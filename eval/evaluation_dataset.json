@@ -1,0 +1,2953 @@
+[
+  {
+    "ticket_id": "EVAL-001",
+    "ticket_text": "Which credit cards and digital payment methods do you support?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_001"
+    ],
+    "expected_resolution_facts": [
+      "Accept major cards, wallets, and selected bank transfers"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-002",
+    "ticket_text": "Can I pay using Google Pay or Apple Pay for my monthly bill?",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_001"
+    ],
+    "expected_resolution_facts": [
+      "Accept major cards, wallets, and selected bank transfers"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-003",
+    "ticket_text": "Do you accept bank wire transfer for invoice payments?",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_001"
+    ],
+    "expected_resolution_facts": [
+      "Accept major cards, wallets, and selected bank transfers"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-004",
+    "ticket_text": "My payment failed at checkout with an insufficient funds or bank restriction error.",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_025"
+    ],
+    "expected_resolution_facts": [
+      "Payments fail due to insufficient balance, bank restrictions, or network"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-005",
+    "ticket_text": "Payment declined repeatedly even though my card details are totally valid.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_025"
+    ],
+    "expected_resolution_facts": [
+      "Check bank restrictions, insufficient balance, or network"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-006",
+    "ticket_text": "Why did my credit card transaction fail during checkout?",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_025"
+    ],
+    "expected_resolution_facts": [
+      "Bank restrictions or balance issues"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-007",
+    "ticket_text": "Checkout payment keeps getting rejected by the payment gateway.",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_025"
+    ],
+    "expected_resolution_facts": [
+      "Payment gateway failure checks"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-008",
+    "ticket_text": "Can I pay with Bitcoin or cryptocurrency on your store?",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-009",
+    "ticket_text": "paymnt faild, plez help fix chekout error",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_025"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for payment failure"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-010",
+    "ticket_text": "Accepted payment types?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_001"
+    ],
+    "expected_resolution_facts": [
+      "Major cards and wallets accepted"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-011",
+    "ticket_text": "I see two identical charges for the same order on my credit card statement.",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_010"
+    ],
+    "expected_resolution_facts": [
+      "Contact support with transaction details so duplicate charge can be reviewed"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-012",
+    "ticket_text": "I was billed twice for my purchase ORD-98124, please issue a credit.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_010"
+    ],
+    "expected_resolution_facts": [
+      "Review duplicate charge with transaction details"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-013",
+    "ticket_text": "Double charge showed up on my bank account for yesterday's order.",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_010"
+    ],
+    "expected_resolution_facts": [
+      "Duplicate charge review"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-014",
+    "ticket_text": "Why was I charged extra fees on top of the listed product price?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_003"
+    ],
+    "expected_resolution_facts": [
+      "Charges include taxes, shipping, discounts, or subscription fees"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-015",
+    "ticket_text": "My monthly invoice is higher than expected, can you explain the breakdown?",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_003"
+    ],
+    "expected_resolution_facts": [
+      "Breakdown may include taxes, shipping, discounts, or fees"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-016",
+    "ticket_text": "Unexplained surcharge added to my recent renewal statement.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_003"
+    ],
+    "expected_resolution_facts": [
+      "Charges include taxes or subscription fees"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-017",
+    "ticket_text": "chargd twise for same itm on visa card",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_010"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for duplicate charge"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-018",
+    "ticket_text": "Duplicate debit transaction noticed on my account.",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_010"
+    ],
+    "expected_resolution_facts": [
+      "Duplicate charge review"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-019",
+    "ticket_text": "Thank you for clarifying the additional tax line item on my receipt.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_003"
+    ],
+    "expected_resolution_facts": [
+      "Taxes and fees explanation"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-020",
+    "ticket_text": "Why does my bill have extra taxes added to it?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_003"
+    ],
+    "expected_resolution_facts": [
+      "Taxes and shipping charges"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-021",
+    "ticket_text": "How can I request a refund for an item that arrived damaged?",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_018"
+    ],
+    "expected_resolution_facts": [
+      "Request a refund from orders section by selecting eligible item"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-022",
+    "ticket_text": "I canceled order ORD-12001 and want to submit a refund request.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_018"
+    ],
+    "expected_resolution_facts": [
+      "Submit refund request in orders section"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-023",
+    "ticket_text": "When will I receive my refund back into my banking account?",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_028"
+    ],
+    "expected_resolution_facts": [
+      "Refunds processed within 5 to 10 business days after approval"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-024",
+    "ticket_text": "How many business days does it usually take for refund money to arrive?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_028"
+    ],
+    "expected_resolution_facts": [
+      "5 to 10 business days after approval"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-025",
+    "ticket_text": "Customer support rejected my refund claim, what is the reason?",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_024"
+    ],
+    "expected_resolution_facts": [
+      "Rejected if item is not eligible or outside return window"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-026",
+    "ticket_text": "Why was my return refund denied by the claims department?",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_024"
+    ],
+    "expected_resolution_facts": [
+      "Ineligibility or outside return window"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-027",
+    "ticket_text": "My refund was rejected without explanation.",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_024"
+    ],
+    "expected_resolution_facts": [
+      "Item eligibility or return window expiration"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-028",
+    "ticket_text": "I need my money returned immediately for my returned goods.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_018",
+      "FAQ_028"
+    ],
+    "expected_resolution_facts": [
+      "Request refund in orders section; 5-10 business days"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-029",
+    "ticket_text": "Glad to see my refund is approved, looking forward to the funds.",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_028"
+    ],
+    "expected_resolution_facts": [
+      "5 to 10 business days"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-030",
+    "ticket_text": "Can I get an instant cash refund handed to me at a physical store?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-031",
+    "ticket_text": "Where can I download the official PDF invoice for last month's subscription?",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_030"
+    ],
+    "expected_resolution_facts": [
+      "Invoices can be downloaded from account billing or order history"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-032",
+    "ticket_text": "I need a copy of my billing receipt for company expense reporting.",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_030"
+    ],
+    "expected_resolution_facts": [
+      "Download invoice from account billing section"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-033",
+    "ticket_text": "How do I update the credit card number on file for future renewals?",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_014"
+    ],
+    "expected_resolution_facts": [
+      "Update billing information from account settings"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-034",
+    "ticket_text": "My card expired, how do I change my billing payment details?",
+    "customer_tier": "Bronze",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_014"
+    ],
+    "expected_resolution_facts": [
+      "Update billing info in account settings"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-035",
+    "ticket_text": "Need to update my company billing address and VAT registration number.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_014"
+    ],
+    "expected_resolution_facts": [
+      "Update in account settings"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-036",
+    "ticket_text": "Download invoice PDF link is missing in my account dashboard.",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_030"
+    ],
+    "expected_resolution_facts": [
+      "Invoices downloaded from account billing section"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-037",
+    "ticket_text": "Can you email me tax invoices for all purchases made this calendar year?",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_030"
+    ],
+    "expected_resolution_facts": [
+      "Account billing or order history download"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-038",
+    "ticket_text": "Billing info update failed with database error code 500.",
+    "customer_tier": "Gold",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_014"
+    ],
+    "expected_resolution_facts": [
+      "Billing settings in account"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-039",
+    "ticket_text": "Thanks for helping me locate my download invoice link so quickly!",
+    "customer_tier": "Silver",
+    "expected_topic": "billing",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Finance Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_030"
+    ],
+    "expected_resolution_facts": [
+      "Invoices in account billing"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-040",
+    "ticket_text": "Can you waive my 2-year contract early termination penalty fee?",
+    "customer_tier": "Platinum",
+    "expected_topic": "billing",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Finance Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-041",
+    "ticket_text": "Where is my package and how can I track its current location?",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_011",
+      "FAQ_029"
+    ],
+    "expected_resolution_facts": [
+      "Check order tracking page or account dashboard with tracking link"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-042",
+    "ticket_text": "How do I track my shipment with tracking code TRK-9921?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_029"
+    ],
+    "expected_resolution_facts": [
+      "Track order from account dashboard using tracking link"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-043",
+    "ticket_text": "Has my order ORD-5541 been dispatched from the distribution warehouse yet?",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_020"
+    ],
+    "expected_resolution_facts": [
+      "Shipment status is available on order details page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-044",
+    "ticket_text": "Where can I check if my package has already shipped or is still pending?",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_020"
+    ],
+    "expected_resolution_facts": [
+      "Shipment status on order details page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-045",
+    "ticket_text": "My package is three days late and tracking has not updated at all.",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Check order tracking page or contact support with order ID"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-046",
+    "ticket_text": "Courier tracking link says delivered but nothing is on my porch.",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Contact support with order ID or check tracking page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-047",
+    "ticket_text": "Can you provide the courier tracking link for my recent order?",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_029"
+    ],
+    "expected_resolution_facts": [
+      "Tracking link in account dashboard"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-048",
+    "ticket_text": "wher is my pakage it has not arived yet",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for order status"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-049",
+    "ticket_text": "Appreciate the quick notification that my parcel was dispatched!",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_020"
+    ],
+    "expected_resolution_facts": [
+      "Shipment status on order details page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-050",
+    "ticket_text": "Track order status for order ORD-7788.",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_029"
+    ],
+    "expected_resolution_facts": [
+      "Track from account dashboard"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-051",
+    "ticket_text": "How many business days does standard ground delivery take to arrive?",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_008"
+    ],
+    "expected_resolution_facts": [
+      "Standard shipping usually takes 3 to 7 business days"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-052",
+    "ticket_text": "What is the expected shipping time frame for domestic orders?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_008"
+    ],
+    "expected_resolution_facts": [
+      "Standard shipping takes 3 to 7 business days depending on location"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-053",
+    "ticket_text": "How much will shipping cost for delivery to a rural address?",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_007"
+    ],
+    "expected_resolution_facts": [
+      "Shipping cost is calculated at checkout based on location and method"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-054",
+    "ticket_text": "Why are the delivery charges so expensive at the final checkout screen?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_007"
+    ],
+    "expected_resolution_facts": [
+      "Calculated at checkout based on location and method"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-055",
+    "ticket_text": "Do you provide express or overnight delivery options for urgent packages?",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_021"
+    ],
+    "expected_resolution_facts": [
+      "Express delivery is available in selected locations for eligible products"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-056",
+    "ticket_text": "Can I expedite delivery to receive my shipment by tomorrow morning?",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_021"
+    ],
+    "expected_resolution_facts": [
+      "Express delivery available in selected locations"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-057",
+    "ticket_text": "Package took 12 days to arrive which is much slower than 3 to 7 business days.",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_008"
+    ],
+    "expected_resolution_facts": [
+      "Standard shipping takes 3 to 7 business days"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-058",
+    "ticket_text": "How much does shipping cost for heavy equipment orders?",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_007"
+    ],
+    "expected_resolution_facts": [
+      "Calculated at checkout"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-059",
+    "ticket_text": "Can you guarantee same-day drone delivery to my private island?",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-060",
+    "ticket_text": "Express delivery arrived ahead of schedule, wonderful service!",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_021"
+    ],
+    "expected_resolution_facts": [
+      "Express delivery in selected locations"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-061",
+    "ticket_text": "What steps do I follow to return an item I ordered last week?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_002"
+    ],
+    "expected_resolution_facts": [
+      "Start a return request from order history and follow return instructions"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-062",
+    "ticket_text": "How do I initiate a product return through my online profile?",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_002"
+    ],
+    "expected_resolution_facts": [
+      "Start return request from order history"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-063",
+    "ticket_text": "What is your official return policy and how long is the return window?",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_016"
+    ],
+    "expected_resolution_facts": [
+      "Eligible items can usually be returned within specified return window"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-064",
+    "ticket_text": "How many days do I have to return an eligible product after delivery?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_016"
+    ],
+    "expected_resolution_facts": [
+      "Return within specified return window"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-065",
+    "ticket_text": "Am I required to pay for the return shipping postage label myself?",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_004"
+    ],
+    "expected_resolution_facts": [
+      "Return shipping depends on reason for return and product policy"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-066",
+    "ticket_text": "Who covers return shipping fees when returning an unwanted item?",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_004"
+    ],
+    "expected_resolution_facts": [
+      "Depends on reason for return and product policy"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-067",
+    "ticket_text": "Return process was rejected because package was opened.",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_016"
+    ],
+    "expected_resolution_facts": [
+      "Eligible items within specified return window"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-068",
+    "ticket_text": "I want to send back an incorrect size, do you provide prepaid labels?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_002",
+      "FAQ_004"
+    ],
+    "expected_resolution_facts": [
+      "Return request from order history; shipping depends on policy"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-069",
+    "ticket_text": "how to retrn item pleez",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_002"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for return request"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-070",
+    "ticket_text": "Very happy with how smooth the return process worked.",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_002"
+    ],
+    "expected_resolution_facts": [
+      "Return request from order history"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-071",
+    "ticket_text": "The courier threw my parcel over the fence and damaged the product.",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_002"
+    ],
+    "expected_resolution_facts": [
+      "Start return request from order history"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-072",
+    "ticket_text": "Package marked as signed for by resident but I was away on vacation.",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Contact support with order ID"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-073",
+    "ticket_text": "Delivery driver refused to bring package to my apartment door.",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Order status and support inquiry"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-074",
+    "ticket_text": "Can I change my delivery shipping address while the parcel is in transit?",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-075",
+    "ticket_text": "Package arrived completely waterlogged and contents ruined.",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_002"
+    ],
+    "expected_resolution_facts": [
+      "Start return request from order history"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-076",
+    "ticket_text": "Received shipping notification with an invalid tracking URL.",
+    "customer_tier": "Bronze",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_029"
+    ],
+    "expected_resolution_facts": [
+      "Track order from account dashboard"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-077",
+    "ticket_text": "Thank you for the prompt dispatch and careful packaging.",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_020"
+    ],
+    "expected_resolution_facts": [
+      "Shipment details page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-078",
+    "ticket_text": "Shipment delayed at regional customs clearance facility.",
+    "customer_tier": "Silver",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Order tracking or contact support"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-079",
+    "ticket_text": "Courier lost my order ORD-3319 entirely.",
+    "customer_tier": "Platinum",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_011"
+    ],
+    "expected_resolution_facts": [
+      "Contact support with order ID"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-080",
+    "ticket_text": "My package was shipped but tracking shows no movement for a week.",
+    "customer_tier": "Gold",
+    "expected_topic": "shipping",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Logistics Team",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_011",
+      "FAQ_020"
+    ],
+    "expected_resolution_facts": [
+      "Check order tracking or contact support"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-081",
+    "ticket_text": "I forgot my password and cannot sign in to my account.",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_013"
+    ],
+    "expected_resolution_facts": [
+      "Click forgot password on login page and follow email instructions"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-082",
+    "ticket_text": "How do I trigger a password reset link for my login email?",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_013"
+    ],
+    "expected_resolution_facts": [
+      "Click forgot password on login page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-083",
+    "ticket_text": "Why does the login portal say invalid credentials when my password is correct?",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Login issues due to incorrect credentials or account verification"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-084",
+    "ticket_text": "I am locked out of my account due to failed authentication verification.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Incorrect credentials or verification issues"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-085",
+    "ticket_text": "password reset email is not reaching my inbox or spam folder.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_013"
+    ],
+    "expected_resolution_facts": [
+      "Click forgot password and follow email instructions"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-086",
+    "ticket_text": "Cant log in to portal, says account suspended or unverifid",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Account verification issues"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-087",
+    "ticket_text": "How do I reset my credentials securely?",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_013"
+    ],
+    "expected_resolution_facts": [
+      "Forgot password instructions"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-088",
+    "ticket_text": "Two-factor authentication code is rejected on every sign-in attempt.",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Account verification issue"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-089",
+    "ticket_text": "Thanks for helping me recover my locked login credentials.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_013"
+    ],
+    "expected_resolution_facts": [
+      "Password reset recovery"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-090",
+    "ticket_text": "Login page redirects in an infinite loop.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_015",
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Login verification or refresh browser"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-091",
+    "ticket_text": "The website shows a blank screen and loading error whenever I browse products.",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Check internet connection, refresh page, or try another browser"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-092",
+    "ticket_text": "How do I fix a loading spinner that never finishes on your web page?",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Check connection, refresh page, or try another browser"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-093",
+    "ticket_text": "The mobile app keeps crashing immediately upon opening on iOS 18.",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_022"
+    ],
+    "expected_resolution_facts": [
+      "Update the app, clear cache, restart device, and try again"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-094",
+    "ticket_text": "Android application freezes during navigation and forces close.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_022"
+    ],
+    "expected_resolution_facts": [
+      "Update app, clear cache, restart device"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-095",
+    "ticket_text": "Page loading fails with ERR_CONNECTION_TIMED_OUT.",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Check internet connection, refresh, try another browser"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-096",
+    "ticket_text": "App performance improved significantly after following your cache clear advice!",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_022"
+    ],
+    "expected_resolution_facts": [
+      "Clear cache, restart, update app"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-097",
+    "ticket_text": "mobyle app crashin all the time plez fix it",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_022"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for app crash"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-098",
+    "ticket_text": "JavaScript console error Uncaught TypeError breaking checkout button.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Try another browser, refresh page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-099",
+    "ticket_text": "App not working after installing latest version 3.4.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_022"
+    ],
+    "expected_resolution_facts": [
+      "Clear cache, restart device, try again"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-100",
+    "ticket_text": "Website refreshed properly and cart is now displaying items.",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Refresh page / browser connection"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-101",
+    "ticket_text": "How can I contact technical support directly for urgent developer assistance?",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_005"
+    ],
+    "expected_resolution_facts": [
+      "Contact through live chat or support ticket submission"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-102",
+    "ticket_text": "I need help from a support engineer to troubleshoot an API integration error.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_005"
+    ],
+    "expected_resolution_facts": [
+      "Contact technical support through live chat or support ticket"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-103",
+    "ticket_text": "How do I completely delete my account and remove my personal profile data?",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_026"
+    ],
+    "expected_resolution_facts": [
+      "Request account deletion from privacy settings or by contacting support"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-104",
+    "ticket_text": "I want my account permanently closed and personal data erased under GDPR.",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_026"
+    ],
+    "expected_resolution_facts": [
+      "Account deletion from privacy settings or contacting support"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-105",
+    "ticket_text": "Where is the account termination option in profile settings?",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_026"
+    ],
+    "expected_resolution_facts": [
+      "Privacy settings or contact support"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-106",
+    "ticket_text": "Can I talk to a technical representative via phone or live chat?",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_005"
+    ],
+    "expected_resolution_facts": [
+      "Live chat or support ticket submission"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-107",
+    "ticket_text": "Technical support engineer resolved our webhook issue swiftly.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_005"
+    ],
+    "expected_resolution_facts": [
+      "Live chat or ticket submission"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-108",
+    "ticket_text": "Can you migrate my self-hosted SQL database into your cloud automatically?",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-109",
+    "ticket_text": "delete acount plez",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_026"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for account deletion"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-110",
+    "ticket_text": "Tech support chat option is grayed out on the portal.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_005"
+    ],
+    "expected_resolution_facts": [
+      "Live chat or support ticket"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-111",
+    "ticket_text": "Is this portal compatible with Linux running Firefox ESR?",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Browser compatibility checks"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-112",
+    "ticket_text": "Session times out every 2 minutes while drafting a support ticket.",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Login / session verification"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-113",
+    "ticket_text": "Getting 403 Forbidden when accessing the user settings page.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Account verification or credentials"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-114",
+    "ticket_text": "I suspect someone unauthorized logged into my user account from overseas.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_013",
+      "FAQ_015"
+    ],
+    "expected_resolution_facts": [
+      "Reset password and review verification"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-115",
+    "ticket_text": "Can I install your mobile app on a jailbroken or rooted device?",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-116",
+    "ticket_text": "Audio is not playing in video tutorial clips on the site.",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Refresh browser or check connection"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-117",
+    "ticket_text": "Browser extension interfering with form submission.",
+    "customer_tier": "Silver",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Try another browser or refresh"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-118",
+    "ticket_text": "Great technical documentation for your developer endpoints!",
+    "customer_tier": "Gold",
+    "expected_topic": "technical",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_005"
+    ],
+    "expected_resolution_facts": [
+      "Technical support and resources"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-119",
+    "ticket_text": "SSL certificate invalid error when connecting to your domain.",
+    "customer_tier": "Platinum",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "Tech Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_009"
+    ],
+    "expected_resolution_facts": [
+      "Browser connection error"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-120",
+    "ticket_text": "Can you provide root SSH credentials to your production database?",
+    "customer_tier": "Bronze",
+    "expected_topic": "technical",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "Tech Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-121",
+    "ticket_text": "I want to file a formal complaint regarding terrible customer service.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "File a complaint through help center, live chat, or support ticket form"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-122",
+    "ticket_text": "How do I register an official grievance with management?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "Help center, live chat, or support ticket form"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-123",
+    "ticket_text": "Can I escalate my unresolved complaint to a senior supervisor?",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_017"
+    ],
+    "expected_resolution_facts": [
+      "Unresolved complaints can be escalated to a senior support representative"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-124",
+    "ticket_text": "I demand to speak to an executive manager immediately regarding my case.",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_017"
+    ],
+    "expected_resolution_facts": [
+      "Escalated to senior support representative"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-125",
+    "ticket_text": "Where can I check the ongoing status of my filed complaint ticket?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_019"
+    ],
+    "expected_resolution_facts": [
+      "Complaint status can be checked from support ticket section"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-126",
+    "ticket_text": "Checking progress on previously submitted grievance number TKT-9901.",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_019"
+    ],
+    "expected_resolution_facts": [
+      "Checked from support ticket section"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-127",
+    "ticket_text": "Agent was extremely rude and unhelpful on the phone yesterday.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "File complaint via help center or ticket"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-128",
+    "ticket_text": "want to fil complant abt poor servise",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "Typo query for complaint filing"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-129",
+    "ticket_text": "Senior manager followed up and resolved my grievance quickly, thank you.",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_017"
+    ],
+    "expected_resolution_facts": [
+      "Senior support representative follow-up"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-130",
+    "ticket_text": "Where is my complaint update?",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_019"
+    ],
+    "expected_resolution_facts": [
+      "Support ticket section"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-131",
+    "ticket_text": "Does this electronic product include a manufacturer warranty?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_006"
+    ],
+    "expected_resolution_facts": [
+      "Warranty details listed on product page under warranty information"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-132",
+    "ticket_text": "What does the 1-year product warranty coverage include?",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_006"
+    ],
+    "expected_resolution_facts": [
+      "Listed on product page under warranty information"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-133",
+    "ticket_text": "Is this laptop model currently in stock or sold out?",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_012"
+    ],
+    "expected_resolution_facts": [
+      "Product availability shown on product page and may vary by location"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-134",
+    "ticket_text": "How can I check inventory availability for item SKU-4412?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_012"
+    ],
+    "expected_resolution_facts": [
+      "Shown on product page and may vary by location"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-135",
+    "ticket_text": "Where can I find the complete hardware dimensions and technical specifications?",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_023"
+    ],
+    "expected_resolution_facts": [
+      "Product specifications available on product detail page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-136",
+    "ticket_text": "Are battery specifications and voltage requirements detailed on the listing?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_023"
+    ],
+    "expected_resolution_facts": [
+      "Available on product detail page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-137",
+    "ticket_text": "Product page does not show whether product has international warranty.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_006"
+    ],
+    "expected_resolution_facts": [
+      "Warranty info on product page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-138",
+    "ticket_text": "Out of stock notification was sent for an item marked available.",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_012"
+    ],
+    "expected_resolution_facts": [
+      "Availability on product page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-139",
+    "ticket_text": "Is this gadget in stock right now?",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_012"
+    ],
+    "expected_resolution_facts": [
+      "Availability on product page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-140",
+    "ticket_text": "Found all hardware specs easily on the product page, great job.",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [
+      "FAQ_023"
+    ],
+    "expected_resolution_facts": [
+      "Specs on product detail page"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-141",
+    "ticket_text": "My package arrived late and customer service gave me completely contradictory answers.",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "File complaint through help center or ticket"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-142",
+    "ticket_text": "The portal layout is confusing, cluttered, and difficult for non-technical users.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "Feedback and complaint form"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-143",
+    "ticket_text": "Returning to your service after a long absence, very impressed with the upgrades!",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-144",
+    "ticket_text": "Need assistance regarding recent activity on my profile.",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-145",
+    "ticket_text": "Help please.",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-146",
+    "ticket_text": "Something went wrong with everything.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-147",
+    "ticket_text": "What are your physical office hours and corporate headquarters address?",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-148",
+    "ticket_text": "Do you sponsor collegiate coding hackathons or student clubs?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-149",
+    "ticket_text": "Where is the CEO's personal direct phone number listed?",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-150",
+    "ticket_text": "General inquiry about partnership and vendor agreements.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-151",
+    "ticket_text": "I really enjoy using your platform and wanted to share positive feedback!",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-152",
+    "ticket_text": "Kudos to your customer support team for excellent service this week.",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-153",
+    "ticket_text": "Your company is unethical and misleading customers with false claims.",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "File complaint through help center"
+    ],
+    "requires_fallback": false,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-154",
+    "ticket_text": "Where can I submit general product feature suggestions?",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-155",
+    "ticket_text": "Are you hiring remote technical support representatives in Europe?",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-156",
+    "ticket_text": "Press inquiry from tech news outlet looking for an official quote.",
+    "customer_tier": "Platinum",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "val"
+  },
+  {
+    "ticket_id": "EVAL-157",
+    "ticket_text": "Can I get an NDA signed before discussing commercial licensing?",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Medium",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-158",
+    "ticket_text": "How do I become an affiliate marketer for your products?",
+    "customer_tier": "Silver",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": true,
+    "requires_human_review": false,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-159",
+    "ticket_text": "Worst experience ever, closing all accounts immediately.",
+    "customer_tier": "Gold",
+    "expected_topic": "other",
+    "expected_sentiment": "NEGATIVE",
+    "expected_priority": "High",
+    "expected_team": "General Support",
+    "expected_escalation": "Escalated to Senior Manager",
+    "expected_faq_ids": [
+      "FAQ_026",
+      "FAQ_027"
+    ],
+    "expected_resolution_facts": [
+      "Account deletion and complaint filing"
+    ],
+    "requires_fallback": true,
+    "requires_human_review": true,
+    "split": "test"
+  },
+  {
+    "ticket_id": "EVAL-160",
+    "ticket_text": "Thank you for the quick and polite response from your staff.",
+    "customer_tier": "Bronze",
+    "expected_topic": "other",
+    "expected_sentiment": "POSITIVE",
+    "expected_priority": "Low",
+    "expected_team": "General Support",
+    "expected_escalation": "No Escalation Required",
+    "expected_faq_ids": [],
+    "expected_resolution_facts": [],
+    "requires_fallback": false,
+    "requires_human_review": false,
+    "split": "test"
+  }
+]

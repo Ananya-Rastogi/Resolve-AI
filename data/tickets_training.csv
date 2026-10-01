@@ -1,0 +1,158 @@
+text,topic,sentiment
+payment deducted twice,billing,NEGATIVE
+charged twice for same order,billing,NEGATIVE
+refund not received,billing,NEGATIVE
+incorrect invoice amount,billing,NEGATIVE
+billing clarification needed,billing,POSITIVE
+invoice shows extra charges,billing,NEGATIVE
+subscription renewal issue,billing,NEGATIVE
+discount not applied,billing,NEGATIVE
+need invoice copy,billing,POSITIVE
+payment confirmation not received,billing,NEGATIVE
+credit card declined but amount deducted,billing,NEGATIVE
+double transaction issue,billing,NEGATIVE
+request refund for cancelled order,billing,NEGATIVE
+overcharged on latest bill,billing,NEGATIVE
+billing support was helpful,billing,POSITIVE
+wrong tax calculation,billing,NEGATIVE
+auto debit failed,billing,NEGATIVE
+plan upgrade charge query,billing,POSITIVE
+billing discrepancy noticed,billing,NEGATIVE
+refund processed successfully,billing,POSITIVE
+order delayed,shipping,NEGATIVE
+package not delivered,shipping,NEGATIVE
+shipment tracking issue,shipping,NEGATIVE
+delivery was smooth,shipping,POSITIVE
+late delivery complaint,shipping,NEGATIVE
+courier lost package,shipping,NEGATIVE
+address updated after dispatch,shipping,NEGATIVE
+shipment arrived damaged,shipping,NEGATIVE
+delivery agent was polite,shipping,POSITIVE
+need tracking details,shipping,POSITIVE
+wrong item delivered,shipping,NEGATIVE
+order stuck in transit,shipping,NEGATIVE
+express delivery was fast,shipping,POSITIVE
+package delivered to wrong address,shipping,NEGATIVE
+shipment status not updating,shipping,NEGATIVE
+delivery delayed due to weather,shipping,NEGATIVE
+received package on time,shipping,POSITIVE
+need to reschedule delivery,shipping,POSITIVE
+shipping charges too high,shipping,NEGATIVE
+courier service excellent,shipping,POSITIVE
+app crash on login,technical,NEGATIVE
+login error issue,technical,NEGATIVE
+website not loading,technical,NEGATIVE
+feature request for dashboard,technical,POSITIVE
+system working perfectly,technical,POSITIVE
+server timeout error,technical,NEGATIVE
+unable to reset password,technical,NEGATIVE
+app freezing frequently,technical,NEGATIVE
+new update looks good,technical,POSITIVE
+bug in payment gateway,technical,NEGATIVE
+error 500 on website,technical,NEGATIVE
+mobile app not opening,technical,NEGATIVE
+two factor authentication issue,technical,NEGATIVE
+slow performance issue,technical,NEGATIVE
+feature enhancement suggestion,technical,POSITIVE
+technical support resolved issue,technical,POSITIVE
+data not syncing properly,technical,NEGATIVE
+account locked unexpectedly,technical,NEGATIVE
+API integration problem,technical,NEGATIVE
+dashboard loading slowly,technical,NEGATIVE
+thank you great service,other,POSITIVE
+general inquiry about service,other,POSITIVE
+feedback about support team,other,POSITIVE
+very disappointed with service,other,NEGATIVE
+customer support not responding,other,NEGATIVE
+need information about plans,other,POSITIVE
+service quality declining,other,NEGATIVE
+happy with overall experience,other,POSITIVE
+request callback from support,other,POSITIVE
+complaint about representative behavior,other,NEGATIVE
+need help understanding features,other,POSITIVE
+account closure request,other,NEGATIVE
+suggestion for improvement,other,POSITIVE
+support response was slow,other,NEGATIVE
+team handled issue professionally,other,POSITIVE
+service outage complaint,other,NEGATIVE
+request demo session,other,POSITIVE
+support team very helpful,other,POSITIVE
+frustrated with overall service,other,NEGATIVE
+compliment to customer care team,other,POSITIVE
+refund taking too long,billing,NEGATIVE
+billing cycle confusion,billing,NEGATIVE
+payment gateway error,billing,NEGATIVE
+refund credited successfully,billing,POSITIVE
+invoice missing details,billing,NEGATIVE
+subscription cancelled but charged,billing,NEGATIVE
+billing team responded quickly,billing,POSITIVE
+duplicate invoice generated,billing,NEGATIVE
+credit note request,billing,POSITIVE
+amount deducted without order,billing,NEGATIVE
+delivery delayed again,shipping,NEGATIVE
+shipment arrived early,shipping,POSITIVE
+tracking number invalid,shipping,NEGATIVE
+package returned to sender,shipping,NEGATIVE
+shipping address change request,shipping,POSITIVE
+delivery executive unprofessional,shipping,NEGATIVE
+shipment dispatched quickly,shipping,POSITIVE
+wrong delivery status shown,shipping,NEGATIVE
+item received in good condition,shipping,POSITIVE
+courier never arrived,shipping,NEGATIVE
+application update caused crash,technical,NEGATIVE
+error message while checkout,technical,NEGATIVE
+password reset link expired,technical,NEGATIVE
+platform performance improved,technical,POSITIVE
+technical glitch during payment,technical,NEGATIVE
+unable to upload documents,technical,NEGATIVE
+new UI looks amazing,technical,POSITIVE
+database connection error,technical,NEGATIVE
+OTP not received,technical,NEGATIVE
+feature working as expected,technical,POSITIVE
+need assistance from support,other,POSITIVE
+extremely unhappy with service,other,NEGATIVE
+team provided quick resolution,other,POSITIVE
+complaint regarding delay in response,other,NEGATIVE
+interested in enterprise plan,other,POSITIVE
+support agent rude behavior,other,NEGATIVE
+service experience excellent,other,POSITIVE
+request billing statement copy,billing,POSITIVE
+refund denied incorrectly,billing,NEGATIVE
+incorrect subscription charge,billing,NEGATIVE
+billing invoice sent late,billing,NEGATIVE
+auto renewal stopped working,billing,NEGATIVE
+refund processed late,billing,NEGATIVE
+discount coupon not applied,billing,NEGATIVE
+invoice corrected successfully,billing,POSITIVE
+billing team clarified issue,billing,POSITIVE
+transaction failed but charged,billing,NEGATIVE
+delivery status incorrect,shipping,NEGATIVE
+shipment lost in transit,shipping,NEGATIVE
+package delivered safely,shipping,POSITIVE
+need shipment invoice,shipping,POSITIVE
+late dispatch issue,shipping,NEGATIVE
+fast shipping service,shipping,POSITIVE
+package damaged on arrival,shipping,NEGATIVE
+delivery confirmation received,shipping,POSITIVE
+shipping process confusing,shipping,NEGATIVE
+delivery arrived before time,shipping,POSITIVE
+technical issue fixed quickly,technical,POSITIVE
+app crashing after update,technical,NEGATIVE
+unable to login to portal,technical,NEGATIVE
+new feature request,technical,POSITIVE
+server downtime complaint,technical,NEGATIVE
+error while generating report,technical,NEGATIVE
+platform stable and reliable,technical,POSITIVE
+technical team resolved issue,technical,POSITIVE
+bug in checkout process,technical,NEGATIVE
+dashboard metrics incorrect,technical,NEGATIVE
+support team amazing,other,POSITIVE
+need pricing details,other,POSITIVE
+very bad service experience,other,NEGATIVE
+happy with product quality,other,POSITIVE
+service interruption noticed,other,NEGATIVE
+appreciate quick assistance,other,POSITIVE
+waiting too long for reply,other,NEGATIVE
+great customer experience,other,POSITIVE
+need onboarding support,other,POSITIVE
+dissatisfied with resolution,other,NEGATIVE

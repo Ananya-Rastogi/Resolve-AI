@@ -1,0 +1,3581 @@
+{
+  "benchmark_metadata": {
+    "total_queries_evaluated": 160,
+    "supported_queries_count": 136,
+    "unsupported_queries_count": 24,
+    "indexed_documents_count": 30,
+    "domain_scope_limitation": "Evaluation performed over the 30 canonical FAQ documents deduplicated from Kaggle FAQ dataset."
+  },
+  "strategy_comparison": {
+    "hybrid_category_with_fallback": {
+      "total_queries": 160,
+      "supported_queries": 136,
+      "unsupported_queries": 24,
+      "recall": {
+        "recall@1": 0.7647,
+        "recall@3": 0.9412,
+        "recall@5": 0.9632
+      },
+      "precision": {
+        "precision@1": 0.7647,
+        "precision@3": 0.326,
+        "precision@5": 0.2
+      },
+      "mrr": 0.8442,
+      "ndcg": {
+        "ndcg@1": 0.7647,
+        "ndcg@3": 0.8624,
+        "ndcg@5": 0.8712
+      },
+      "empty_retrieval_rate": 0.0,
+      "latency": {
+        "mean": 38.68,
+        "median": 28.98,
+        "p95": 55.44,
+        "p99": 97.68,
+        "sample_count": 160
+      },
+      "global_fallback_activation_rate": 0.0,
+      "category_filtered_success_rate": 1.0
+    },
+    "global_semantic_search": {
+      "total_queries": 160,
+      "supported_queries": 136,
+      "unsupported_queries": 24,
+      "recall": {
+        "recall@1": 0.7647,
+        "recall@3": 0.9338,
+        "recall@5": 0.9485
+      },
+      "precision": {
+        "precision@1": 0.7647,
+        "precision@3": 0.3211,
+        "precision@5": 0.1956
+      },
+      "mrr": 0.8391,
+      "ndcg": {
+        "ndcg@1": 0.7647,
+        "ndcg@3": 0.8555,
+        "ndcg@5": 0.8615
+      },
+      "empty_retrieval_rate": 0.0,
+      "latency": {
+        "mean": 26.39,
+        "median": 25.23,
+        "p95": 32.11,
+        "p99": 58.41,
+        "sample_count": 160
+      }
+    },
+    "category_filtered_search_strict": {
+      "total_queries": 160,
+      "supported_queries": 136,
+      "unsupported_queries": 24,
+      "recall": {
+        "recall@1": 0.8015,
+        "recall@3": 0.9485,
+        "recall@5": 0.9926
+      },
+      "precision": {
+        "precision@1": 0.8015,
+        "precision@3": 0.3284,
+        "precision@5": 0.2059
+      },
+      "mrr": 0.8739,
+      "ndcg": {
+        "ndcg@1": 0.8015,
+        "ndcg@3": 0.882,
+        "ndcg@5": 0.899
+      },
+      "empty_retrieval_rate": 0.0,
+      "latency": {
+        "mean": 26.88,
+        "median": 26.37,
+        "p95": 31.78,
+        "p99": 44.58,
+        "sample_count": 160
+      }
+    }
+  },
+  "queries": [
+    {
+      "query": "Which credit cards and digital payment methods do you support?",
+      "expected_faq_ids": [
+        "FAQ_001"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_001",
+        "FAQ_025",
+        "FAQ_014",
+        "FAQ_030",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.5593,
+        0.3222,
+        0.2775,
+        0.1931,
+        0.1429
+      ],
+      "latency_ms": 13.03
+    },
+    {
+      "query": "Can I pay using Google Pay or Apple Pay for my monthly bill?",
+      "expected_faq_ids": [
+        "FAQ_001"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_014",
+        "FAQ_025",
+        "FAQ_030",
+        "FAQ_001"
+      ],
+      "scores": [
+        0.3813,
+        0.3338,
+        0.3267,
+        0.3222,
+        0.2886
+      ],
+      "latency_ms": 38.38
+    },
+    {
+      "query": "Do you accept bank wire transfer for invoice payments?",
+      "expected_faq_ids": [
+        "FAQ_001"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_001",
+        "FAQ_030",
+        "FAQ_025",
+        "FAQ_014",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.3819,
+        0.362,
+        0.2533,
+        0.183,
+        0.176
+      ],
+      "latency_ms": 72.71
+    },
+    {
+      "query": "My payment failed at checkout with an insufficient funds or bank restriction error.",
+      "expected_faq_ids": [
+        "FAQ_025"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_025",
+        "FAQ_024",
+        "FAQ_001",
+        "FAQ_010",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.5953,
+        0.3047,
+        0.2551,
+        0.2439,
+        0.2257
+      ],
+      "latency_ms": 44.46
+    },
+    {
+      "query": "Payment declined repeatedly even though my card details are totally valid.",
+      "expected_faq_ids": [
+        "FAQ_025"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_025",
+        "FAQ_024",
+        "FAQ_001",
+        "FAQ_010",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.4413,
+        0.336,
+        0.3284,
+        0.3248,
+        0.2778
+      ],
+      "latency_ms": 156.8
+    },
+    {
+      "query": "Why did my credit card transaction fail during checkout?",
+      "expected_faq_ids": [
+        "FAQ_025"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_025",
+        "FAQ_010",
+        "FAQ_024",
+        "FAQ_001",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.5174,
+        0.3064,
+        0.2451,
+        0.236,
+        0.2201
+      ],
+      "latency_ms": 31.6
+    },
+    {
+      "query": "Checkout payment keeps getting rejected by the payment gateway.",
+      "expected_faq_ids": [
+        "FAQ_025"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_025",
+        "FAQ_001",
+        "FAQ_024",
+        "FAQ_010",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.4509,
+        0.3587,
+        0.2995,
+        0.1899,
+        0.1894
+      ],
+      "latency_ms": 26.54
+    },
+    {
+      "query": "Can I pay with Bitcoin or cryptocurrency on your store?",
+      "expected_faq_ids": [],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_025",
+        "FAQ_001",
+        "FAQ_030",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.2503,
+        0.2471,
+        0.2468,
+        0.2266,
+        0.2038
+      ],
+      "latency_ms": 51.14
+    },
+    {
+      "query": "paymnt faild, plez help fix chekout error",
+      "expected_faq_ids": [
+        "FAQ_025"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_025",
+        "FAQ_010",
+        "FAQ_001",
+        "FAQ_024",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.3968,
+        0.2163,
+        0.1743,
+        0.1643,
+        0.1486
+      ],
+      "latency_ms": 49.93
+    },
+    {
+      "query": "Accepted payment types?",
+      "expected_faq_ids": [
+        "FAQ_001"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_001",
+        "FAQ_025",
+        "FAQ_018",
+        "FAQ_024",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.7037,
+        0.399,
+        0.2999,
+        0.2975,
+        0.2513
+      ],
+      "latency_ms": 24.12
+    },
+    {
+      "query": "I see two identical charges for the same order on my credit card statement.",
+      "expected_faq_ids": [
+        "FAQ_010"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_010",
+        "FAQ_003",
+        "FAQ_014",
+        "FAQ_025",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.6009,
+        0.4476,
+        0.2829,
+        0.2478,
+        0.2057
+      ],
+      "latency_ms": 25.06
+    },
+    {
+      "query": "I was billed twice for my purchase ORD-98124, please issue a credit.",
+      "expected_faq_ids": [
+        "FAQ_010"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_010",
+        "FAQ_003",
+        "FAQ_025",
+        "FAQ_014",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.5603,
+        0.4009,
+        0.3546,
+        0.3268,
+        0.2826
+      ],
+      "latency_ms": 28.98
+    },
+    {
+      "query": "Double charge showed up on my bank account for yesterday's order.",
+      "expected_faq_ids": [
+        "FAQ_010"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_010",
+        "FAQ_003",
+        "FAQ_025",
+        "FAQ_014",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.6698,
+        0.4254,
+        0.2156,
+        0.1963,
+        0.1914
+      ],
+      "latency_ms": 31.46
+    },
+    {
+      "query": "Why was I charged extra fees on top of the listed product price?",
+      "expected_faq_ids": [
+        "FAQ_003"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_010",
+        "FAQ_024",
+        "FAQ_030",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.6786,
+        0.4483,
+        0.1837,
+        0.1772,
+        0.177
+      ],
+      "latency_ms": 28.8
+    },
+    {
+      "query": "My monthly invoice is higher than expected, can you explain the breakdown?",
+      "expected_faq_ids": [
+        "FAQ_003"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_030",
+        "FAQ_003",
+        "FAQ_025",
+        "FAQ_014",
+        "FAQ_010"
+      ],
+      "scores": [
+        0.375,
+        0.3606,
+        0.2853,
+        0.2147,
+        0.2047
+      ],
+      "latency_ms": 49.54
+    },
+    {
+      "query": "Unexplained surcharge added to my recent renewal statement.",
+      "expected_faq_ids": [
+        "FAQ_003"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_010",
+        "FAQ_014",
+        "FAQ_025",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.5011,
+        0.4965,
+        0.2144,
+        0.1859,
+        0.1813
+      ],
+      "latency_ms": 25.85
+    },
+    {
+      "query": "chargd twise for same itm on visa card",
+      "expected_faq_ids": [
+        "FAQ_010"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_001",
+        "FAQ_014",
+        "FAQ_010",
+        "FAQ_025",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.2579,
+        0.2121,
+        0.1969,
+        0.164,
+        0.1127
+      ],
+      "latency_ms": 50.3
+    },
+    {
+      "query": "Duplicate debit transaction noticed on my account.",
+      "expected_faq_ids": [
+        "FAQ_010"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_010",
+        "FAQ_003",
+        "FAQ_025",
+        "FAQ_014",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.5105,
+        0.2436,
+        0.1958,
+        0.1568,
+        0.1279
+      ],
+      "latency_ms": 24.25
+    },
+    {
+      "query": "Thank you for clarifying the additional tax line item on my receipt.",
+      "expected_faq_ids": [
+        "FAQ_003"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_030",
+        "FAQ_010",
+        "FAQ_024",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.3799,
+        0.2557,
+        0.2434,
+        0.2198,
+        0.2024
+      ],
+      "latency_ms": 51.3
+    },
+    {
+      "query": "Why does my bill have extra taxes added to it?",
+      "expected_faq_ids": [
+        "FAQ_003"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_030",
+        "FAQ_010",
+        "FAQ_014",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.3757,
+        0.2048,
+        0.1891,
+        0.1813,
+        0.12
+      ],
+      "latency_ms": 52.28
+    },
+    {
+      "query": "How can I request a refund for an item that arrived damaged?",
+      "expected_faq_ids": [
+        "FAQ_018"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_018",
+        "FAQ_024",
+        "FAQ_028",
+        "FAQ_010",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.5803,
+        0.4589,
+        0.3441,
+        0.3343,
+        0.2679
+      ],
+      "latency_ms": 26.31
+    },
+    {
+      "query": "I canceled order ORD-12001 and want to submit a refund request.",
+      "expected_faq_ids": [
+        "FAQ_018"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_018",
+        "FAQ_024",
+        "FAQ_028",
+        "FAQ_010",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.5702,
+        0.4065,
+        0.3532,
+        0.2986,
+        0.2421
+      ],
+      "latency_ms": 29.64
+    },
+    {
+      "query": "When will I receive my refund back into my banking account?",
+      "expected_faq_ids": [
+        "FAQ_028"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_028",
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_010",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.6495,
+        0.4019,
+        0.3855,
+        0.2388,
+        0.1789
+      ],
+      "latency_ms": 28.72
+    },
+    {
+      "query": "How many business days does it usually take for refund money to arrive?",
+      "expected_faq_ids": [
+        "FAQ_028"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_028",
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_001",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.5831,
+        0.2774,
+        0.2498,
+        0.1451,
+        0.1113
+      ],
+      "latency_ms": 27.14
+    },
+    {
+      "query": "Customer support rejected my refund claim, what is the reason?",
+      "expected_faq_ids": [
+        "FAQ_024"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_028",
+        "FAQ_025",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.6298,
+        0.4361,
+        0.3214,
+        0.3143,
+        0.2907
+      ],
+      "latency_ms": 28.16
+    },
+    {
+      "query": "Why was my return refund denied by the claims department?",
+      "expected_faq_ids": [
+        "FAQ_024"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_028",
+        "FAQ_010",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.5648,
+        0.399,
+        0.3819,
+        0.2566,
+        0.2178
+      ],
+      "latency_ms": 25.09
+    },
+    {
+      "query": "My refund was rejected without explanation.",
+      "expected_faq_ids": [
+        "FAQ_024"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_028",
+        "FAQ_003",
+        "FAQ_010"
+      ],
+      "scores": [
+        0.703,
+        0.4663,
+        0.401,
+        0.3117,
+        0.3061
+      ],
+      "latency_ms": 25.49
+    },
+    {
+      "query": "I need my money returned immediately for my returned goods.",
+      "expected_faq_ids": [
+        "FAQ_018",
+        "FAQ_028"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_018",
+        "FAQ_028",
+        "FAQ_016",
+        "FAQ_024"
+      ],
+      "scores": [
+        0.4611,
+        0.3835,
+        0.3494,
+        0.3351,
+        0.3167
+      ],
+      "latency_ms": 50.06
+    },
+    {
+      "query": "Glad to see my refund is approved, looking forward to the funds.",
+      "expected_faq_ids": [
+        "FAQ_028"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_028",
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_010",
+        "FAQ_001"
+      ],
+      "scores": [
+        0.4372,
+        0.3734,
+        0.3425,
+        0.1774,
+        0.1497
+      ],
+      "latency_ms": 25.65
+    },
+    {
+      "query": "Can I get an instant cash refund handed to me at a physical store?",
+      "expected_faq_ids": [],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_018",
+        "FAQ_028",
+        "FAQ_024",
+        "FAQ_010",
+        "FAQ_003"
+      ],
+      "scores": [
+        0.377,
+        0.3463,
+        0.3303,
+        0.2209,
+        0.1722
+      ],
+      "latency_ms": 51.57
+    },
+    {
+      "query": "Where can I download the official PDF invoice for last month's subscription?",
+      "expected_faq_ids": [
+        "FAQ_030"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_030",
+        "FAQ_003",
+        "FAQ_014",
+        "FAQ_018",
+        "FAQ_001"
+      ],
+      "scores": [
+        0.626,
+        0.2384,
+        0.2294,
+        0.1863,
+        0.1487
+      ],
+      "latency_ms": 25.98
+    },
+    {
+      "query": "I need a copy of my billing receipt for company expense reporting.",
+      "expected_faq_ids": [
+        "FAQ_030"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_030",
+        "FAQ_014",
+        "FAQ_003",
+        "FAQ_010",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.5033,
+        0.3808,
+        0.3211,
+        0.2395,
+        0.2325
+      ],
+      "latency_ms": 25.98
+    },
+    {
+      "query": "How do I update the credit card number on file for future renewals?",
+      "expected_faq_ids": [
+        "FAQ_014"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_014",
+        "FAQ_010",
+        "FAQ_030",
+        "FAQ_001",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.4702,
+        0.164,
+        0.1243,
+        0.1146,
+        0.0711
+      ],
+      "latency_ms": 28.23
+    },
+    {
+      "query": "My card expired, how do I change my billing payment details?",
+      "expected_faq_ids": [
+        "FAQ_014"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_014",
+        "FAQ_003",
+        "FAQ_030",
+        "FAQ_010",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.6057,
+        0.3128,
+        0.2771,
+        0.2507,
+        0.2451
+      ],
+      "latency_ms": 25.14
+    },
+    {
+      "query": "Need to update my company billing address and VAT registration number.",
+      "expected_faq_ids": [
+        "FAQ_014"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_014",
+        "FAQ_030",
+        "FAQ_003",
+        "FAQ_010",
+        "FAQ_018"
+      ],
+      "scores": [
+        0.5393,
+        0.298,
+        0.1912,
+        0.1794,
+        0.1514
+      ],
+      "latency_ms": 25.4
+    },
+    {
+      "query": "Download invoice PDF link is missing in my account dashboard.",
+      "expected_faq_ids": [
+        "FAQ_030"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_030",
+        "FAQ_003",
+        "FAQ_014",
+        "FAQ_018",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.5614,
+        0.2376,
+        0.1992,
+        0.1678,
+        0.159
+      ],
+      "latency_ms": 25.31
+    },
+    {
+      "query": "Can you email me tax invoices for all purchases made this calendar year?",
+      "expected_faq_ids": [
+        "FAQ_030"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_030",
+        "FAQ_003",
+        "FAQ_018",
+        "FAQ_014",
+        "FAQ_028"
+      ],
+      "scores": [
+        0.506,
+        0.3643,
+        0.3028,
+        0.2223,
+        0.1992
+      ],
+      "latency_ms": 25.98
+    },
+    {
+      "query": "Billing info update failed with database error code 500.",
+      "expected_faq_ids": [
+        "FAQ_014"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_014",
+        "FAQ_025",
+        "FAQ_010",
+        "FAQ_003",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.552,
+        0.3448,
+        0.2536,
+        0.2448,
+        0.2442
+      ],
+      "latency_ms": 25.67
+    },
+    {
+      "query": "Thanks for helping me locate my download invoice link so quickly!",
+      "expected_faq_ids": [
+        "FAQ_030"
+      ],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_030",
+        "FAQ_003",
+        "FAQ_014",
+        "FAQ_018",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.6609,
+        0.2906,
+        0.2184,
+        0.2022,
+        0.1487
+      ],
+      "latency_ms": 25.48
+    },
+    {
+      "query": "Can you waive my 2-year contract early termination penalty fee?",
+      "expected_faq_ids": [],
+      "topic": "billing",
+      "retrieved_faq_ids": [
+        "FAQ_010",
+        "FAQ_003",
+        "FAQ_024",
+        "FAQ_018",
+        "FAQ_025"
+      ],
+      "scores": [
+        0.2051,
+        0.2027,
+        0.1245,
+        0.1176,
+        0.1037
+      ],
+      "latency_ms": 48.02
+    },
+    {
+      "query": "Where is my package and how can I track its current location?",
+      "expected_faq_ids": [
+        "FAQ_011",
+        "FAQ_029"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_029",
+        "FAQ_008",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.3776,
+        0.3504,
+        0.3485,
+        0.2121,
+        0.1949
+      ],
+      "latency_ms": 54.02
+    },
+    {
+      "query": "How do I track my shipment with tracking code TRK-9921?",
+      "expected_faq_ids": [
+        "FAQ_029"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_029",
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_008",
+        "FAQ_002"
+      ],
+      "scores": [
+        0.463,
+        0.3881,
+        0.3593,
+        0.1881,
+        0.1436
+      ],
+      "latency_ms": 28.99
+    },
+    {
+      "query": "Has my order ORD-5541 been dispatched from the distribution warehouse yet?",
+      "expected_faq_ids": [
+        "FAQ_020"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_008",
+        "FAQ_029",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.4976,
+        0.3783,
+        0.3017,
+        0.2838,
+        0.2177
+      ],
+      "latency_ms": 28.24
+    },
+    {
+      "query": "Where can I check if my package has already shipped or is still pending?",
+      "expected_faq_ids": [
+        "FAQ_020"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_008",
+        "FAQ_021",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.6736,
+        0.418,
+        0.3474,
+        0.3285,
+        0.2959
+      ],
+      "latency_ms": 30.31
+    },
+    {
+      "query": "My package is three days late and tracking has not updated at all.",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_029",
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_008",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.4047,
+        0.4012,
+        0.3471,
+        0.2742,
+        0.1487
+      ],
+      "latency_ms": 33.55
+    },
+    {
+      "query": "Courier tracking link says delivered but nothing is on my porch.",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_011",
+        "FAQ_021",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.4571,
+        0.3595,
+        0.2902,
+        0.2558,
+        0.2516
+      ],
+      "latency_ms": 29.48
+    },
+    {
+      "query": "Can you provide the courier tracking link for my recent order?",
+      "expected_faq_ids": [
+        "FAQ_029"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_029",
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_002",
+        "FAQ_008"
+      ],
+      "scores": [
+        0.5916,
+        0.5355,
+        0.5182,
+        0.295,
+        0.28
+      ],
+      "latency_ms": 25.17
+    },
+    {
+      "query": "wher is my pakage it has not arived yet",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_029",
+        "FAQ_002",
+        "FAQ_008"
+      ],
+      "scores": [
+        0.3497,
+        0.2645,
+        0.1691,
+        0.1374,
+        0.0868
+      ],
+      "latency_ms": 48.98
+    },
+    {
+      "query": "Appreciate the quick notification that my parcel was dispatched!",
+      "expected_faq_ids": [
+        "FAQ_020"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_008",
+        "FAQ_029",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.4444,
+        0.2794,
+        0.2753,
+        0.2712,
+        0.2152
+      ],
+      "latency_ms": 24.79
+    },
+    {
+      "query": "Track order status for order ORD-7788.",
+      "expected_faq_ids": [
+        "FAQ_029"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_029",
+        "FAQ_011",
+        "FAQ_020",
+        "FAQ_002",
+        "FAQ_016"
+      ],
+      "scores": [
+        0.5027,
+        0.4962,
+        0.4664,
+        0.3039,
+        0.1663
+      ],
+      "latency_ms": 25.27
+    },
+    {
+      "query": "How many business days does standard ground delivery take to arrive?",
+      "expected_faq_ids": [
+        "FAQ_008"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_020",
+        "FAQ_021",
+        "FAQ_007",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.5894,
+        0.3309,
+        0.2356,
+        0.1489,
+        0.1466
+      ],
+      "latency_ms": 24.26
+    },
+    {
+      "query": "What is the expected shipping time frame for domestic orders?",
+      "expected_faq_ids": [
+        "FAQ_008"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_020",
+        "FAQ_004",
+        "FAQ_011",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.5777,
+        0.4142,
+        0.2727,
+        0.2462,
+        0.2178
+      ],
+      "latency_ms": 25.13
+    },
+    {
+      "query": "How much will shipping cost for delivery to a rural address?",
+      "expected_faq_ids": [
+        "FAQ_007"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_007",
+        "FAQ_021",
+        "FAQ_020",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.4698,
+        0.3868,
+        0.3776,
+        0.3064,
+        0.296
+      ],
+      "latency_ms": 25.09
+    },
+    {
+      "query": "Why are the delivery charges so expensive at the final checkout screen?",
+      "expected_faq_ids": [
+        "FAQ_007"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_004",
+        "FAQ_007",
+        "FAQ_021",
+        "FAQ_008"
+      ],
+      "scores": [
+        0.4879,
+        0.3389,
+        0.3348,
+        0.3292,
+        0.2854
+      ],
+      "latency_ms": 50.4
+    },
+    {
+      "query": "Do you provide express or overnight delivery options for urgent packages?",
+      "expected_faq_ids": [
+        "FAQ_021"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_021",
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_011",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.5211,
+        0.4528,
+        0.3563,
+        0.2575,
+        0.2167
+      ],
+      "latency_ms": 27.58
+    },
+    {
+      "query": "Can I expedite delivery to receive my shipment by tomorrow morning?",
+      "expected_faq_ids": [
+        "FAQ_021"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_021",
+        "FAQ_011",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.4917,
+        0.4045,
+        0.3054,
+        0.2963,
+        0.2557
+      ],
+      "latency_ms": 24.52
+    },
+    {
+      "query": "Package took 12 days to arrive which is much slower than 3 to 7 business days.",
+      "expected_faq_ids": [
+        "FAQ_008"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_020",
+        "FAQ_011",
+        "FAQ_007",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.589,
+        0.3548,
+        0.1999,
+        0.1886,
+        0.1719
+      ],
+      "latency_ms": 28.05
+    },
+    {
+      "query": "How much does shipping cost for heavy equipment orders?",
+      "expected_faq_ids": [
+        "FAQ_007"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_007",
+        "FAQ_020",
+        "FAQ_004",
+        "FAQ_011"
+      ],
+      "scores": [
+        0.482,
+        0.3461,
+        0.3284,
+        0.296,
+        0.2649
+      ],
+      "latency_ms": 26.8
+    },
+    {
+      "query": "Can you guarantee same-day drone delivery to my private island?",
+      "expected_faq_ids": [],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_020",
+        "FAQ_021",
+        "FAQ_004",
+        "FAQ_007"
+      ],
+      "scores": [
+        0.2966,
+        0.2696,
+        0.2304,
+        0.1312,
+        0.1185
+      ],
+      "latency_ms": 51.31
+    },
+    {
+      "query": "Express delivery arrived ahead of schedule, wonderful service!",
+      "expected_faq_ids": [
+        "FAQ_021"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_021",
+        "FAQ_011",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.4406,
+        0.3789,
+        0.3731,
+        0.2555,
+        0.2264
+      ],
+      "latency_ms": 22.93
+    },
+    {
+      "query": "What steps do I follow to return an item I ordered last week?",
+      "expected_faq_ids": [
+        "FAQ_002"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_016",
+        "FAQ_020",
+        "FAQ_029",
+        "FAQ_011"
+      ],
+      "scores": [
+        0.6765,
+        0.4231,
+        0.3964,
+        0.3737,
+        0.3409
+      ],
+      "latency_ms": 24.28
+    },
+    {
+      "query": "How do I initiate a product return through my online profile?",
+      "expected_faq_ids": [
+        "FAQ_002"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_016",
+        "FAQ_004",
+        "FAQ_021",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.4121,
+        0.3333,
+        0.2093,
+        0.1877,
+        0.1849
+      ],
+      "latency_ms": 27.62
+    },
+    {
+      "query": "What is your official return policy and how long is the return window?",
+      "expected_faq_ids": [
+        "FAQ_016"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_016",
+        "FAQ_002",
+        "FAQ_004",
+        "FAQ_020",
+        "FAQ_008"
+      ],
+      "scores": [
+        0.6063,
+        0.4187,
+        0.2988,
+        0.162,
+        0.1115
+      ],
+      "latency_ms": 28.46
+    },
+    {
+      "query": "How many days do I have to return an eligible product after delivery?",
+      "expected_faq_ids": [
+        "FAQ_016"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_016",
+        "FAQ_002",
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.3901,
+        0.37,
+        0.252,
+        0.2364,
+        0.2081
+      ],
+      "latency_ms": 49.84
+    },
+    {
+      "query": "Am I required to pay for the return shipping postage label myself?",
+      "expected_faq_ids": [
+        "FAQ_004"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_004",
+        "FAQ_002",
+        "FAQ_020",
+        "FAQ_016",
+        "FAQ_008"
+      ],
+      "scores": [
+        0.4176,
+        0.3124,
+        0.2493,
+        0.2372,
+        0.2012
+      ],
+      "latency_ms": 28.09
+    },
+    {
+      "query": "Who covers return shipping fees when returning an unwanted item?",
+      "expected_faq_ids": [
+        "FAQ_004"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_004",
+        "FAQ_002",
+        "FAQ_016",
+        "FAQ_008",
+        "FAQ_007"
+      ],
+      "scores": [
+        0.569,
+        0.4585,
+        0.4118,
+        0.2766,
+        0.2631
+      ],
+      "latency_ms": 25.66
+    },
+    {
+      "query": "Return process was rejected because package was opened.",
+      "expected_faq_ids": [
+        "FAQ_016"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_024",
+        "FAQ_016",
+        "FAQ_002",
+        "FAQ_004",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.4217,
+        0.381,
+        0.3666,
+        0.2786,
+        0.2165
+      ],
+      "latency_ms": 47.54
+    },
+    {
+      "query": "I want to send back an incorrect size, do you provide prepaid labels?",
+      "expected_faq_ids": [
+        "FAQ_002",
+        "FAQ_004"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_014",
+        "FAQ_021",
+        "FAQ_020",
+        "FAQ_003",
+        "FAQ_011"
+      ],
+      "scores": [
+        0.311,
+        0.2996,
+        0.2748,
+        0.2705,
+        0.2677
+      ],
+      "latency_ms": 51.2
+    },
+    {
+      "query": "how to retrn item pleez",
+      "expected_faq_ids": [
+        "FAQ_002"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_016",
+        "FAQ_029",
+        "FAQ_011",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.3601,
+        0.1714,
+        0.1033,
+        0.0699,
+        0.0567
+      ],
+      "latency_ms": 47.34
+    },
+    {
+      "query": "Very happy with how smooth the return process worked.",
+      "expected_faq_ids": [
+        "FAQ_002"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_016",
+        "FAQ_020",
+        "FAQ_004",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.2689,
+        0.2667,
+        0.1993,
+        0.1911,
+        0.0635
+      ],
+      "latency_ms": 52.09
+    },
+    {
+      "query": "The courier threw my parcel over the fence and damaged the product.",
+      "expected_faq_ids": [
+        "FAQ_002"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_004",
+        "FAQ_002",
+        "FAQ_011",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.3335,
+        0.2277,
+        0.2115,
+        0.2067,
+        0.1847
+      ],
+      "latency_ms": 49.96
+    },
+    {
+      "query": "Package marked as signed for by resident but I was away on vacation.",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_021",
+        "FAQ_011",
+        "FAQ_004",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.376,
+        0.2087,
+        0.2052,
+        0.156,
+        0.1479
+      ],
+      "latency_ms": 48.35
+    },
+    {
+      "query": "Delivery driver refused to bring package to my apartment door.",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_024",
+        "FAQ_008",
+        "FAQ_020",
+        "FAQ_027",
+        "FAQ_002"
+      ],
+      "scores": [
+        0.2183,
+        0.1955,
+        0.191,
+        0.142,
+        0.1376
+      ],
+      "latency_ms": 50.61
+    },
+    {
+      "query": "Can I change my delivery shipping address while the parcel is in transit?",
+      "expected_faq_ids": [],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_008",
+        "FAQ_020",
+        "FAQ_021",
+        "FAQ_007",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.291,
+        0.2757,
+        0.233,
+        0.1865,
+        0.18
+      ],
+      "latency_ms": 52.67
+    },
+    {
+      "query": "Package arrived completely waterlogged and contents ruined.",
+      "expected_faq_ids": [
+        "FAQ_002"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_004",
+        "FAQ_011",
+        "FAQ_002"
+      ],
+      "scores": [
+        0.3137,
+        0.1917,
+        0.1299,
+        0.1071,
+        0.1008
+      ],
+      "latency_ms": 51.08
+    },
+    {
+      "query": "Received shipping notification with an invalid tracking URL.",
+      "expected_faq_ids": [
+        "FAQ_029"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_019",
+        "FAQ_029",
+        "FAQ_011",
+        "FAQ_020",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.3531,
+        0.3475,
+        0.3224,
+        0.3137,
+        0.2862
+      ],
+      "latency_ms": 46.52
+    },
+    {
+      "query": "Thank you for the prompt dispatch and careful packaging.",
+      "expected_faq_ids": [
+        "FAQ_020"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_021",
+        "FAQ_008",
+        "FAQ_004",
+        "FAQ_002"
+      ],
+      "scores": [
+        0.3569,
+        0.278,
+        0.2033,
+        0.197,
+        0.1799
+      ],
+      "latency_ms": 46.79
+    },
+    {
+      "query": "Shipment delayed at regional customs clearance facility.",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_008",
+        "FAQ_011",
+        "FAQ_021",
+        "FAQ_029"
+      ],
+      "scores": [
+        0.4271,
+        0.3765,
+        0.2671,
+        0.2261,
+        0.1618
+      ],
+      "latency_ms": 24.21
+    },
+    {
+      "query": "Courier lost my order ORD-3319 entirely.",
+      "expected_faq_ids": [
+        "FAQ_011"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_011",
+        "FAQ_020",
+        "FAQ_029",
+        "FAQ_002",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.3618,
+        0.3505,
+        0.2917,
+        0.2406,
+        0.1552
+      ],
+      "latency_ms": 52.73
+    },
+    {
+      "query": "My package was shipped but tracking shows no movement for a week.",
+      "expected_faq_ids": [
+        "FAQ_011",
+        "FAQ_020"
+      ],
+      "topic": "shipping",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_029",
+        "FAQ_011",
+        "FAQ_008",
+        "FAQ_021"
+      ],
+      "scores": [
+        0.5577,
+        0.4421,
+        0.4104,
+        0.3777,
+        0.1928
+      ],
+      "latency_ms": 28.36
+    },
+    {
+      "query": "I forgot my password and cannot sign in to my account.",
+      "expected_faq_ids": [
+        "FAQ_013"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_009",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.664,
+        0.6148,
+        0.3657,
+        0.2433,
+        0.1573
+      ],
+      "latency_ms": 24.43
+    },
+    {
+      "query": "How do I trigger a password reset link for my login email?",
+      "expected_faq_ids": [
+        "FAQ_013"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_005",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.592,
+        0.289,
+        0.2014,
+        0.0508,
+        0.0205
+      ],
+      "latency_ms": 28.14
+    },
+    {
+      "query": "Why does the login portal say invalid credentials when my password is correct?",
+      "expected_faq_ids": [
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_022",
+        "FAQ_026",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.6266,
+        0.364,
+        0.1817,
+        0.1769,
+        0.1685
+      ],
+      "latency_ms": 24.69
+    },
+    {
+      "query": "I am locked out of my account due to failed authentication verification.",
+      "expected_faq_ids": [
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_026",
+        "FAQ_005",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.4985,
+        0.4656,
+        0.4404,
+        0.1667,
+        0.1164
+      ],
+      "latency_ms": 26.26
+    },
+    {
+      "query": "password reset email is not reaching my inbox or spam folder.",
+      "expected_faq_ids": [
+        "FAQ_013"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_009",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.5703,
+        0.3492,
+        0.2349,
+        0.1674,
+        0.1523
+      ],
+      "latency_ms": 25.13
+    },
+    {
+      "query": "Cant log in to portal, says account suspended or unverifid",
+      "expected_faq_ids": [
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_013",
+        "FAQ_009",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.5523,
+        0.3474,
+        0.2797,
+        0.2502,
+        0.2282
+      ],
+      "latency_ms": 25.88
+    },
+    {
+      "query": "How do I reset my credentials securely?",
+      "expected_faq_ids": [
+        "FAQ_013"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_009",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.5012,
+        0.3456,
+        0.3055,
+        0.0693,
+        0.0245
+      ],
+      "latency_ms": 24.94
+    },
+    {
+      "query": "Two-factor authentication code is rejected on every sign-in attempt.",
+      "expected_faq_ids": [
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_022",
+        "FAQ_013",
+        "FAQ_026",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.4286,
+        0.2091,
+        0.2056,
+        0.1737,
+        0.1389
+      ],
+      "latency_ms": 25.61
+    },
+    {
+      "query": "Thanks for helping me recover my locked login credentials.",
+      "expected_faq_ids": [
+        "FAQ_013"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_005",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.5149,
+        0.4999,
+        0.357,
+        0.1563,
+        0.1322
+      ],
+      "latency_ms": 27.71
+    },
+    {
+      "query": "Login page redirects in an infinite loop.",
+      "expected_faq_ids": [
+        "FAQ_015",
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_009",
+        "FAQ_013",
+        "FAQ_022",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.4567,
+        0.234,
+        0.1836,
+        0.0827,
+        0.0512
+      ],
+      "latency_ms": 39.82
+    },
+    {
+      "query": "The website shows a blank screen and loading error whenever I browse products.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.5912,
+        0.3318,
+        0.2482,
+        0.1319,
+        0.1238
+      ],
+      "latency_ms": 28.6
+    },
+    {
+      "query": "How do I fix a loading spinner that never finishes on your web page?",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.5667,
+        0.1854,
+        0.1427,
+        0.1012,
+        0.0225
+      ],
+      "latency_ms": 26.98
+    },
+    {
+      "query": "The mobile app keeps crashing immediately upon opening on iOS 18.",
+      "expected_faq_ids": [
+        "FAQ_022"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.5328,
+        0.2301,
+        0.119,
+        0.0513,
+        0.0393
+      ],
+      "latency_ms": 27.36
+    },
+    {
+      "query": "Android application freezes during navigation and forces close.",
+      "expected_faq_ids": [
+        "FAQ_022"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.3793,
+        0.144,
+        0.0938,
+        0.0168,
+        0.0136
+      ],
+      "latency_ms": 46.63
+    },
+    {
+      "query": "Page loading fails with ERR_CONNECTION_TIMED_OUT.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_022",
+        "FAQ_005",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.5822,
+        0.3236,
+        0.2263,
+        0.0341,
+        0.0245
+      ],
+      "latency_ms": 25.05
+    },
+    {
+      "query": "App performance improved significantly after following your cache clear advice!",
+      "expected_faq_ids": [
+        "FAQ_022"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.3703,
+        0.2029,
+        0.0594,
+        0.013,
+        0.0
+      ],
+      "latency_ms": 48.12
+    },
+    {
+      "query": "mobyle app crashin all the time plez fix it",
+      "expected_faq_ids": [
+        "FAQ_022"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.4406,
+        0.2729,
+        0.2091,
+        0.0989,
+        0.0754
+      ],
+      "latency_ms": 27.55
+    },
+    {
+      "query": "JavaScript console error Uncaught TypeError breaking checkout button.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.2813,
+        0.1804,
+        0.1502,
+        0.0367,
+        0.0024
+      ],
+      "latency_ms": 49.66
+    },
+    {
+      "query": "App not working after installing latest version 3.4.",
+      "expected_faq_ids": [
+        "FAQ_022"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.6247,
+        0.2575,
+        0.1296,
+        0.0529,
+        0.0057
+      ],
+      "latency_ms": 23.0
+    },
+    {
+      "query": "Website refreshed properly and cart is now displaying items.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.335,
+        0.2418,
+        0.1199,
+        0.1034,
+        0.0678
+      ],
+      "latency_ms": 52.33
+    },
+    {
+      "query": "How can I contact technical support directly for urgent developer assistance?",
+      "expected_faq_ids": [
+        "FAQ_005"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_005",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.6618,
+        0.2544,
+        0.2138,
+        0.2095,
+        0.2004
+      ],
+      "latency_ms": 25.88
+    },
+    {
+      "query": "I need help from a support engineer to troubleshoot an API integration error.",
+      "expected_faq_ids": [
+        "FAQ_005"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.3782,
+        0.3754,
+        0.3148,
+        0.3067,
+        0.1963
+      ],
+      "latency_ms": 52.53
+    },
+    {
+      "query": "How do I completely delete my account and remove my personal profile data?",
+      "expected_faq_ids": [
+        "FAQ_026"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_026",
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_009",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.5327,
+        0.2383,
+        0.2179,
+        0.0183,
+        0.0
+      ],
+      "latency_ms": 27.38
+    },
+    {
+      "query": "I want my account permanently closed and personal data erased under GDPR.",
+      "expected_faq_ids": [
+        "FAQ_026"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_026",
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.4843,
+        0.3074,
+        0.2037,
+        0.0711,
+        0.0
+      ],
+      "latency_ms": 23.26
+    },
+    {
+      "query": "Where is the account termination option in profile settings?",
+      "expected_faq_ids": [
+        "FAQ_026"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_026",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_009",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.4358,
+        0.2167,
+        0.131,
+        0.0821,
+        0.062
+      ],
+      "latency_ms": 27.56
+    },
+    {
+      "query": "Can I talk to a technical representative via phone or live chat?",
+      "expected_faq_ids": [
+        "FAQ_005"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_005",
+        "FAQ_026",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.5833,
+        0.1309,
+        0.0872,
+        0.0609,
+        0.0553
+      ],
+      "latency_ms": 25.9
+    },
+    {
+      "query": "Technical support engineer resolved our webhook issue swiftly.",
+      "expected_faq_ids": [
+        "FAQ_005"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_005",
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.2703,
+        0.2659,
+        0.2583,
+        0.2246,
+        0.1086
+      ],
+      "latency_ms": 48.09
+    },
+    {
+      "query": "Can you migrate my self-hosted SQL database into your cloud automatically?",
+      "expected_faq_ids": [],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_029",
+        "FAQ_026",
+        "FAQ_008",
+        "FAQ_014",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.1568,
+        0.1533,
+        0.1399,
+        0.1306,
+        0.1216
+      ],
+      "latency_ms": 51.25
+    },
+    {
+      "query": "delete acount plez",
+      "expected_faq_ids": [
+        "FAQ_026"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_026",
+        "FAQ_013",
+        "FAQ_015",
+        "FAQ_009",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.4491,
+        0.2471,
+        0.1784,
+        0.1587,
+        0.1028
+      ],
+      "latency_ms": 23.43
+    },
+    {
+      "query": "Tech support chat option is grayed out on the portal.",
+      "expected_faq_ids": [
+        "FAQ_005"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_005",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_009",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.543,
+        0.3013,
+        0.2725,
+        0.2719,
+        0.2145
+      ],
+      "latency_ms": 26.95
+    },
+    {
+      "query": "Is this portal compatible with Linux running Firefox ESR?",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.1756,
+        0.1471,
+        0.0937,
+        0.0475,
+        0.0183
+      ],
+      "latency_ms": 48.48
+    },
+    {
+      "query": "Session times out every 2 minutes while drafting a support ticket.",
+      "expected_faq_ids": [
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.3245,
+        0.282,
+        0.1616,
+        0.1562,
+        0.0982
+      ],
+      "latency_ms": 49.85
+    },
+    {
+      "query": "Getting 403 Forbidden when accessing the user settings page.",
+      "expected_faq_ids": [
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_009",
+        "FAQ_026",
+        "FAQ_022",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.3295,
+        0.2139,
+        0.1931,
+        0.1779,
+        0.1068
+      ],
+      "latency_ms": 47.43
+    },
+    {
+      "query": "I suspect someone unauthorized logged into my user account from overseas.",
+      "expected_faq_ids": [
+        "FAQ_013",
+        "FAQ_015"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_026",
+        "FAQ_013",
+        "FAQ_009",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.4651,
+        0.2502,
+        0.2285,
+        0.1688,
+        0.1047
+      ],
+      "latency_ms": 25.39
+    },
+    {
+      "query": "Can I install your mobile app on a jailbroken or rooted device?",
+      "expected_faq_ids": [],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.3685,
+        0.0787,
+        0.043,
+        0.0421,
+        0.0213
+      ],
+      "latency_ms": 54.91
+    },
+    {
+      "query": "Audio is not playing in video tutorial clips on the site.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_015",
+        "FAQ_005",
+        "FAQ_013"
+      ],
+      "scores": [
+        0.2988,
+        0.2602,
+        0.1954,
+        0.1098,
+        0.0867
+      ],
+      "latency_ms": 51.09
+    },
+    {
+      "query": "Browser extension interfering with form submission.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_009",
+        "FAQ_005",
+        "FAQ_015",
+        "FAQ_022",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.2275,
+        0.1311,
+        0.1294,
+        0.0887,
+        0.0561
+      ],
+      "latency_ms": 44.62
+    },
+    {
+      "query": "Great technical documentation for your developer endpoints!",
+      "expected_faq_ids": [
+        "FAQ_005"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_023",
+        "FAQ_005",
+        "FAQ_019",
+        "FAQ_027",
+        "FAQ_030"
+      ],
+      "scores": [
+        0.3416,
+        0.2131,
+        0.1695,
+        0.1445,
+        0.1423
+      ],
+      "latency_ms": 48.65
+    },
+    {
+      "query": "SSL certificate invalid error when connecting to your domain.",
+      "expected_faq_ids": [
+        "FAQ_009"
+      ],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_009",
+        "FAQ_022",
+        "FAQ_026",
+        "FAQ_005"
+      ],
+      "scores": [
+        0.3253,
+        0.3178,
+        0.2436,
+        0.1103,
+        0.1072
+      ],
+      "latency_ms": 50.91
+    },
+    {
+      "query": "Can you provide root SSH credentials to your production database?",
+      "expected_faq_ids": [],
+      "topic": "technical",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_026",
+        "FAQ_005",
+        "FAQ_022"
+      ],
+      "scores": [
+        0.1222,
+        0.1082,
+        0.0758,
+        0.0106,
+        0.0
+      ],
+      "latency_ms": 48.82
+    },
+    {
+      "query": "I want to file a formal complaint regarding terrible customer service.",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_027",
+        "FAQ_019",
+        "FAQ_017",
+        "FAQ_006",
+        "FAQ_023"
+      ],
+      "scores": [
+        0.5572,
+        0.4804,
+        0.3548,
+        0.1853,
+        0.1335
+      ],
+      "latency_ms": 27.03
+    },
+    {
+      "query": "How do I register an official grievance with management?",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_019",
+        "FAQ_017",
+        "FAQ_027",
+        "FAQ_023",
+        "FAQ_006"
+      ],
+      "scores": [
+        0.3474,
+        0.3277,
+        0.3022,
+        0.1061,
+        0.0668
+      ],
+      "latency_ms": 48.74
+    },
+    {
+      "query": "Can I escalate my unresolved complaint to a senior supervisor?",
+      "expected_faq_ids": [
+        "FAQ_017"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_017",
+        "FAQ_027",
+        "FAQ_019",
+        "FAQ_006",
+        "FAQ_012"
+      ],
+      "scores": [
+        0.7383,
+        0.3321,
+        0.2974,
+        0.092,
+        0.0091
+      ],
+      "latency_ms": 25.98
+    },
+    {
+      "query": "I demand to speak to an executive manager immediately regarding my case.",
+      "expected_faq_ids": [
+        "FAQ_017"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_017",
+        "FAQ_027",
+        "FAQ_019",
+        "FAQ_006",
+        "FAQ_012"
+      ],
+      "scores": [
+        0.3325,
+        0.2616,
+        0.2601,
+        0.1796,
+        0.1093
+      ],
+      "latency_ms": 51.61
+    },
+    {
+      "query": "Where can I check the ongoing status of my filed complaint ticket?",
+      "expected_faq_ids": [
+        "FAQ_019"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_019",
+        "FAQ_027",
+        "FAQ_017",
+        "FAQ_006",
+        "FAQ_012"
+      ],
+      "scores": [
+        0.7613,
+        0.5778,
+        0.3488,
+        0.2244,
+        0.2067
+      ],
+      "latency_ms": 25.64
+    },
+    {
+      "query": "Checking progress on previously submitted grievance number TKT-9901.",
+      "expected_faq_ids": [
+        "FAQ_019"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_019",
+        "FAQ_027",
+        "FAQ_017",
+        "FAQ_006",
+        "FAQ_012"
+      ],
+      "scores": [
+        0.3734,
+        0.239,
+        0.2031,
+        0.1639,
+        0.161
+      ],
+      "latency_ms": 56.92
+    },
+    {
+      "query": "Agent was extremely rude and unhelpful on the phone yesterday.",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_017",
+        "FAQ_027",
+        "FAQ_019",
+        "FAQ_006",
+        "FAQ_023"
+      ],
+      "scores": [
+        0.1168,
+        0.1081,
+        0.0792,
+        0.0,
+        0.0
+      ],
+      "latency_ms": 46.82
+    },
+    {
+      "query": "want to fil complant abt poor servise",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_025",
+        "FAQ_005",
+        "FAQ_023",
+        "FAQ_001",
+        "FAQ_024"
+      ],
+      "scores": [
+        0.2391,
+        0.1393,
+        0.1119,
+        0.1106,
+        0.1036
+      ],
+      "latency_ms": 50.81
+    },
+    {
+      "query": "Senior manager followed up and resolved my grievance quickly, thank you.",
+      "expected_faq_ids": [
+        "FAQ_017"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_017",
+        "FAQ_027",
+        "FAQ_019",
+        "FAQ_012",
+        "FAQ_006"
+      ],
+      "scores": [
+        0.4012,
+        0.2469,
+        0.2411,
+        0.0644,
+        0.0522
+      ],
+      "latency_ms": 25.42
+    },
+    {
+      "query": "Where is my complaint update?",
+      "expected_faq_ids": [
+        "FAQ_019"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_019",
+        "FAQ_027",
+        "FAQ_017",
+        "FAQ_012",
+        "FAQ_006"
+      ],
+      "scores": [
+        0.6082,
+        0.541,
+        0.3867,
+        0.2614,
+        0.2314
+      ],
+      "latency_ms": 27.14
+    },
+    {
+      "query": "Does this electronic product include a manufacturer warranty?",
+      "expected_faq_ids": [
+        "FAQ_006"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_006",
+        "FAQ_023",
+        "FAQ_012",
+        "FAQ_017",
+        "FAQ_019"
+      ],
+      "scores": [
+        0.5606,
+        0.1918,
+        0.1708,
+        0.1158,
+        0.0715
+      ],
+      "latency_ms": 23.94
+    },
+    {
+      "query": "What does the 1-year product warranty coverage include?",
+      "expected_faq_ids": [
+        "FAQ_006"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_006",
+        "FAQ_023",
+        "FAQ_019",
+        "FAQ_012",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.5511,
+        0.1727,
+        0.134,
+        0.1151,
+        0.0893
+      ],
+      "latency_ms": 28.27
+    },
+    {
+      "query": "Is this laptop model currently in stock or sold out?",
+      "expected_faq_ids": [
+        "FAQ_012"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_006",
+        "FAQ_019",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.4161,
+        0.2831,
+        0.2621,
+        0.1613,
+        0.0387
+      ],
+      "latency_ms": 27.38
+    },
+    {
+      "query": "How can I check inventory availability for item SKU-4412?",
+      "expected_faq_ids": [
+        "FAQ_012"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_019",
+        "FAQ_006",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.4656,
+        0.2979,
+        0.2784,
+        0.2202,
+        0.0848
+      ],
+      "latency_ms": 25.71
+    },
+    {
+      "query": "Where can I find the complete hardware dimensions and technical specifications?",
+      "expected_faq_ids": [
+        "FAQ_023"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_023",
+        "FAQ_012",
+        "FAQ_006",
+        "FAQ_019",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.5945,
+        0.1905,
+        0.1844,
+        0.1695,
+        0.0715
+      ],
+      "latency_ms": 25.01
+    },
+    {
+      "query": "Are battery specifications and voltage requirements detailed on the listing?",
+      "expected_faq_ids": [
+        "FAQ_023"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_023",
+        "FAQ_006",
+        "FAQ_012",
+        "FAQ_017",
+        "FAQ_019"
+      ],
+      "scores": [
+        0.3746,
+        0.2495,
+        0.1937,
+        0.1167,
+        0.0852
+      ],
+      "latency_ms": 46.71
+    },
+    {
+      "query": "Product page does not show whether product has international warranty.",
+      "expected_faq_ids": [
+        "FAQ_006"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_006",
+        "FAQ_019",
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.498,
+        0.2844,
+        0.2685,
+        0.2516,
+        0.1384
+      ],
+      "latency_ms": 28.63
+    },
+    {
+      "query": "Out of stock notification was sent for an item marked available.",
+      "expected_faq_ids": [
+        "FAQ_012"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_012",
+        "FAQ_011",
+        "FAQ_021",
+        "FAQ_019"
+      ],
+      "scores": [
+        0.3952,
+        0.393,
+        0.2687,
+        0.2652,
+        0.2523
+      ],
+      "latency_ms": 51.54
+    },
+    {
+      "query": "Is this gadget in stock right now?",
+      "expected_faq_ids": [
+        "FAQ_012"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_019",
+        "FAQ_006",
+        "FAQ_017"
+      ],
+      "scores": [
+        0.4206,
+        0.1899,
+        0.1681,
+        0.1563,
+        0.0434
+      ],
+      "latency_ms": 25.02
+    },
+    {
+      "query": "Found all hardware specs easily on the product page, great job.",
+      "expected_faq_ids": [
+        "FAQ_023"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_023",
+        "FAQ_019",
+        "FAQ_012",
+        "FAQ_006",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.5291,
+        0.2239,
+        0.2013,
+        0.1759,
+        0.0914
+      ],
+      "latency_ms": 25.76
+    },
+    {
+      "query": "My package arrived late and customer service gave me completely contradictory answers.",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_020",
+        "FAQ_003",
+        "FAQ_021",
+        "FAQ_010",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.2997,
+        0.2994,
+        0.2329,
+        0.224,
+        0.2039
+      ],
+      "latency_ms": 52.69
+    },
+    {
+      "query": "The portal layout is confusing, cluttered, and difficult for non-technical users.",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_023",
+        "FAQ_027",
+        "FAQ_026",
+        "FAQ_024"
+      ],
+      "scores": [
+        0.2043,
+        0.1583,
+        0.1479,
+        0.1376,
+        0.1372
+      ],
+      "latency_ms": 73.54
+    },
+    {
+      "query": "Returning to your service after a long absence, very impressed with the upgrades!",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_020",
+        "FAQ_012",
+        "FAQ_016",
+        "FAQ_006"
+      ],
+      "scores": [
+        0.1646,
+        0.1588,
+        0.1463,
+        0.139,
+        0.1048
+      ],
+      "latency_ms": 85.57
+    },
+    {
+      "query": "Need assistance regarding recent activity on my profile.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_029",
+        "FAQ_026",
+        "FAQ_011",
+        "FAQ_015",
+        "FAQ_009"
+      ],
+      "scores": [
+        0.2712,
+        0.2341,
+        0.2319,
+        0.2085,
+        0.2009
+      ],
+      "latency_ms": 63.31
+    },
+    {
+      "query": "Help please.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_026",
+        "FAQ_005",
+        "FAQ_009",
+        "FAQ_013",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.1689,
+        0.156,
+        0.1516,
+        0.1485,
+        0.1476
+      ],
+      "latency_ms": 115.1
+    },
+    {
+      "query": "Something went wrong with everything.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_015",
+        "FAQ_022",
+        "FAQ_009",
+        "FAQ_025",
+        "FAQ_020"
+      ],
+      "scores": [
+        0.2611,
+        0.2532,
+        0.2456,
+        0.2298,
+        0.128
+      ],
+      "latency_ms": 55.43
+    },
+    {
+      "query": "What are your physical office hours and corporate headquarters address?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_021",
+        "FAQ_014",
+        "FAQ_012",
+        "FAQ_011",
+        "FAQ_020"
+      ],
+      "scores": [
+        0.1754,
+        0.1708,
+        0.1622,
+        0.1576,
+        0.1361
+      ],
+      "latency_ms": 51.27
+    },
+    {
+      "query": "Do you sponsor collegiate coding hackathons or student clubs?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_001",
+        "FAQ_003",
+        "FAQ_004",
+        "FAQ_021",
+        "FAQ_006"
+      ],
+      "scores": [
+        0.1629,
+        0.1469,
+        0.1314,
+        0.13,
+        0.1274
+      ],
+      "latency_ms": 51.65
+    },
+    {
+      "query": "Where is the CEO's personal direct phone number listed?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_011",
+        "FAQ_014",
+        "FAQ_005",
+        "FAQ_019",
+        "FAQ_012"
+      ],
+      "scores": [
+        0.2259,
+        0.2012,
+        0.1975,
+        0.1834,
+        0.1825
+      ],
+      "latency_ms": 49.36
+    },
+    {
+      "query": "General inquiry about partnership and vendor agreements.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_023",
+        "FAQ_006",
+        "FAQ_012",
+        "FAQ_017",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.2831,
+        0.2586,
+        0.2,
+        0.1367,
+        0.1259
+      ],
+      "latency_ms": 45.07
+    },
+    {
+      "query": "I really enjoy using your platform and wanted to share positive feedback!",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_022",
+        "FAQ_012",
+        "FAQ_024",
+        "FAQ_027",
+        "FAQ_019"
+      ],
+      "scores": [
+        0.1505,
+        0.1059,
+        0.1045,
+        0.0987,
+        0.09
+      ],
+      "latency_ms": 44.77
+    },
+    {
+      "query": "Kudos to your customer support team for excellent service this week.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_027",
+        "FAQ_019",
+        "FAQ_012",
+        "FAQ_017",
+        "FAQ_006"
+      ],
+      "scores": [
+        0.2288,
+        0.2147,
+        0.1929,
+        0.1552,
+        0.1252
+      ],
+      "latency_ms": 48.24
+    },
+    {
+      "query": "Your company is unethical and misleading customers with false claims.",
+      "expected_faq_ids": [
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_003",
+        "FAQ_010",
+        "FAQ_006",
+        "FAQ_024",
+        "FAQ_026"
+      ],
+      "scores": [
+        0.3004,
+        0.2999,
+        0.2576,
+        0.2332,
+        0.1914
+      ],
+      "latency_ms": 51.53
+    },
+    {
+      "query": "Where can I submit general product feature suggestions?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_023",
+        "FAQ_012",
+        "FAQ_019",
+        "FAQ_006",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.4508,
+        0.3645,
+        0.2204,
+        0.1982,
+        0.1974
+      ],
+      "latency_ms": 23.79
+    },
+    {
+      "query": "Are you hiring remote technical support representatives in Europe?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_005",
+        "FAQ_021",
+        "FAQ_019",
+        "FAQ_012",
+        "FAQ_017"
+      ],
+      "scores": [
+        0.4036,
+        0.1949,
+        0.1834,
+        0.1785,
+        0.1772
+      ],
+      "latency_ms": 53.54
+    },
+    {
+      "query": "Press inquiry from tech news outlet looking for an official quote.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_006",
+        "FAQ_019",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.2716,
+        0.2481,
+        0.2245,
+        0.176,
+        0.1484
+      ],
+      "latency_ms": 53.14
+    },
+    {
+      "query": "Can I get an NDA signed before discussing commercial licensing?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_006",
+        "FAQ_017",
+        "FAQ_019"
+      ],
+      "scores": [
+        0.1527,
+        0.1467,
+        0.1394,
+        0.0492,
+        0.003
+      ],
+      "latency_ms": 50.05
+    },
+    {
+      "query": "How do I become an affiliate marketer for your products?",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_021",
+        "FAQ_003",
+        "FAQ_012",
+        "FAQ_023",
+        "FAQ_004"
+      ],
+      "scores": [
+        0.1899,
+        0.1714,
+        0.151,
+        0.1339,
+        0.0917
+      ],
+      "latency_ms": 55.62
+    },
+    {
+      "query": "Worst experience ever, closing all accounts immediately.",
+      "expected_faq_ids": [
+        "FAQ_026",
+        "FAQ_027"
+      ],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_026",
+        "FAQ_015",
+        "FAQ_013",
+        "FAQ_025",
+        "FAQ_010"
+      ],
+      "scores": [
+        0.3075,
+        0.2744,
+        0.1883,
+        0.1601,
+        0.1364
+      ],
+      "latency_ms": 47.79
+    },
+    {
+      "query": "Thank you for the quick and polite response from your staff.",
+      "expected_faq_ids": [],
+      "topic": "other",
+      "retrieved_faq_ids": [
+        "FAQ_002",
+        "FAQ_017",
+        "FAQ_019",
+        "FAQ_011",
+        "FAQ_027"
+      ],
+      "scores": [
+        0.2223,
+        0.1961,
+        0.1715,
+        0.1702,
+        0.1693
+      ],
+      "latency_ms": 49.92
+    }
+  ]
+}

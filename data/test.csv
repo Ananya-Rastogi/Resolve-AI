@@ -1,0 +1,33 @@
+text,topic,sentiment
+invoice corrected successfully,billing,POSITIVE
+delivery confirmation received,shipping,POSITIVE
+wrong delivery status shown,shipping,NEGATIVE
+feature request for dashboard,technical,POSITIVE
+package not delivered,shipping,NEGATIVE
+account closure request,other,NEGATIVE
+appreciate quick assistance,other,POSITIVE
+interested in enterprise plan,other,POSITIVE
+service outage complaint,other,NEGATIVE
+bug in checkout process,technical,NEGATIVE
+need help understanding features,other,POSITIVE
+discount not applied,billing,NEGATIVE
+billing team clarified issue,billing,POSITIVE
+billing discrepancy noticed,billing,NEGATIVE
+package delivered to wrong address,shipping,NEGATIVE
+two factor authentication issue,technical,NEGATIVE
+need shipment invoice,shipping,POSITIVE
+request refund for cancelled order,billing,NEGATIVE
+unable to reset password,technical,NEGATIVE
+extremely unhappy with service,other,NEGATIVE
+delivery arrived before time,shipping,POSITIVE
+subscription cancelled but charged,billing,NEGATIVE
+compliment to customer care team,other,POSITIVE
+app crash on login,technical,NEGATIVE
+duplicate invoice generated,billing,NEGATIVE
+payment confirmation not received,billing,NEGATIVE
+late delivery complaint,shipping,NEGATIVE
+delivery delayed due to weather,shipping,NEGATIVE
+mobile app not opening,technical,NEGATIVE
+new update looks good,technical,POSITIVE
+bug in payment gateway,technical,NEGATIVE
+general inquiry about service,other,POSITIVE

@@ -1,0 +1,413 @@
+{
+  "dataset_held_out_count": 100,
+  "dataset_validation_count": 60,
+  "validation_threshold_sweep": [
+    {
+      "threshold": 0.4,
+      "fastpath_count": 21,
+      "fastpath_percentage": 35.0,
+      "fallback_count": 39,
+      "fallback_percentage": 65.0,
+      "topic_macro_f1": 0.8138,
+      "topic_accuracy": 0.8167,
+      "incorrect_routing_count": 11,
+      "incorrect_routing_rate": 0.1833,
+      "latency_median_ms": 0.87,
+      "latency_mean_ms": 0.98,
+      "latency_p95_ms": 1.67
+    },
+    {
+      "threshold": 0.5,
+      "fastpath_count": 7,
+      "fastpath_percentage": 11.67,
+      "fallback_count": 53,
+      "fallback_percentage": 88.33,
+      "topic_macro_f1": 0.8133,
+      "topic_accuracy": 0.8167,
+      "incorrect_routing_count": 11,
+      "incorrect_routing_rate": 0.1833,
+      "latency_median_ms": 0.98,
+      "latency_mean_ms": 1.07,
+      "latency_p95_ms": 1.76
+    },
+    {
+      "threshold": 0.6,
+      "fastpath_count": 0,
+      "fastpath_percentage": 0.0,
+      "fallback_count": 60,
+      "fallback_percentage": 100.0,
+      "topic_macro_f1": 0.8133,
+      "topic_accuracy": 0.8167,
+      "incorrect_routing_count": 11,
+      "incorrect_routing_rate": 0.1833,
+      "latency_median_ms": 0.79,
+      "latency_mean_ms": 0.85,
+      "latency_p95_ms": 1.28
+    },
+    {
+      "threshold": 0.7,
+      "fastpath_count": 0,
+      "fastpath_percentage": 0.0,
+      "fallback_count": 60,
+      "fallback_percentage": 100.0,
+      "topic_macro_f1": 0.8133,
+      "topic_accuracy": 0.8167,
+      "incorrect_routing_count": 11,
+      "incorrect_routing_rate": 0.1833,
+      "latency_median_ms": 0.95,
+      "latency_mean_ms": 1.1,
+      "latency_p95_ms": 1.72
+    },
+    {
+      "threshold": 0.8,
+      "fastpath_count": 0,
+      "fastpath_percentage": 0.0,
+      "fallback_count": 60,
+      "fallback_percentage": 100.0,
+      "topic_macro_f1": 0.8133,
+      "topic_accuracy": 0.8167,
+      "incorrect_routing_count": 11,
+      "incorrect_routing_rate": 0.1833,
+      "latency_median_ms": 1.06,
+      "latency_mean_ms": 1.12,
+      "latency_p95_ms": 1.66
+    }
+  ],
+  "selected_production_threshold": 0.5,
+  "ml_vs_llm_agreement": {
+    "topic_agreement_rate": 0.67,
+    "sentiment_agreement_rate": 0.85
+  },
+  "ml_only": {
+    "topic_metrics": {
+      "accuracy": 0.72,
+      "macro_precision": 0.7354,
+      "macro_recall": 0.72,
+      "macro_f1": 0.7011,
+      "per_class": {
+        "billing": {
+          "precision": 0.6552,
+          "recall": 0.76,
+          "f1": 0.7037,
+          "support": 25
+        },
+        "other": {
+          "precision": 0.8182,
+          "recall": 0.36,
+          "f1": 0.5,
+          "support": 25
+        },
+        "shipping": {
+          "precision": 0.7097,
+          "recall": 0.88,
+          "f1": 0.7857,
+          "support": 25
+        },
+        "technical": {
+          "precision": 0.7586,
+          "recall": 0.88,
+          "f1": 0.8148,
+          "support": 25
+        }
+      },
+      "confusion_matrix": [
+        [
+          19,
+          1,
+          3,
+          2
+        ],
+        [
+          5,
+          9,
+          6,
+          5
+        ],
+        [
+          3,
+          0,
+          22,
+          0
+        ],
+        [
+          2,
+          1,
+          0,
+          22
+        ]
+      ],
+      "labels": [
+        "billing",
+        "other",
+        "shipping",
+        "technical"
+      ],
+      "sample_count": 100
+    },
+    "sentiment_metrics": {
+      "accuracy": 0.65,
+      "macro_precision": 0.7458,
+      "macro_recall": 0.5667,
+      "macro_f1": 0.5133,
+      "per_class": {
+        "NEGATIVE": {
+          "precision": 0.6344,
+          "recall": 0.9833,
+          "f1": 0.7712,
+          "support": 60
+        },
+        "POSITIVE": {
+          "precision": 0.8571,
+          "recall": 0.15,
+          "f1": 0.2553,
+          "support": 40
+        }
+      },
+      "confusion_matrix": [
+        [
+          59,
+          1
+        ],
+        [
+          34,
+          6
+        ]
+      ],
+      "labels": [
+        "NEGATIVE",
+        "POSITIVE"
+      ],
+      "sample_count": 100
+    },
+    "latency": {
+      "mean": 0.89,
+      "median": 0.78,
+      "p95": 1.51,
+      "p99": 1.96,
+      "sample_count": 100
+    }
+  },
+  "llm_only": {
+    "topic_metrics": {
+      "accuracy": 0.81,
+      "macro_precision": 0.8593,
+      "macro_recall": 0.81,
+      "macro_f1": 0.8093,
+      "per_class": {
+        "billing": {
+          "precision": 0.8519,
+          "recall": 0.92,
+          "f1": 0.8846,
+          "support": 25
+        },
+        "other": {
+          "precision": 1.0,
+          "recall": 0.64,
+          "f1": 0.7805,
+          "support": 25
+        },
+        "shipping": {
+          "precision": 0.9444,
+          "recall": 0.68,
+          "f1": 0.7907,
+          "support": 25
+        },
+        "technical": {
+          "precision": 0.641,
+          "recall": 1.0,
+          "f1": 0.7812,
+          "support": 25
+        }
+      },
+      "confusion_matrix": [
+        [
+          23,
+          0,
+          0,
+          2
+        ],
+        [
+          1,
+          16,
+          1,
+          7
+        ],
+        [
+          3,
+          0,
+          17,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          25
+        ]
+      ],
+      "labels": [
+        "billing",
+        "other",
+        "shipping",
+        "technical"
+      ],
+      "sample_count": 100
+    },
+    "sentiment_metrics": {
+      "accuracy": 0.7,
+      "macro_precision": 0.7455,
+      "macro_recall": 0.6375,
+      "macro_f1": 0.628,
+      "per_class": {
+        "NEGATIVE": {
+          "precision": 0.6786,
+          "recall": 0.95,
+          "f1": 0.7917,
+          "support": 60
+        },
+        "POSITIVE": {
+          "precision": 0.8125,
+          "recall": 0.325,
+          "f1": 0.4643,
+          "support": 40
+        }
+      },
+      "confusion_matrix": [
+        [
+          57,
+          3
+        ],
+        [
+          27,
+          13
+        ]
+      ],
+      "labels": [
+        "NEGATIVE",
+        "POSITIVE"
+      ],
+      "sample_count": 100
+    },
+    "latency": {
+      "mean": 0.01,
+      "median": 0.01,
+      "p95": 0.02,
+      "p99": 0.02,
+      "sample_count": 100
+    }
+  },
+  "hybrid_production": {
+    "threshold": 0.5,
+    "fastpath_count": 13,
+    "fastpath_rate": 0.13,
+    "fallback_count": 87,
+    "fallback_rate": 0.87,
+    "topic_metrics": {
+      "accuracy": 0.82,
+      "macro_precision": 0.8683,
+      "macro_recall": 0.82,
+      "macro_f1": 0.8205,
+      "per_class": {
+        "billing": {
+          "precision": 0.8846,
+          "recall": 0.92,
+          "f1": 0.902,
+          "support": 25
+        },
+        "other": {
+          "precision": 1.0,
+          "recall": 0.64,
+          "f1": 0.7805,
+          "support": 25
+        },
+        "shipping": {
+          "precision": 0.9474,
+          "recall": 0.72,
+          "f1": 0.8182,
+          "support": 25
+        },
+        "technical": {
+          "precision": 0.641,
+          "recall": 1.0,
+          "f1": 0.7812,
+          "support": 25
+        }
+      },
+      "confusion_matrix": [
+        [
+          23,
+          0,
+          0,
+          2
+        ],
+        [
+          1,
+          16,
+          1,
+          7
+        ],
+        [
+          2,
+          0,
+          18,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          25
+        ]
+      ],
+      "labels": [
+        "billing",
+        "other",
+        "shipping",
+        "technical"
+      ],
+      "sample_count": 100
+    },
+    "sentiment_metrics": {
+      "accuracy": 0.69,
+      "macro_precision": 0.7353,
+      "macro_recall": 0.625,
+      "macro_f1": 0.6113,
+      "per_class": {
+        "NEGATIVE": {
+          "precision": 0.6706,
+          "recall": 0.95,
+          "f1": 0.7862,
+          "support": 60
+        },
+        "POSITIVE": {
+          "precision": 0.8,
+          "recall": 0.3,
+          "f1": 0.4364,
+          "support": 40
+        }
+      },
+      "confusion_matrix": [
+        [
+          57,
+          3
+        ],
+        [
+          28,
+          12
+        ]
+      ],
+      "labels": [
+        "NEGATIVE",
+        "POSITIVE"
+      ],
+      "sample_count": 100
+    },
+    "latency": {
+      "mean": 0.81,
+      "median": 0.72,
+      "p95": 1.27,
+      "p99": 1.41,
+      "sample_count": 100
+    }
+  }
+}

@@ -1,0 +1,25 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	classification(classification)
+	llm_classification(llm_classification)
+	priority(priority)
+	routing(routing)
+	escalation(escalation)
+	response(response)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> classification;
+	classification -.-> llm_classification;
+	classification -.-> priority;
+	escalation --> response;
+	llm_classification --> priority;
+	priority --> routing;
+	routing --> escalation;
+	response --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

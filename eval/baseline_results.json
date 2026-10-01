@@ -1,0 +1,199 @@
+{
+  "dataset": {
+    "source_dataset": "data/tickets_training.csv",
+    "train_samples": 125,
+    "test_samples": 32,
+    "split_ratio": "80/20 stratified",
+    "random_state": 42,
+    "topic_distribution_train": {
+      "billing": 32,
+      "shipping": 32,
+      "technical": 32,
+      "other": 29
+    },
+    "topic_distribution_test": {
+      "billing": 8,
+      "shipping": 8,
+      "technical": 8,
+      "other": 8
+    },
+    "sentiment_distribution_train": {
+      "NEGATIVE": 76,
+      "POSITIVE": 49
+    },
+    "sentiment_distribution_test": {
+      "NEGATIVE": 20,
+      "POSITIVE": 12
+    }
+  },
+  "data_leakage_check": {
+    "has_leakage": false,
+    "overlapping_samples_count": 0,
+    "overlapping_samples": [],
+    "train_samples_count": 125,
+    "test_samples_count": 32
+  },
+  "models": {
+    "feature_extractor": "TfidfVectorizer(stop_words='english', ngram_range=(1, 2), max_features=1000)",
+    "topic_classifier": "MultinomialNB()",
+    "sentiment_classifier": "LogisticRegression(max_iter=1000)",
+    "artifacts_location": "C:\\Users\\anany\\Downloads\\ticket_env\\models"
+  },
+  "topic_classification": {
+    "accuracy": 0.875,
+    "macro_f1": 0.8718020541549953,
+    "macro_precision": 0.8865079365079366,
+    "macro_recall": 0.875,
+    "classes": [
+      "billing",
+      "other",
+      "shipping",
+      "technical"
+    ],
+    "per_class_f1": {
+      "billing": 0.8888888888888888,
+      "other": 0.8571428571428571,
+      "shipping": 0.9411764705882353,
+      "technical": 0.8
+    },
+    "confusion_matrix": [
+      [
+        8,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        6,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        1,
+        0,
+        1,
+        6
+      ]
+    ],
+    "detailed_report": {
+      "billing": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1-score": 0.8888888888888888,
+        "support": 8.0
+      },
+      "other": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1-score": 0.8571428571428571,
+        "support": 8.0
+      },
+      "shipping": {
+        "precision": 0.8888888888888888,
+        "recall": 1.0,
+        "f1-score": 0.9411764705882353,
+        "support": 8.0
+      },
+      "technical": {
+        "precision": 0.8571428571428571,
+        "recall": 0.75,
+        "f1-score": 0.8,
+        "support": 8.0
+      },
+      "accuracy": 0.875,
+      "macro avg": {
+        "precision": 0.8865079365079366,
+        "recall": 0.875,
+        "f1-score": 0.8718020541549953,
+        "support": 32.0
+      },
+      "weighted avg": {
+        "precision": 0.8865079365079366,
+        "recall": 0.875,
+        "f1-score": 0.8718020541549953,
+        "support": 32.0
+      }
+    }
+  },
+  "sentiment_classification": {
+    "accuracy": 0.75,
+    "macro_f1": 0.6666666666666667,
+    "macro_precision": 0.8571428571428572,
+    "macro_recall": 0.6666666666666666,
+    "classes": [
+      "NEGATIVE",
+      "POSITIVE"
+    ],
+    "per_class_f1": {
+      "NEGATIVE": 0.8333333333333334,
+      "POSITIVE": 0.5
+    },
+    "confusion_matrix": [
+      [
+        20,
+        0
+      ],
+      [
+        8,
+        4
+      ]
+    ],
+    "detailed_report": {
+      "NEGATIVE": {
+        "precision": 0.7142857142857143,
+        "recall": 1.0,
+        "f1-score": 0.8333333333333334,
+        "support": 20.0
+      },
+      "POSITIVE": {
+        "precision": 1.0,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.5,
+        "support": 12.0
+      },
+      "accuracy": 0.75,
+      "macro avg": {
+        "precision": 0.8571428571428572,
+        "recall": 0.6666666666666666,
+        "f1-score": 0.6666666666666667,
+        "support": 32.0
+      },
+      "weighted avg": {
+        "precision": 0.8214285714285714,
+        "recall": 0.75,
+        "f1-score": 0.7083333333333334,
+        "support": 32.0
+      }
+    }
+  },
+  "latency": {
+    "topic_prediction_ms": {
+      "mean": 0.4083992824598681,
+      "median": 0.37869997322559357,
+      "std": 0.12382443089427875,
+      "p95": 0.5611599655821916,
+      "sample_count": 3200
+    },
+    "sentiment_prediction_ms": {
+      "mean": 0.4135964381566737,
+      "median": 0.3799500409513712,
+      "std": 0.26015806164128413,
+      "p95": 0.5787000991404057,
+      "sample_count": 3200
+    },
+    "complete_classification_pipeline_ms": {
+      "mean": 0.8113192189921392,
+      "median": 0.7533499738201499,
+      "std": 0.244138170349086,
+      "p95": 1.12714507849887,
+      "sample_count": 3200
+    }
+  }
+}
