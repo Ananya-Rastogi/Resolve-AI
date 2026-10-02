@@ -9,6 +9,7 @@ export const BRAND_CONFIG = {
   shortName: 'Resolve',
   category: 'Enterprise Multi-Agent AI Ticket Resolution Platform',
   primaryTagline: 'Every ticket. One intelligent resolution.',
+  tagline: 'Every ticket. One intelligent resolution.',
   supportingMessage:
     'Multiple specialized agents. One coordinated system. Human-approved outcomes.',
   metaDescription:

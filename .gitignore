@@ -13,9 +13,9 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
-lib/
-lib64/
+/lib/
+/lib64/
+!frontend/src/lib/
 parts/
 sdist/
 var/
@@ -68,7 +68,10 @@ coverage.xml
 *.sqlite
 *.sqlite3
 data/*.db
+**/data/*.db
 data/chroma/
+backend/data/chroma/
+**/chroma/
 
 # Node dependencies
 node_modules/

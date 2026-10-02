@@ -4,8 +4,31 @@ export type TicketPriority = 'High' | 'Medium' | 'Low';
 export type TicketTopic = 'billing' | 'shipping' | 'technical' | 'other';
 export type AssignedTeam = 'Finance Team' | 'Logistics Team' | 'Tech Support' | 'General Support';
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type UserRole = 'admin' | 'manager' | 'agent';
+
+export interface UserPreferences {
+  notifications?: boolean;
+  simple_mode?: boolean;
+  compact_view?: boolean;
+  [key: string]: any;
+}
+
+export interface UserProfile {
+  id: string;
+  email?: string;
+  full_name?: string;
+  avatar_url?: string;
+  role: UserRole;
+  theme: ThemeMode;
+  preferences: UserPreferences;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface Ticket {
   ticket_id: string;
+  user_id?: string;
   customer_name?: string;
   customer_id?: string;
   email?: string;

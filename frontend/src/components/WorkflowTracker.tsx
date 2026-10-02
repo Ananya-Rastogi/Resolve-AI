@@ -26,54 +26,54 @@ export const WorkflowTracker: React.FC<WorkflowTrackerProps> = ({ ticket, compac
   const steps = [
     {
       id: 'ingest',
-      label: 'Ticket Ingest',
+      label: 'Ticket Created',
       sublabel: ticket?.ticket_id || 'Submitted',
       status: 'complete',
       icon: Inbox,
     },
     {
       id: 'classify',
-      label: 'AI Classification',
-      sublabel: ticket?.category ? `${ticket.category} (${ticket.classification_source || 'ml'})` : 'Pending',
+      label: 'Category Match',
+      sublabel: ticket?.category ? `${ticket.category} (${ticket.classification_source === 'llm' ? 'Deep AI' : 'Fast Match'})` : 'Waiting',
       status: hasAnalysis || ticket?.category ? 'complete' : 'waiting',
       icon: Cpu,
     },
     {
       id: 'priority',
-      label: 'Priority Assessment',
-      sublabel: ticket?.priority ? `${ticket.priority} priority` : 'Pending',
+      label: 'Priority Check',
+      sublabel: ticket?.priority ? `${ticket.priority} priority` : 'Waiting',
       status: ticket?.priority ? 'complete' : 'waiting',
       icon: Flame,
     },
     {
       id: 'routing',
-      label: 'Agent Routing',
-      sublabel: ticket?.assigned_team || 'Pending',
+      label: 'Team Assignment',
+      sublabel: ticket?.assigned_team || 'Waiting',
       status: ticket?.assigned_team ? 'complete' : 'waiting',
       icon: ArrowRight,
     },
     {
       id: 'rag',
-      label: 'Knowledge Retrieval',
+      label: 'Answer Search',
       sublabel: ragUsed
-        ? `${ticket?.analysis?.retrieval_count ?? 3} FAQs (${ticket?.analysis?.total_retrieval_ms?.toFixed(0) ?? '—'}ms)`
-        : 'Canonical RAG',
+        ? `${ticket?.analysis?.retrieval_count ?? 3} Answers Found`
+        : 'FAQ Search',
       status: ticket?.generated_reply ? 'complete' : 'waiting',
       icon: BookOpen,
     },
     {
       id: 'response',
-      label: 'Grounded Response',
+      label: 'Suggested Reply',
       sublabel: ticket?.analysis?.used_faq_ids?.length
         ? `${ticket.analysis.used_faq_ids.length} Citation(s)`
-        : 'Generated',
+        : 'Draft Ready',
       status: ticket?.generated_reply ? 'complete' : 'waiting',
       icon: CheckCircle2,
     },
     {
       id: 'action',
-      label: isEscalated ? 'Human Escalation' : 'Human Review',
-      sublabel: isResolved ? 'Resolved' : isEscalated ? 'Escalated to Lead' : 'Awaiting Review',
+      label: isEscalated ? 'Senior Review' : 'Team Review',
+      sublabel: isResolved ? 'Resolved' : isEscalated ? 'Sent to Senior Lead' : 'Ready for Review',
       status: isResolved ? 'complete' : isEscalated ? 'escalated' : 'active',
       icon: UserCheck,
     },
@@ -88,22 +88,22 @@ export const WorkflowTracker: React.FC<WorkflowTrackerProps> = ({ ticket, compac
           return (
             <React.Fragment key={step.id}>
               <div
-                className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md border font-sans whitespace-nowrap ${
+                className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md border font-sans whitespace-nowrap transition-colors ${
                   isEsc
-                    ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                    ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-500/30 text-rose-700 dark:text-rose-300'
                     : isDone
-                    ? 'bg-slate-900 border-slate-700/80 text-slate-200'
-                    : 'bg-slate-950 border-slate-800 text-slate-500'
+                    ? 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200'
+                    : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500'
                 }`}
               >
                 {isDone ? (
-                  <Check className="w-3 h-3 text-emerald-400" />
+                  <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                  <step.icon className={`w-3 h-3 ${isEsc ? 'text-rose-400' : 'text-slate-400'}`} />
+                  <step.icon className={`w-3 h-3 ${isEsc ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500'}`} />
                 )}
                 <span className="font-medium">{step.label}</span>
               </div>
-              {idx < steps.length - 1 && <span className="text-slate-600 text-[10px]">&rarr;</span>}
+              {idx < steps.length - 1 && <span className="text-slate-400 dark:text-slate-600 text-[10px]">&rarr;</span>}
             </React.Fragment>
           );
         })}
@@ -112,13 +112,13 @@ export const WorkflowTracker: React.FC<WorkflowTrackerProps> = ({ ticket, compac
   }
 
   return (
-    <div className="p-4 sm:p-5 rounded-xl saas-panel border border-slate-800 space-y-3">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-slate-800/80 gap-1 text-xs">
-        <span className="font-semibold text-slate-200 uppercase tracking-wider font-mono">
-          Coordinated Agent Execution Lifecycle
+    <div className="p-4 sm:p-5 rounded-xl saas-card space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 gap-1 text-xs">
+        <span className="font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider font-mono">
+          Ticket Progress Steps
         </span>
-        <span className="text-slate-400">
-          State: <strong className="text-indigo-400">{ticket?.status || 'Active Pipeline'}</strong>
+        <span className="text-slate-500 dark:text-slate-400">
+          Current State: <strong className="text-indigo-600 dark:text-indigo-400 capitalize">{ticket?.status || 'Active'}</strong>
         </span>
       </div>
 
@@ -132,31 +132,31 @@ export const WorkflowTracker: React.FC<WorkflowTrackerProps> = ({ ticket, compac
           return (
             <div
               key={step.id}
-              className={`p-2.5 rounded-lg border flex flex-col justify-between transition ${
+              className={`p-2.5 rounded-lg border flex flex-col justify-between transition-colors ${
                 isEsc
-                  ? 'bg-rose-950/20 border-rose-500/40 text-rose-200'
+                  ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-200'
                   : isActive
-                  ? 'bg-indigo-950/20 border-indigo-500/40 text-indigo-200'
+                  ? 'bg-indigo-50 dark:bg-indigo-950/20 border-indigo-300 dark:border-indigo-500/40 text-indigo-900 dark:text-indigo-200'
                   : isDone
-                  ? 'bg-slate-900/80 border-slate-800 text-slate-200'
-                  : 'bg-slate-950 border-slate-850 text-slate-500'
+                  ? 'bg-slate-50 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200'
+                  : 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-850 text-slate-400 dark:text-slate-500'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
                 <Icon
                   className={`w-3.5 h-3.5 ${
-                    isEsc ? 'text-rose-400' : isActive ? 'text-indigo-400' : isDone ? 'text-emerald-400' : 'text-slate-500'
+                    isEsc ? 'text-rose-600 dark:text-rose-400' : isActive ? 'text-indigo-600 dark:text-indigo-400' : isDone ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500'
                   }`}
                 />
                 <span
                   className={`w-1.5 h-1.5 rounded-full ${
-                    isEsc ? 'bg-rose-400' : isActive ? 'bg-indigo-400 animate-pulse' : isDone ? 'bg-emerald-400' : 'bg-slate-600'
+                    isEsc ? 'bg-rose-500' : isActive ? 'bg-indigo-500 animate-pulse' : isDone ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 />
               </div>
               <div>
                 <div className="text-[11px] font-semibold tracking-tight leading-tight">{step.label}</div>
-                <div className="text-[10px] text-slate-400 font-mono truncate mt-0.5" title={step.sublabel}>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate mt-0.5" title={step.sublabel}>
                   {step.sublabel}
                 </div>
               </div>

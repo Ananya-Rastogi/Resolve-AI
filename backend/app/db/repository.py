@@ -47,6 +47,7 @@ class BaseRepository(ABC):
         pass
 
     @abstractmethod
+    @abstractmethod
     def list_tickets(
         self,
         status: Optional[str] = None,
@@ -56,6 +57,7 @@ class BaseRepository(ABC):
         search: Optional[str] = None,
         page: int = 1,
         limit: int = 20,
+        user_id: Optional[str] = None,
     ) -> Tuple[List[Dict[str, Any]], int]:
         """List tickets with filtering, search, and pagination."""
         pass
@@ -95,6 +97,26 @@ class BaseRepository(ABC):
         """Check for existing ticket with idempotency key."""
         pass
 
+    @abstractmethod
+    def get_user_profile(self, user_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch user profile and preferences by user_id."""
+        pass
+
+    @abstractmethod
+    def update_user_profile(self, user_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user profile or preferences."""
+        pass
+
+    @abstractmethod
+    def update_user_role_admin(self, target_user_id: str, new_role: str) -> Optional[Dict[str, Any]]:
+        """Update user role (restricted to administrators)."""
+        pass
+
+    @abstractmethod
+    def bootstrap_first_admin(self, admin_email: str) -> str:
+        """One-time bootstrap procedure for the first administrator."""
+        pass
+
 
 class SQLiteRepository(BaseRepository):
     """Local SQLite implementation for offline and development environments."""
@@ -127,6 +149,7 @@ class SQLiteRepository(BaseRepository):
                 CREATE TABLE IF NOT EXISTS tickets (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     ticket_id TEXT UNIQUE NOT NULL,
+                    user_id TEXT,
                     customer_name TEXT,
                     customer_id TEXT,
                     email TEXT,
@@ -146,12 +169,17 @@ class SQLiteRepository(BaseRepository):
                     updated_at TEXT NOT NULL
                 );
 
-                CREATE INDEX IF NOT EXISTS idx_sqlite_tkt_id ON tickets(ticket_id);
-                CREATE INDEX IF NOT EXISTS idx_sqlite_status ON tickets(status);
-                CREATE INDEX IF NOT EXISTS idx_sqlite_category ON tickets(category);
-                CREATE INDEX IF NOT EXISTS idx_sqlite_priority ON tickets(priority);
-                CREATE INDEX IF NOT EXISTS idx_sqlite_team ON tickets(assigned_team);
-                CREATE INDEX IF NOT EXISTS idx_sqlite_idempotency ON tickets(idempotency_key);
+                CREATE TABLE IF NOT EXISTS profiles (
+                    id TEXT PRIMARY KEY,
+                    full_name TEXT,
+                    email TEXT,
+                    avatar_url TEXT,
+                    role TEXT NOT NULL DEFAULT 'agent',
+                    theme TEXT NOT NULL DEFAULT 'system',
+                    preferences TEXT NOT NULL DEFAULT '{"notifications": true, "simple_mode": true, "compact_view": false}',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
 
                 CREATE TABLE IF NOT EXISTS ticket_analyses (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -182,8 +210,6 @@ class SQLiteRepository(BaseRepository):
                     created_at TEXT NOT NULL
                 );
 
-                CREATE INDEX IF NOT EXISTS idx_sqlite_analysis_tkt ON ticket_analyses(ticket_id);
-
                 CREATE TABLE IF NOT EXISTS ticket_events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     ticket_id TEXT NOT NULL REFERENCES tickets(ticket_id) ON DELETE CASCADE,
@@ -192,7 +218,24 @@ class SQLiteRepository(BaseRepository):
                     details TEXT NOT NULL DEFAULT '{}',
                     created_at TEXT NOT NULL
                 );
+                """
+            )
 
+            # Auto-migrate older SQLite databases missing user_id
+            existing_cols = {col[1] for col in conn.execute("PRAGMA table_info(tickets)").fetchall()}
+            if "user_id" not in existing_cols:
+                conn.execute("ALTER TABLE tickets ADD COLUMN user_id TEXT;")
+
+            conn.executescript(
+                """
+                CREATE INDEX IF NOT EXISTS idx_sqlite_tkt_id ON tickets(ticket_id);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_user_id ON tickets(user_id);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_status ON tickets(status);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_category ON tickets(category);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_priority ON tickets(priority);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_team ON tickets(assigned_team);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_idempotency ON tickets(idempotency_key);
+                CREATE INDEX IF NOT EXISTS idx_sqlite_analysis_tkt ON ticket_analyses(ticket_id);
                 CREATE INDEX IF NOT EXISTS idx_sqlite_events_tkt ON ticket_events(ticket_id);
                 """
             )
@@ -214,17 +257,24 @@ class SQLiteRepository(BaseRepository):
     ) -> Dict[str, Any]:
         now_iso = datetime.now(timezone.utc).isoformat()
         with self._get_connection() as conn:
+            # Ensure user_id column exists if table was created earlier without it
+            cursor = conn.execute("PRAGMA table_info(tickets);")
+            cols = [row["name"] for row in cursor.fetchall()]
+            if "user_id" not in cols:
+                conn.execute("ALTER TABLE tickets ADD COLUMN user_id TEXT;")
+
             conn.execute(
                 """
                 INSERT INTO tickets (
-                    ticket_id, customer_name, customer_id, email, tier, subject,
+                    ticket_id, user_id, customer_name, customer_id, email, tier, subject,
                     status, priority, category, sentiment, confidence, assigned_team,
                     escalation_level, classification_source, generated_reply,
                     idempotency_key, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     ticket_data.get("ticket_id"),
+                    ticket_data.get("user_id"),
                     ticket_data.get("customer_name"),
                     ticket_data.get("customer_id"),
                     ticket_data.get("email"),
@@ -320,10 +370,14 @@ class SQLiteRepository(BaseRepository):
         search: Optional[str] = None,
         page: int = 1,
         limit: int = 20,
+        user_id: Optional[str] = None,
     ) -> Tuple[List[Dict[str, Any]], int]:
         conditions = []
         params = []
 
+        if user_id:
+            conditions.append("user_id = ?")
+            params.append(user_id)
         if status:
             conditions.append("status = ?")
             params.append(status)
@@ -368,7 +422,7 @@ class SQLiteRepository(BaseRepository):
         if not current:
             return None
 
-        allowed_fields = {"status", "assigned_team", "priority", "escalation_level"}
+        allowed_fields = {"status", "assigned_team", "priority", "escalation_level", "user_id"}
         valid_updates = {k: v for k, v in updates.items() if k in allowed_fields and v is not None}
         if not valid_updates:
             return current
@@ -472,6 +526,102 @@ class SQLiteRepository(BaseRepository):
         except Exception as e:
             return {"status": "error", "backend": self.backend_name, "error": str(e)}
 
+    def get_user_profile(self, user_id: str) -> Optional[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            row = conn.execute("SELECT * FROM profiles WHERE id = ?", (user_id,)).fetchone()
+            if not row:
+                return None
+            res = dict(row)
+            if isinstance(res.get("preferences"), str):
+                try:
+                    res["preferences"] = json.loads(res["preferences"])
+                except Exception:
+                    res["preferences"] = {}
+            return res
+
+    def update_user_profile(self, user_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        current = self.get_user_profile(user_id)
+        now_iso = datetime.now(timezone.utc).isoformat()
+        allowed = {"full_name", "avatar_url", "theme", "preferences"}
+        valid = {k: v for k, v in updates.items() if k in allowed}
+        if not current:
+            # Create default profile if not exists
+            prefs = valid.get("preferences") or {"notifications": True, "simple_mode": True, "compact_view": False}
+            if not isinstance(prefs, str):
+                prefs = json.dumps(prefs)
+            with self._get_connection() as conn:
+                conn.execute(
+                    """
+                    INSERT INTO profiles (id, full_name, email, avatar_url, role, theme, preferences, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        user_id,
+                        valid.get("full_name") or updates.get("email", "").split("@")[0] or "User",
+                        updates.get("email", ""),
+                        valid.get("avatar_url") or "",
+                        "agent",
+                        valid.get("theme") or "system",
+                        prefs,
+                        now_iso,
+                        now_iso,
+                    ),
+                )
+                conn.commit()
+            return self.get_user_profile(user_id)
+
+        if not valid:
+            return current
+
+        if "preferences" in valid and isinstance(valid["preferences"], (dict, list)):
+            valid["preferences"] = json.dumps(valid["preferences"])
+
+        valid["updated_at"] = now_iso
+        set_clauses = [f"{k} = ?" for k in valid.keys()]
+        params = list(valid.values()) + [user_id]
+        with self._get_connection() as conn:
+            conn.execute(f"UPDATE profiles SET {', '.join(set_clauses)} WHERE id = ?", params)
+            conn.commit()
+        return self.get_user_profile(user_id)
+
+    def update_user_role_admin(self, target_user_id: str, new_role: str) -> Optional[Dict[str, Any]]:
+        if new_role not in ("admin", "manager", "agent"):
+            raise ValueError(f"Invalid role: {new_role}")
+        now_iso = datetime.now(timezone.utc).isoformat()
+        current = self.get_user_profile(target_user_id)
+        if not current:
+            # Create default profile with specified role
+            with self._get_connection() as conn:
+                conn.execute(
+                    """
+                    INSERT INTO profiles (id, full_name, email, avatar_url, role, theme, preferences, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (target_user_id, "User", "", "", new_role, "system", "{}", now_iso, now_iso),
+                )
+                conn.commit()
+            return self.get_user_profile(target_user_id)
+
+        with self._get_connection() as conn:
+            conn.execute("UPDATE profiles SET role = ?, updated_at = ? WHERE id = ?", (new_role, now_iso, target_user_id))
+            conn.commit()
+        return self.get_user_profile(target_user_id)
+
+    def bootstrap_first_admin(self, admin_email: str) -> str:
+        with self._get_connection() as conn:
+            admin_count = conn.execute("SELECT COUNT(*) FROM profiles WHERE role = 'admin'").fetchone()[0]
+            if admin_count > 0:
+                raise ValueError("An administrator already exists. Bootstrap procedure is permanently locked.")
+            row = conn.execute("SELECT id FROM profiles WHERE email = ?", (admin_email,)).fetchone()
+            if not row:
+                raise ValueError(f'User profile with email "{admin_email}" does not exist. Please sign up first.')
+            target_id = row["id"]
+            now_iso = datetime.now(timezone.utc).isoformat()
+            conn.execute("UPDATE profiles SET role = 'admin', updated_at = ? WHERE id = ?", (now_iso, target_id))
+            conn.commit()
+            return f"Success: {admin_email} has been promoted to initial Administrator."
+
+
 
 class SupabaseRepository(BaseRepository):
     """Supabase PostgreSQL implementation via official supabase client."""
@@ -499,6 +649,7 @@ class SupabaseRepository(BaseRepository):
         now_iso = datetime.now(timezone.utc).isoformat()
         tkt_payload = {
             "ticket_id": ticket_data.get("ticket_id"),
+            "user_id": ticket_data.get("user_id"),
             "customer_name": ticket_data.get("customer_name"),
             "customer_id": ticket_data.get("customer_id"),
             "email": ticket_data.get("email"),
@@ -574,8 +725,11 @@ class SupabaseRepository(BaseRepository):
         search: Optional[str] = None,
         page: int = 1,
         limit: int = 20,
+        user_id: Optional[str] = None,
     ) -> Tuple[List[Dict[str, Any]], int]:
         query = self.client.table("tickets").select("*", count="exact")
+        if user_id:
+            query = query.eq("user_id", user_id)
         if status:
             query = query.eq("status", status)
         if category:
@@ -602,7 +756,7 @@ class SupabaseRepository(BaseRepository):
         if not current:
             return None
 
-        allowed_fields = {"status", "assigned_team", "priority", "escalation_level"}
+        allowed_fields = {"status", "assigned_team", "priority", "escalation_level", "user_id"}
         valid_updates = {k: v for k, v in updates.items() if k in allowed_fields and v is not None}
         if not valid_updates:
             return current
@@ -694,6 +848,55 @@ class SupabaseRepository(BaseRepository):
             return {"status": "ok", "backend": self.backend_name, "ticket_count": res.count or 0}
         except Exception as e:
             return {"status": "error", "backend": self.backend_name, "error": str(e)}
+
+    def get_user_profile(self, user_id: str) -> Optional[Dict[str, Any]]:
+        try:
+            res = self.client.table("profiles").select("*").eq("id", user_id).limit(1).execute()
+            return res.data[0] if res.data else None
+        except Exception as e:
+            logger.error(f"Error fetching profile for {user_id} from Supabase: {e}")
+            return None
+
+    def update_user_profile(self, user_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        allowed = {"full_name", "avatar_url", "theme", "preferences"}
+        valid = {k: v for k, v in updates.items() if k in allowed}
+        if not valid:
+            return self.get_user_profile(user_id)
+        valid["updated_at"] = datetime.now(timezone.utc).isoformat()
+        try:
+            res = self.client.table("profiles").update(valid).eq("id", user_id).execute()
+            if res.data:
+                return res.data[0]
+            # If not yet created, insert
+            valid["id"] = user_id
+            valid["role"] = "agent"
+            valid["email"] = updates.get("email", "")
+            valid["created_at"] = valid["updated_at"]
+            ins_res = self.client.table("profiles").insert(valid).execute()
+            return ins_res.data[0] if ins_res.data else self.get_user_profile(user_id)
+        except Exception as e:
+            logger.error(f"Error updating profile for {user_id} in Supabase: {e}")
+            return None
+
+    def update_user_role_admin(self, target_user_id: str, new_role: str) -> Optional[Dict[str, Any]]:
+        if new_role not in ("admin", "manager", "agent"):
+            raise ValueError(f"Invalid role: {new_role}")
+        now_iso = datetime.now(timezone.utc).isoformat()
+        try:
+            res = self.client.table("profiles").update({"role": new_role, "updated_at": now_iso}).eq("id", target_user_id).execute()
+            return res.data[0] if res.data else self.get_user_profile(target_user_id)
+        except Exception as e:
+            logger.error(f"Error updating role for {target_user_id} in Supabase: {e}")
+            return None
+
+    def bootstrap_first_admin(self, admin_email: str) -> str:
+        try:
+            res = self.client.rpc("bootstrap_first_admin", {"admin_email": admin_email}).execute()
+            return str(res.data)
+        except Exception as e:
+            logger.error(f"Error executing bootstrap_first_admin in Supabase: {e}")
+            raise
+
 
 
 _repo_instance: Optional[BaseRepository] = None

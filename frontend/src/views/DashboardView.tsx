@@ -11,18 +11,21 @@ import {
   ArrowRight,
   ShieldCheck,
   Check,
+  Sparkles,
 } from 'lucide-react';
 import { fetchAnalytics, fetchTickets } from '../api';
 import { AnalyticsResponse, Ticket } from '../types';
 import { StatusBadge, PriorityBadge, TopicBadge, TierBadge } from '../components/Badges';
 import { BRAND_CONFIG } from '../config/brand';
 import { WorkflowTracker } from '../components/WorkflowTracker';
+import { useAuth } from '../context/AuthContext';
 
 interface DashboardViewProps {
   onNavigate: (view: string, ticketId?: string) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
+  const { user, profile, welcomeMessage, setWelcomeMessage } = useAuth();
   const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
   const [recentTickets, setRecentTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +42,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
       setAnalytics(analyticsData);
       setRecentTickets(ticketsData.items);
     } catch (err: any) {
-      setError(err.message || 'Failed to load operational metrics');
+      setError(err.message || 'Failed to load tickets and metrics');
     } finally {
       setLoading(false);
     }
@@ -54,7 +57,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 text-xs font-mono">Loading Resolve AI operational metrics...</p>
+          <p className="text-slate-500 dark:text-slate-400 text-xs font-mono">Loading dashboard metrics...</p>
         </div>
       </div>
     );
@@ -62,12 +65,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
 
   if (error) {
     return (
-      <div className="p-6 rounded-xl saas-card border-rose-500/30 text-rose-300 max-w-xl mx-auto my-12 text-center space-y-3">
-        <AlertTriangle className="w-7 h-7 mx-auto text-rose-400" />
+      <div className="p-6 rounded-xl saas-card border-rose-300 dark:border-rose-500/30 text-rose-800 dark:text-rose-300 max-w-xl mx-auto my-12 text-center space-y-3">
+        <AlertTriangle className="w-7 h-7 mx-auto text-rose-500" />
         <p className="text-sm font-semibold">{error}</p>
         <button
           onClick={loadData}
-          className="px-3.5 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 rounded-lg text-xs font-semibold tracking-wide transition focus-ring"
+          className="px-3.5 py-1.5 bg-rose-100 dark:bg-rose-500/20 hover:bg-rose-200 dark:hover:bg-rose-500/30 text-rose-700 dark:text-rose-200 rounded-lg text-xs font-semibold tracking-wide transition focus-ring"
         >
           Retry Connection
         </button>
@@ -79,49 +82,65 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
 
   const statCards = [
     {
-      label: 'Total Ingested',
+      label: 'Total Tickets',
       value: live?.total_tickets ?? 0,
       icon: Inbox,
-      sub: 'All time',
+      sub: 'All tickets recorded',
     },
     {
-      label: 'Open Queue',
+      label: 'Open Tickets',
       value: live?.open_tickets ?? 0,
       icon: Clock,
-      sub: 'Awaiting action',
+      sub: 'Awaiting team action',
     },
     {
       label: 'Resolved',
       value: live?.resolved_tickets ?? 0,
       icon: CheckCircle2,
-      sub: 'Completed',
+      sub: 'Successfully resolved',
     },
     {
       label: 'High Priority',
       value: live?.high_priority_tickets ?? 0,
       icon: Flame,
-      sub: 'SLA sensitive',
+      sub: 'Needs urgent reply',
     },
     {
-      label: 'Escalations',
+      label: 'Senior Team Needed',
       value: live?.escalated_tickets ?? 0,
       icon: AlertTriangle,
-      sub: 'Human oversight',
+      sub: 'Requires manager review',
     },
   ];
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
+      {/* Friendly Welcome Message Banner */}
+      {welcomeMessage && (
+        <div className="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 flex items-center justify-between text-indigo-900 dark:text-indigo-200 text-sm">
+          <div className="flex items-center space-x-2.5">
+            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+            <span className="font-medium">{welcomeMessage}</span>
+          </div>
+          <button
+            onClick={() => setWelcomeMessage(null)}
+            className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline ml-4"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <div className="flex items-center space-x-2 text-indigo-400 text-xs font-mono font-medium mb-1">
+          <div className="flex items-center space-x-2 text-indigo-600 dark:text-indigo-400 text-xs font-mono font-medium mb-1">
             <span>{BRAND_CONFIG.category}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
             {BRAND_CONFIG.primaryTagline}
           </h1>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
             {BRAND_CONFIG.supportingMessage}
           </p>
         </div>
@@ -129,9 +148,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         <div className="flex items-center space-x-3">
           <button
             onClick={() => onNavigate('create')}
-            className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-sm transition focus-ring"
+            className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition focus-ring"
           >
-            <span>Ingest New Ticket</span>
+            <span>Create New Ticket</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -146,59 +165,64 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
               key={idx}
               className="p-4 rounded-xl saas-card saas-card-hover flex flex-col justify-between"
             >
-              <div className="flex items-center justify-between text-slate-400">
+              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
                 <span className="text-xs font-medium uppercase tracking-wider font-mono">
                   {card.label}
                 </span>
                 <Icon className="w-4 h-4 opacity-75" />
               </div>
               <div className="mt-3">
-                <div className="text-2xl sm:text-3xl font-bold text-white font-mono">
+                <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-mono">
                   {card.value}
                 </div>
-                <div className="text-[11px] text-slate-500 mt-0.5">{card.sub}</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{card.sub}</div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Multi-Agent Coordinated Lifecycle Tracker */}
+      {/* Multi-Agent Lifecycle Tracker */}
       <WorkflowTracker ticket={recentTickets[0] as any} />
 
       {/* Breakdown Grid: Category, Priority, Team Routing */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Category Breakdown */}
         <div className="p-5 rounded-xl saas-card space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-            <h2 className="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center space-x-2">
-              <Layers className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Category Distribution</span>
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+            <h2 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider font-mono flex items-center space-x-2">
+              <Layers className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>Ticket Categories</span>
             </h2>
-            <span className="text-[11px] text-slate-500 font-mono">Live DB</span>
+            <span className="text-[11px] text-slate-500 font-mono">Live</span>
           </div>
 
           <div className="space-y-3 pt-1">
-            {['billing', 'shipping', 'technical', 'other'].map((cat) => {
-              const count = live?.category_distribution?.[cat] || 0;
+            {[
+              { id: 'billing', label: 'Billing & Charges' },
+              { id: 'shipping', label: 'Shipping & Delivery' },
+              { id: 'technical', label: 'Technical Support' },
+              { id: 'other', label: 'General Questions' },
+            ].map(({ id, label }) => {
+              const count = live?.category_distribution?.[id] || 0;
               const total = live?.total_tickets || 1;
               const pct = Math.round((count / total) * 100);
               return (
-                <div key={cat} className="space-y-1">
+                <div key={id} className="space-y-1">
                   <div className="flex justify-between text-xs font-sans">
-                    <span className="capitalize font-medium text-slate-300">{cat}</span>
-                    <span className="text-slate-400 font-mono text-[11px]">
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{label}</span>
+                    <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                       {count} ({pct}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-800/80 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-slate-800/80 rounded-full h-1.5 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-300 ${
-                        cat === 'billing'
+                        id === 'billing'
                           ? 'bg-emerald-500'
-                          : cat === 'shipping'
+                          : id === 'shipping'
                           ? 'bg-cyan-500'
-                          : cat === 'technical'
+                          : id === 'technical'
                           ? 'bg-indigo-500'
                           : 'bg-slate-400'
                       }`}
@@ -213,32 +237,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
 
         {/* Priority Breakdown */}
         <div className="p-5 rounded-xl saas-card space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-            <h2 className="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center space-x-2">
-              <Flame className="w-3.5 h-3.5 text-rose-400" />
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+            <h2 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider font-mono flex items-center space-x-2">
+              <Flame className="w-3.5 h-3.5 text-rose-500" />
               <span>Priority Levels</span>
             </h2>
-            <span className="text-[11px] text-slate-500 font-mono">Live DB</span>
+            <span className="text-[11px] text-slate-500 font-mono">Live</span>
           </div>
 
           <div className="space-y-3 pt-1">
             {[
-              { level: 'High', color: 'bg-rose-500' },
-              { level: 'Medium', color: 'bg-amber-500' },
-              { level: 'Low', color: 'bg-slate-500' },
-            ].map(({ level, color }) => {
+              { level: 'High', color: 'bg-rose-500', text: 'High Priority' },
+              { level: 'Medium', color: 'bg-amber-500', text: 'Medium Priority' },
+              { level: 'Low', color: 'bg-slate-500', text: 'Low Priority' },
+            ].map(({ level, color, text }) => {
               const count = live?.priority_distribution?.[level] || 0;
               const total = live?.total_tickets || 1;
               const pct = Math.round((count / total) * 100);
               return (
                 <div key={level} className="space-y-1">
                   <div className="flex justify-between text-xs font-sans">
-                    <span className="font-medium text-slate-300">{level} Priority</span>
-                    <span className="text-slate-400 font-mono text-[11px]">
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{text}</span>
+                    <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                       {count} ({pct}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-800/80 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-slate-800/80 rounded-full h-1.5 overflow-hidden">
                     <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
                   </div>
                 </div>
@@ -249,12 +273,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
 
         {/* Support Team Assignments */}
         <div className="p-5 rounded-xl saas-card space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-            <h2 className="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center space-x-2">
-              <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Specialized Agent Routing</span>
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+            <h2 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider font-mono flex items-center space-x-2">
+              <Cpu className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>Assigned Teams</span>
             </h2>
-            <span className="text-[11px] text-slate-500 font-mono">Live DB</span>
+            <span className="text-[11px] text-slate-500 font-mono">Live</span>
           </div>
 
           <div className="space-y-2 pt-1">
@@ -262,11 +286,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
               return (
                 <div
                   key={team}
-                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs"
                 >
-                  <span className="font-medium text-slate-300">{team}</span>
-                  <span className="px-2 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono font-semibold text-[11px]">
-                    {count}
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{team}</span>
+                  <span className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 font-mono font-semibold text-[11px]">
+                    {count} tickets
                   </span>
                 </div>
               );
@@ -280,66 +304,66 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
 
       {/* Recent Tickets Table */}
       <div className="rounded-xl saas-card overflow-hidden">
-        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
+        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
-              Recent Triaged Tickets
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white font-mono uppercase tracking-wider">
+              Recent Tickets
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Live operational tickets persisted in {live?.storage_backend === 'supabase' ? 'Supabase' : 'SQLite'}.
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Live operational tickets stored in {live?.storage_backend === 'supabase' ? 'Supabase Database' : 'Local SQLite'}.
             </p>
           </div>
           <button
             onClick={() => onNavigate('queue')}
-            className="flex items-center space-x-1 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition focus-ring"
+            className="flex items-center space-x-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline transition focus-ring"
           >
-            <span>View Full Queue</span>
+            <span>View All Tickets</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {recentTickets.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <Inbox className="w-8 h-8 text-slate-600 mx-auto" />
-            <p className="text-slate-400 text-xs">No tickets in the database yet.</p>
+            <Inbox className="w-8 h-8 text-slate-400 mx-auto" />
+            <p className="text-slate-500 dark:text-slate-400 text-xs">No tickets in the database yet.</p>
             <button
               onClick={() => onNavigate('create')}
-              className="px-3.5 py-1.5 bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-semibold hover:bg-indigo-600/30 transition focus-ring"
+              className="px-3.5 py-1.5 bg-indigo-50 dark:bg-indigo-600/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition focus-ring"
             >
-              Ingest First Support Ticket
+              Create Your First Ticket
             </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="text-[11px] uppercase bg-slate-900/60 text-slate-400 border-b border-slate-800 font-mono">
+            <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
+              <thead className="text-[11px] uppercase bg-slate-50 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-mono">
                 <tr>
                   <th className="px-5 py-3">Ticket ID</th>
                   <th className="px-5 py-3">Customer & Tier</th>
                   <th className="px-5 py-3">Subject</th>
-                  <th className="px-5 py-3">Topic & Priority</th>
+                  <th className="px-5 py-3">Category & Priority</th>
                   <th className="px-5 py-3">Assigned Team</th>
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {recentTickets.map((t) => (
                   <tr
                     key={t.ticket_id}
                     onClick={() => onNavigate('detail', t.ticket_id)}
-                    className="hover:bg-slate-900/50 cursor-pointer transition"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition"
                   >
-                    <td className="px-5 py-3.5 font-mono font-medium text-indigo-400 whitespace-nowrap">
+                    <td className="px-5 py-3.5 font-mono font-medium text-indigo-600 dark:text-indigo-400 whitespace-nowrap">
                       {t.ticket_id}
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="font-medium text-slate-200">{t.customer_name || 'Anonymous'}</div>
+                      <div className="font-medium text-slate-900 dark:text-slate-200">{t.customer_name || 'Anonymous Customer'}</div>
                       <div className="mt-0.5">
                         <TierBadge tier={t.tier} />
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 max-w-xs truncate text-slate-300">
+                    <td className="px-5 py-3.5 max-w-xs truncate text-slate-700 dark:text-slate-300">
                       {t.subject}
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
@@ -348,14 +372,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                         <PriorityBadge priority={t.priority} />
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 whitespace-nowrap text-slate-300 font-medium">
+                    <td className="px-5 py-3.5 whitespace-nowrap text-slate-800 dark:text-slate-300 font-medium">
                       {t.assigned_team || 'Unassigned'}
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <StatusBadge status={t.status} />
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap text-right">
-                      <span className="text-indigo-400 font-medium hover:underline">
+                      <span className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
                         Details &rarr;
                       </span>
                     </td>

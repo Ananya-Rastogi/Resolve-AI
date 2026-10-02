@@ -6,10 +6,26 @@ import {
   TicketListResponse,
   TicketPriority,
   TicketStatus,
-  TicketTopic,
+  UserProfile,
 } from './types';
+import { supabase } from './lib/supabase';
 
 const API_BASE = '/api';
+
+async function getAuthHeaders(): Promise<HeadersInit> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.access_token}`;
+    }
+  } catch (e) {
+    // Supabase auth not initialized or network offline
+  }
+  return headers;
+}
 
 export async function fetchHealth(): Promise<HealthResponse> {
   const res = await fetch(`${API_BASE}/health`);
@@ -20,7 +36,8 @@ export async function fetchHealth(): Promise<HealthResponse> {
 }
 
 export async function fetchAnalytics(): Promise<AnalyticsResponse> {
-  const res = await fetch(`${API_BASE}/analytics`);
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/analytics`, { headers });
   if (!res.ok) {
     throw new Error(`Failed to load analytics: ${res.statusText}`);
   }
@@ -33,6 +50,7 @@ export interface ListTicketsParams {
   priority?: string;
   assigned_team?: string;
   search?: string;
+  user_id?: string;
   page?: number;
   limit?: number;
 }
@@ -44,10 +62,12 @@ export async function fetchTickets(params: ListTicketsParams = {}): Promise<Tick
   if (params.priority) query.set('priority', params.priority);
   if (params.assigned_team) query.set('assigned_team', params.assigned_team);
   if (params.search) query.set('search', params.search);
+  if (params.user_id) query.set('user_id', params.user_id);
   if (params.page) query.set('page', params.page.toString());
   if (params.limit) query.set('limit', params.limit.toString());
 
-  const res = await fetch(`${API_BASE}/tickets?${query.toString()}`);
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/tickets?${query.toString()}`, { headers });
   if (!res.ok) {
     throw new Error(`Failed to load tickets: ${res.statusText}`);
   }
@@ -55,7 +75,8 @@ export async function fetchTickets(params: ListTicketsParams = {}): Promise<Tick
 }
 
 export async function fetchTicketDetail(ticketId: string): Promise<TicketDetail> {
-  const res = await fetch(`${API_BASE}/tickets/${encodeURIComponent(ticketId)}`);
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/tickets/${encodeURIComponent(ticketId)}`, { headers });
   if (!res.ok) {
     throw new Error(`Failed to load ticket ${ticketId}: ${res.statusText}`);
   }
@@ -72,9 +93,10 @@ export interface CreateTicketPayload {
 }
 
 export async function createTicket(payload: CreateTicketPayload): Promise<TicketDetail> {
+  const headers = await getAuthHeaders();
   const res = await fetch(`${API_BASE}/tickets`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(payload),
   });
 
@@ -94,15 +116,38 @@ export interface UpdateTicketPayload {
 }
 
 export async function updateTicket(ticketId: string, updates: UpdateTicketPayload): Promise<Ticket> {
+  const headers = await getAuthHeaders();
   const res = await fetch(`${API_BASE}/tickets/${encodeURIComponent(ticketId)}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(updates),
   });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || `Failed to update ticket: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchUserProfile(): Promise<UserProfile> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/user/profile`, { headers });
+  if (!res.ok) {
+    throw new Error(`Failed to load user profile: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function updateUserProfileApi(updates: Partial<UserProfile>): Promise<UserProfile> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/user/profile`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to update profile: ${res.statusText}`);
   }
   return res.json();
 }

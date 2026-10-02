@@ -91,6 +91,7 @@ class TicketResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     ticket_id: str
+    user_id: Optional[str] = None
     customer_name: Optional[str] = None
     customer_id: Optional[str] = None
     email: Optional[str] = None
@@ -107,6 +108,31 @@ class TicketResponse(BaseModel):
     generated_reply: Optional[str] = None
     created_at: str
     updated_at: str
+
+
+class UserProfileResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    avatar_url: Optional[str] = None
+    role: str = "agent"
+    theme: str = "system"
+    preferences: Dict[str, Any] = Field(default_factory=dict)
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+
+
+class UserProfileUpdateRequest(BaseModel):
+    full_name: Optional[str] = Field(default=None, max_length=255)
+    avatar_url: Optional[str] = None
+    theme: Optional[Literal["light", "dark", "system"]] = None
+    preferences: Optional[Dict[str, Any]] = None
+
+
+class AdminRoleUpdateRequest(BaseModel):
+    role: Literal["admin", "manager", "agent"]
 
 
 class TicketDetailResponse(TicketResponse):

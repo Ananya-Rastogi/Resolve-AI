@@ -48,16 +48,16 @@ The orchestration pipeline is implemented as a **LangGraph StateGraph** operatin
 
 ### Core Architecture Components
 
-1. **FastAPI Backend (`app/api/`)**:
+1. **FastAPI Backend (`backend/app/api/`)**:
    - `GET /api/health`: System health, storage backend status, vector store readiness.
    - `POST /api/tickets`: Ingests a new ticket, executes multi-agent LangGraph triage, persists to Supabase/SQLite, and returns detailed diagnostic state. Safe against duplicate submissions via `idempotency_key`.
    - `GET /api/tickets`: Paginated ticket queue with search and filters (`status`, `category`, `priority`, `assigned_team`).
    - `GET /api/tickets/{ticket_id}`: Full ticket details, analysis metadata, retrieval timings, FAQ citations, and audit trail events.
    - `PATCH /api/tickets/{ticket_id}`: Safe updates to status, team assignments, and priority with audit logging.
    - `GET /api/analytics`: Real-time operational ticket statistics from the database alongside offline evaluation benchmarks.
-2. **Supabase PostgreSQL & Local SQLite Persistence (`supabase/`, `app/db/`)**:
-   - `supabase/schema.sql`: Full versioned schema with `tickets`, `ticket_analyses`, and `ticket_events` tables, foreign keys, timestamps, and indexes.
-   - Zero-configuration local fallback: If `SUPABASE_URL` and `SUPABASE_KEY` are unset, automatically uses persistent SQLite (`data/tickets_dev.db`) without mock illusions or silent failures.
+2. **Supabase PostgreSQL & Local SQLite Persistence (`backend/supabase/`, `backend/app/db/`)**:
+   - `backend/supabase/schema.sql`: Full versioned schema with `tickets`, `ticket_analyses`, and `ticket_events` tables, foreign keys, timestamps, and indexes.
+   - Zero-configuration local fallback: If `SUPABASE_URL` and `SUPABASE_KEY` are unset, automatically uses persistent SQLite (`backend/data/tickets_dev.db`) without mock illusions or silent failures.
 3. **React + Vite + Tailwind CSS Dashboard (`frontend/`)**:
    - **Dashboard**: Live ticket counts, open/resolved queue, category distribution, and recent tickets table.
    - **Create Ticket**: Form with one-click demo presets, validation, and immediate triage preview.
@@ -68,29 +68,29 @@ The orchestration pipeline is implemented as a **LangGraph StateGraph** operatin
    - Differentiates fine-grained refund intents (`FAQ_018`, `FAQ_028`, `FAQ_024`, `FAQ_010`).
    - Abstains and escalates unsupported inquiries (e.g., cryptocurrency payments, physical stores) without hallucinating citations.
    - Strictly enforces that financial side effects (e.g., disbursing refunds, altering accounts) remain simulation-only, requiring explicit human authorization.
-5. **Streamlit Fallback App (`streamlit_app.py`)**:
-   - Retained as a secondary fallback interface with live triage and evaluation tabs.
 
 ---
 
 ## 2. Quickstart & Windows PowerShell Commands
 
+### Repository Structure
+```
+ticket_env/
+├── backend/            # FastAPI, LangGraph multi-agent pipeline, ChromaDB RAG, Supabase migrations, & tests
+└── frontend/           # React 19, TypeScript, Vite, Tailwind CSS enterprise dashboard
+```
+
 ### Prerequisites
-- Python 3.10+ (using workspace venv at `.\ticket_env\ticket_multi_agents\ticket_env\Scripts\python.exe`)
+- Python 3.10+ (using virtual environment at `backend/venv`)
 - Node.js v18+ and npm (tested on Node v22.14.0)
 
-### 1. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```powershell
-cp .env.example .env
-```
-*(If you do not configure Supabase credentials, the backend automatically uses persistent local SQLite at `data/tickets_dev.db`.)*
-
-### 2. Start the FastAPI Backend
+### 1. Start the FastAPI Backend
 In a Windows PowerShell window:
 ```powershell
+cd backend
+
 # Activate virtual environment
-.\ticket_env\ticket_multi_agents\ticket_env\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 
 # Launch FastAPI server with auto-reload on port 8000
 uvicorn app.api.main:app --host 127.0.0.1 --port 8000 --reload
@@ -99,7 +99,7 @@ API Documentation will be available at:
 - Swagger UI: `http://127.0.0.1:8000/docs`
 - Health check: `http://127.0.0.1:8000/api/health`
 
-### 3. Start the React Frontend Dashboard
+### 2. Start the React Frontend Dashboard
 In a second Windows PowerShell window:
 ```powershell
 cd frontend
@@ -109,13 +109,6 @@ npm run dev
 Open your browser at:
 - `http://localhost:5173`
 
-### 4. Running the Streamlit Fallback App (Optional)
-If you wish to run the legacy Streamlit interface:
-```powershell
-.\ticket_env\ticket_multi_agents\ticket_env\Scripts\Activate.ps1
-python -m streamlit run streamlit_app.py
-```
-
 ---
 
 ## 3. Supabase Cloud Database Setup
@@ -123,8 +116,8 @@ python -m streamlit run streamlit_app.py
 To use cloud Supabase PostgreSQL instead of the local SQLite fallback:
 1. Create a new project at [supabase.com](https://supabase.com).
 2. Open the **SQL Editor** in your Supabase dashboard.
-3. Copy and run the contents of [`supabase/schema.sql`](file:///c:/Users/anany/Downloads/ticket_env/supabase/schema.sql).
-4. Copy your project URL and service role (or anon) key into `.env`:
+3. Copy and run the contents of [`backend/supabase/schema.sql`](file:///c:/Users/anany/Downloads/ticket_env/backend/supabase/schema.sql).
+4. Copy your project URL and service role (or anon) key into `backend/.env`:
    ```ini
    SUPABASE_URL=https://<your-project-id>.supabase.co
    SUPABASE_KEY=<your-supabase-key>
@@ -136,22 +129,21 @@ To use cloud Supabase PostgreSQL instead of the local SQLite fallback:
 
 ## 4. Running Tests & Builds
 
-### Full Python Test Suite (87 Tests: Unit, RAG, Workflow, API, Safety)
+### Python Backend Tests
 ```powershell
-.\ticket_env\ticket_multi_agents\ticket_env\Scripts\python.exe -m unittest discover -s tests -v
-```
-*(All 87 tests pass with 100% pass rate.)*
+cd backend
 
-### Specialized Test Suites
-```powershell
-# 1. FastAPI REST API endpoints
-.\ticket_env\ticket_multi_agents\ticket_env\Scripts\python.exe -m unittest tests.test_api -v
+# 1. Live PostgreSQL Migration Scenarios (Docker/WSL)
+.\venv\Scripts\python.exe -m unittest tests.test_postgres_live_scenarios -v
 
-# 2. Safety guardrails, MockLLMClient 'other' topic, and citation validity
-.\ticket_env\ticket_multi_agents\ticket_env\Scripts\python.exe -m unittest tests.test_safety_and_regression -v
+# 2. Migration AST Parser Tests (pglast C-parser)
+.\venv\Scripts\python.exe -m unittest tests.test_postgres_migration -v
 
-# 3. Week 3 comprehensive evaluation targets
-.\ticket_env\ticket_multi_agents\ticket_env\Scripts\python.exe -m unittest tests.test_week3_evaluation -v
+# 3. FastAPI REST API endpoints
+.\venv\Scripts\python.exe -m unittest tests.test_api -v
+
+# 4. Safety guardrails, MockLLMClient 'other' topic, and citation validity
+.\venv\Scripts\python.exe -m unittest tests.test_safety_and_regression -v
 ```
 
 ### Frontend Production Build Check
