@@ -68,19 +68,35 @@ app = FastAPI(
 )
 
 # Configure CORS for local development and dashboard UI
-raw_origins = os.getenv(
-    "CORS_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000",
-)
-allowed_origins = [orig.strip() for orig in raw_origins.split(",") if orig.strip()]
+
+# Configure CORS for local development and deployed Vercel frontends
+raw_origins = os.getenv("CORS_ORIGINS", "")
+
+default_origins = [
+    "https://resolve-ai-ananya-3e45.vercel.app",
+    "https://resolve-ai-lyart-seven.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+configured_origins = [
+    origin.strip().rstrip("/")
+    for origin in raw_origins.split(",")
+    if origin.strip()
+]
+
+allowed_origins = list(dict.fromkeys(default_origins + configured_origins))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins or ["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 @app.exception_handler(Exception)

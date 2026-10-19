@@ -1,0 +1,61 @@
+{
+  "health": {
+    "endpoint": "GET /api/health",
+    "n_requests": 50,
+    "success_rate": 1.0,
+    "error_rate": 0.0,
+    "latency_p50_ms": 20.67,
+    "latency_p95_ms": 41.2,
+    "latency_mean_ms": 22.64,
+    "min_latency_ms": 13.76,
+    "max_latency_ms": 42.26,
+    "throughput_req_sec": 44.16
+  },
+  "list_tickets": {
+    "endpoint": "GET /api/tickets?limit=10",
+    "n_requests": 30,
+    "success_rate": 1.0,
+    "error_rate": 0.0,
+    "latency_p50_ms": 26.11,
+    "latency_p95_ms": 46.99,
+    "latency_mean_ms": 28.71,
+    "min_latency_ms": 15.62,
+    "max_latency_ms": 47.98,
+    "throughput_req_sec": 34.83
+  },
+  "duplicate_check": {
+    "endpoint": "POST /api/tickets/check-duplicates",
+    "n_requests": 30,
+    "success_rate": 1.0,
+    "error_rate": 0.0,
+    "latency_p50_ms": 24.85,
+    "latency_p95_ms": 44.88,
+    "latency_mean_ms": 26.24,
+    "min_latency_ms": 3.74,
+    "max_latency_ms": 46.57,
+    "throughput_req_sec": 38.1
+  },
+  "help_chat": {
+    "endpoint": "POST /api/help/chat",
+    "n_requests": 30,
+    "success_rate": 1.0,
+    "error_rate": 0.0,
+    "latency_p50_ms": 17.63,
+    "latency_p95_ms": 36.88,
+    "latency_mean_ms": 19.76,
+    "min_latency_ms": 12.23,
+    "max_latency_ms": 45.68,
+    "throughput_req_sec": 50.59
+  },
+  "create_and_triage": {
+    "endpoint": "POST /api/tickets (Full Multi-Agent Triage)",
+    "n_samples": 20,
+    "success_rate": 1.0,
+    "error_rate": 0.0,
+    "p50_ms": 32.51,
+    "p95_ms": 78.41,
+    "mean_ms": 35.27,
+    "min_ms": 30.57,
+    "max_ms": 80.58
+  }
+}

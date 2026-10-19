@@ -1,0 +1,238 @@
+{
+  "audit_metadata": {
+    "project_name": "Resolve AI — AI-Powered Support Ticket Routing System",
+    "audit_timestamp": "2026-10-20T01:45:00+05:30",
+    "auditor": "Senior AI/ML Engineer & Software Quality Auditor",
+    "environment": {
+      "os": "Windows 11",
+      "python_version": "3.12.0",
+      "node_version": "v22.14.0",
+      "backend_framework": "FastAPI",
+      "frontend_framework": "React 19 + Vite 8 + Tailwind CSS",
+      "active_storage_backend": "SQLite (tickets_dev.db with Supabase schema parity)",
+      "llm_client_mode": "MockLLMClient (deterministic offline heuristic fallback)"
+    }
+  },
+  "ml_metrics": {
+    "topic_classification": {
+      "models": {
+        "vectorizer": "TfidfVectorizer(stop_words='english', ngram_range=(1,2), max_features=1000)",
+        "classifier": "MultinomialNB()"
+      },
+      "training_dataset": {
+        "file": "data/train.csv",
+        "samples": 125,
+        "classes": ["billing", "other", "shipping", "technical"]
+      },
+      "benchmark_test_set_32": {
+        "file": "data/test.csv",
+        "held_out_samples": 32,
+        "data_leakage_detected": false,
+        "accuracy": 0.875,
+        "macro_precision": 0.8865,
+        "macro_recall": 0.875,
+        "macro_f1": 0.8718,
+        "weighted_f1": 0.8718,
+        "classes": ["billing", "other", "shipping", "technical"],
+        "per_class": {
+          "billing": {"precision": 0.8000, "recall": 1.0000, "f1_score": 0.8889, "support": 8},
+          "other": {"precision": 1.0000, "recall": 0.7500, "f1_score": 0.8571, "support": 8},
+          "shipping": {"precision": 0.8889, "recall": 1.0000, "f1_score": 0.9412, "support": 8},
+          "technical": {"precision": 0.8571, "recall": 0.7500, "f1_score": 0.8000, "support": 8}
+        },
+        "confusion_matrix": [
+          [8, 0, 0, 0],
+          [1, 6, 0, 1],
+          [0, 0, 8, 0],
+          [1, 0, 1, 6]
+        ]
+      },
+      "benchmark_evaluation_test_set_100": {
+        "file": "eval/evaluation_dataset.json (held-out test split)",
+        "held_out_samples": 100,
+        "ml_only": {
+          "accuracy": 0.7200,
+          "macro_precision": 0.7607,
+          "macro_recall": 0.7200,
+          "macro_f1": 0.7011,
+          "weighted_f1": 0.7089
+        },
+        "hybrid_production_pipeline": {
+          "description": "ML Fast-Path (threshold 0.50) with Fallback Routing",
+          "accuracy": 0.8200,
+          "macro_precision": 0.8683,
+          "macro_recall": 0.8200,
+          "macro_f1": 0.8205,
+          "department_routing_accuracy": 0.8188,
+          "fast_path_pct": 13.0,
+          "fallback_pct": 87.0
+        }
+      },
+      "inference_latency_cpu_ms": {
+        "repetitions": 100,
+        "median_p50": 0.379,
+        "mean": 0.408,
+        "p95": 0.561,
+        "sample_count": 3200
+      }
+    },
+    "sentiment_analysis": {
+      "model": "LogisticRegression(max_iter=1000)",
+      "training_dataset": "data/train.csv (125 samples)",
+      "benchmark_test_set_32": {
+        "file": "data/test.csv",
+        "held_out_samples": 32,
+        "accuracy": 0.7500,
+        "macro_precision": 0.8571,
+        "macro_recall": 0.6667,
+        "macro_f1": 0.6667,
+        "weighted_f1": 0.7083,
+        "classes": ["NEGATIVE", "POSITIVE"],
+        "per_class": {
+          "NEGATIVE": {"precision": 0.7143, "recall": 1.0000, "f1_score": 0.8333, "support": 20},
+          "POSITIVE": {"precision": 1.0000, "recall": 0.3333, "f1_score": 0.5000, "support": 12}
+        },
+        "confusion_matrix": [
+          [20, 0],
+          [8, 4]
+        ]
+      },
+      "benchmark_evaluation_test_set_100": {
+        "file": "eval/evaluation_dataset.json (held-out test split)",
+        "held_out_samples": 100,
+        "accuracy": 0.6500,
+        "macro_precision": 0.5284,
+        "macro_recall": 0.5404,
+        "macro_f1": 0.5133,
+        "weighted_f1": 0.6019
+      }
+    },
+    "duplicate_detection": {
+      "status": "UNMEASURED_EVALUATION_GAP",
+      "algorithm": "Heuristic Jaccard token similarity (60%) + difflib.SequenceMatcher ratio (40%) on ticket subject",
+      "threshold": 0.35,
+      "ground_truth_test_pairs_available": 0,
+      "precision": null,
+      "recall": null,
+      "note": "Feature is implemented and operational in API (/api/tickets/check-duplicates and /api/tickets/{ticket_id}/duplicates), but formal precision/recall is unmeasured due to absence of a labeled duplicate pair benchmark dataset."
+    }
+  },
+  "rag_metrics": {
+    "corpus": {
+      "source_file": "data/rag_faqs.csv",
+      "canonical_documents": 30
+    },
+    "embeddings": {
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "vector_store": "ChromaDB"
+    },
+    "evaluation_set": {
+      "file": "eval/rag_eval.json",
+      "total_queries": 160,
+      "supported_queries": 136,
+      "unsupported_out_of_scope_queries": 24
+    },
+    "retrieval_performance": {
+      "recall_at_1": 0.7647,
+      "recall_at_3": 0.9412,
+      "recall_at_5": 0.9632,
+      "precision_at_1": 0.7647,
+      "mrr": 0.8442,
+      "ndcg_at_3": 0.8624,
+      "ndcg_at_5": 0.8712,
+      "empty_retrieval_rate": 0.0
+    },
+    "generation_quality": {
+      "citation_validity_pct": 100.0,
+      "valid_citations_count": 130,
+      "hallucinated_citations_count": 0,
+      "out_of_scope_abstention_pct": 91.67,
+      "abstained_count": 22,
+      "total_unsupported": 24
+    },
+    "vector_retrieval_latency_ms": {
+      "median_p50": 28.98,
+      "p95": 55.44,
+      "mean": 38.68
+    }
+  },
+  "system_and_api_performance": {
+    "endpoints_benchmarked": {
+      "GET /api/health": {
+        "requests": 50,
+        "median_latency_ms": 20.67,
+        "p95_latency_ms": 41.20,
+        "mean_latency_ms": 22.64,
+        "throughput_req_per_sec": 44.16,
+        "success_rate_pct": 100.0
+      },
+      "GET /api/tickets?limit=10": {
+        "requests": 30,
+        "median_latency_ms": 26.11,
+        "p95_latency_ms": 46.99,
+        "mean_latency_ms": 28.71,
+        "throughput_req_per_sec": 34.83,
+        "success_rate_pct": 100.0
+      },
+      "POST /api/tickets/check-duplicates": {
+        "requests": 30,
+        "median_latency_ms": 24.85,
+        "p95_latency_ms": 44.88,
+        "mean_latency_ms": 26.24,
+        "throughput_req_per_sec": 38.10,
+        "success_rate_pct": 100.0
+      },
+      "POST /api/help/chat": {
+        "requests": 30,
+        "median_latency_ms": 17.63,
+        "p95_latency_ms": 36.88,
+        "mean_latency_ms": 19.76,
+        "throughput_req_per_sec": 50.59,
+        "success_rate_pct": 100.0
+      },
+      "POST /api/tickets (Full Multi-Agent Triage Pipeline)": {
+        "requests": 20,
+        "cold_start_latency_ms": 14182.41,
+        "warm_median_latency_ms": 32.51,
+        "warm_p95_latency_ms": 78.41,
+        "warm_mean_latency_ms": 35.27,
+        "success_rate_pct": 100.0
+      }
+    }
+  },
+  "persistence_and_reliability": {
+    "test_ticket_id": "TKT-20261020-7AD213",
+    "verified_steps": [
+      "Submitted ticket via POST /api/tickets with Platinum customer tier and dual billing charge complaint",
+      "Verified multi-agent triage: topic=billing, sentiment=NEGATIVE, priority=Low, assigned_team=Finance Team, escalation=No Escalation Required",
+      "Verified grounded resolution citing canonical FAQ_010",
+      "Verified relational persistence in SQLite tickets, ticket_analyses, and ticket_events tables",
+      "Verified authenticated read-back via GET /api/tickets/TKT-20261020-7AD213",
+      "Verified status update to resolved via PATCH /api/tickets/TKT-20261020-7AD213",
+      "Verified audit event ticket_updated logged in ticket_events with previous and updated state diff",
+      "Safely cleaned up audit test record from local SQLite database"
+    ],
+    "storage_switch_behavior": "SQLite selected automatically in development when SUPABASE_KEY contains an anonymous publishable key, preventing RLS write violations"
+  },
+  "automated_tests_and_build": {
+    "backend_unittest": {
+      "test_runner": "python -m unittest discover -s tests -v",
+      "total_tests": 117,
+      "passed": 117,
+      "failed": 0,
+      "duration_sec": 33.63
+    },
+    "frontend_build": {
+      "tool": "Vite v8.3.2 + TypeScript (tsc && vite build)",
+      "status": "SUCCESS",
+      "modules_transformed": 1952,
+      "duration_sec": 13.27,
+      "bundle_sizes": {
+        "index.html": "1.11 kB (gzip: 0.58 kB)",
+        "index.css": "48.43 kB (gzip: 8.59 kB)",
+        "index.js": "631.99 kB (gzip: 162.07 kB)"
+      }
+    }
+  }
+}
