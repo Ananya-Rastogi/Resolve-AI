@@ -89,11 +89,12 @@ In a Windows PowerShell window:
 ```powershell
 cd backend
 
-# Activate virtual environment
+# Activate virtual environment (optional if invoking python directly)
 .\venv\Scripts\Activate.ps1
 
 # Launch FastAPI server with auto-reload on port 8000
-uvicorn app.api.main:app --host 127.0.0.1 --port 8000 --reload
+python -m uvicorn app.api.main:app --host 127.0.0.1 --port 8000 --reload
+# Or directly: .\venv\Scripts\python.exe -m uvicorn app.api.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 API Documentation will be available at:
 - Swagger UI: `http://127.0.0.1:8000/docs`
