@@ -6,8 +6,19 @@ from datetime import datetime, timezone
 import json
 import logging
 import os
+from pathlib import Path
 import sqlite3
 from typing import Any, Dict, List, Optional, Tuple
+
+from dotenv import load_dotenv
+
+# Ensure environment variables are loaded from backend/.env or root .env
+_base_dir = Path(__file__).resolve().parent.parent.parent
+_env_file = _base_dir / ".env"
+if _env_file.is_file():
+    load_dotenv(_env_file)
+else:
+    load_dotenv()
 
 logger = logging.getLogger("ticket_db")
 
@@ -47,7 +58,6 @@ class BaseRepository(ABC):
         pass
 
     @abstractmethod
-    @abstractmethod
     def list_tickets(
         self,
         status: Optional[str] = None,
@@ -58,8 +68,9 @@ class BaseRepository(ABC):
         page: int = 1,
         limit: int = 20,
         user_id: Optional[str] = None,
+        exclude_benchmarks: bool = True,
     ) -> Tuple[List[Dict[str, Any]], int]:
-        """List tickets with filtering, search, and pagination."""
+        """List tickets with filtering, search, pagination, and benchmark exclusion."""
         pass
 
     @abstractmethod
@@ -83,8 +94,12 @@ class BaseRepository(ABC):
         pass
 
     @abstractmethod
-    def get_analytics(self) -> Dict[str, Any]:
-        """Compute aggregated ticket counts and distributions."""
+    def get_analytics(
+        self,
+        user_id: Optional[str] = None,
+        exclude_benchmarks: bool = True,
+    ) -> Dict[str, Any]:
+        """Compute aggregated ticket counts and distributions with user scoping."""
         pass
 
     @abstractmethod
@@ -371,10 +386,13 @@ class SQLiteRepository(BaseRepository):
         page: int = 1,
         limit: int = 20,
         user_id: Optional[str] = None,
+        exclude_benchmarks: bool = True,
     ) -> Tuple[List[Dict[str, Any]], int]:
         conditions = []
         params = []
 
+        if exclude_benchmarks:
+            conditions.append("(customer_name != 'Scenario Test' OR customer_name IS NULL)")
         if user_id:
             conditions.append("user_id = ?")
             params.append(user_id)
@@ -481,27 +499,63 @@ class SQLiteRepository(BaseRepository):
                 events.append(item)
             return events
 
-    def get_analytics(self) -> Dict[str, Any]:
-        with self._get_connection() as conn:
-            total_tickets = conn.execute("SELECT COUNT(*) FROM tickets").fetchone()[0]
-            open_count = conn.execute("SELECT COUNT(*) FROM tickets WHERE status = 'open'").fetchone()[0]
-            resolved_count = conn.execute("SELECT COUNT(*) FROM tickets WHERE status = 'resolved'").fetchone()[0]
-            in_progress_count = conn.execute("SELECT COUNT(*) FROM tickets WHERE status = 'in_progress'").fetchone()[0]
-            escalated_count = conn.execute(
-                "SELECT COUNT(*) FROM tickets WHERE escalation_level != 'Not Escalated' OR status = 'escalated'"
-            ).fetchone()[0]
-            high_priority_count = conn.execute("SELECT COUNT(*) FROM tickets WHERE priority = 'High'").fetchone()[0]
+    def get_analytics(
+        self,
+        user_id: Optional[str] = None,
+        exclude_benchmarks: bool = True,
+    ) -> Dict[str, Any]:
+        if user_id == "__none__":
+            return {
+                "total_tickets": 0,
+                "open_tickets": 0,
+                "in_progress_tickets": 0,
+                "resolved_tickets": 0,
+                "escalated_tickets": 0,
+                "high_priority_tickets": 0,
+                "category_distribution": {},
+                "priority_distribution": {},
+                "sentiment_distribution": {},
+                "team_distribution": {},
+                "storage_backend": self.backend_name,
+            }
 
-            cat_rows = conn.execute("SELECT category, COUNT(*) FROM tickets GROUP BY category").fetchall()
+        conditions = []
+        params: List[Any] = []
+        if exclude_benchmarks:
+            conditions.append("(customer_name != 'Scenario Test' OR customer_name IS NULL)")
+        if user_id:
+            conditions.append("user_id = ?")
+            params.append(user_id)
+
+        base_where = " WHERE " + " AND ".join(conditions) if conditions else ""
+
+        def build_clause(extra: str = ""):
+            if not base_where:
+                return f" WHERE {extra}" if extra else ""
+            return f"{base_where} AND {extra}" if extra else base_where
+
+        with self._get_connection() as conn:
+            total_tickets = conn.execute(f"SELECT COUNT(*) FROM tickets{base_where}", params).fetchone()[0]
+            open_count = conn.execute(f"SELECT COUNT(*) FROM tickets{build_clause('status = ?')}", params + ["open"]).fetchone()[0]
+            resolved_count = conn.execute(f"SELECT COUNT(*) FROM tickets{build_clause('status = ?')}", params + ["resolved"]).fetchone()[0]
+            in_progress_count = conn.execute(f"SELECT COUNT(*) FROM tickets{build_clause('status = ?')}", params + ["in_progress"]).fetchone()[0]
+            escalation_extra = "(escalation_level != 'Not Escalated' OR status = 'escalated')"
+            escalated_count = conn.execute(
+                f"SELECT COUNT(*) FROM tickets{build_clause(escalation_extra)}",
+                params,
+            ).fetchone()[0]
+            high_priority_count = conn.execute(f"SELECT COUNT(*) FROM tickets{build_clause('priority = ?')}", params + ["High"]).fetchone()[0]
+
+            cat_rows = conn.execute(f"SELECT category, COUNT(*) FROM tickets{base_where} GROUP BY category", params).fetchall()
             category_distribution = {r[0] or "unassigned": r[1] for r in cat_rows}
 
-            prio_rows = conn.execute("SELECT priority, COUNT(*) FROM tickets GROUP BY priority").fetchall()
+            prio_rows = conn.execute(f"SELECT priority, COUNT(*) FROM tickets{base_where} GROUP BY priority", params).fetchall()
             priority_distribution = {r[0]: r[1] for r in prio_rows}
 
-            sent_rows = conn.execute("SELECT sentiment, COUNT(*) FROM tickets GROUP BY sentiment").fetchall()
+            sent_rows = conn.execute(f"SELECT sentiment, COUNT(*) FROM tickets{base_where} GROUP BY sentiment", params).fetchall()
             sentiment_distribution = {r[0] or "UNKNOWN": r[1] for r in sent_rows}
 
-            team_rows = conn.execute("SELECT assigned_team, COUNT(*) FROM tickets GROUP BY assigned_team").fetchall()
+            team_rows = conn.execute(f"SELECT assigned_team, COUNT(*) FROM tickets{base_where} GROUP BY assigned_team", params).fetchall()
             team_distribution = {r[0] or "Unassigned": r[1] for r in team_rows}
 
         return {
@@ -647,9 +701,17 @@ class SupabaseRepository(BaseRepository):
         event_details: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         now_iso = datetime.now(timezone.utc).isoformat()
+        user_id = ticket_data.get("user_id")
+        if user_id:
+            try:
+                import uuid
+                uuid.UUID(str(user_id))
+            except (ValueError, TypeError, AttributeError):
+                user_id = None
+
         tkt_payload = {
             "ticket_id": ticket_data.get("ticket_id"),
-            "user_id": ticket_data.get("user_id"),
+            "user_id": user_id,
             "customer_name": ticket_data.get("customer_name"),
             "customer_id": ticket_data.get("customer_id"),
             "email": ticket_data.get("email"),
@@ -726,8 +788,11 @@ class SupabaseRepository(BaseRepository):
         page: int = 1,
         limit: int = 20,
         user_id: Optional[str] = None,
+        exclude_benchmarks: bool = True,
     ) -> Tuple[List[Dict[str, Any]], int]:
         query = self.client.table("tickets").select("*", count="exact")
+        if exclude_benchmarks:
+            query = query.neq("customer_name", "Scenario Test")
         if user_id:
             query = query.eq("user_id", user_id)
         if status:
@@ -760,6 +825,13 @@ class SupabaseRepository(BaseRepository):
         valid_updates = {k: v for k, v in updates.items() if k in allowed_fields and v is not None}
         if not valid_updates:
             return current
+
+        if "user_id" in valid_updates and valid_updates["user_id"]:
+            try:
+                import uuid
+                uuid.UUID(str(valid_updates["user_id"]))
+            except (ValueError, TypeError, AttributeError):
+                valid_updates["user_id"] = None
 
         valid_updates["updated_at"] = datetime.now(timezone.utc).isoformat()
         res = self.client.table("tickets").update(valid_updates).eq("ticket_id", ticket_id).execute()
@@ -796,9 +868,33 @@ class SupabaseRepository(BaseRepository):
         )
         return res.data or []
 
-    def get_analytics(self) -> Dict[str, Any]:
-        # Fast query for ticket stats
-        all_tickets_res = self.client.table("tickets").select("status,priority,category,sentiment,assigned_team,escalation_level").execute()
+    def get_analytics(
+        self,
+        user_id: Optional[str] = None,
+        exclude_benchmarks: bool = True,
+    ) -> Dict[str, Any]:
+        if user_id == "__none__":
+            return {
+                "total_tickets": 0,
+                "open_tickets": 0,
+                "in_progress_tickets": 0,
+                "resolved_tickets": 0,
+                "escalated_tickets": 0,
+                "high_priority_tickets": 0,
+                "category_distribution": {},
+                "priority_distribution": {},
+                "sentiment_distribution": {},
+                "team_distribution": {},
+                "storage_backend": self.backend_name,
+            }
+
+        # Query ticket stats with user scoping
+        query = self.client.table("tickets").select("status,priority,category,sentiment,assigned_team,escalation_level,customer_name,user_id")
+        if exclude_benchmarks:
+            query = query.neq("customer_name", "Scenario Test")
+        if user_id:
+            query = query.eq("user_id", user_id)
+        all_tickets_res = query.execute()
         rows = all_tickets_res.data or []
 
         total = len(rows)
@@ -917,25 +1013,44 @@ def get_repository(force_refresh: bool = False) -> BaseRepository:
     use_local_force = os.getenv("USE_LOCAL_DB", "").lower() in ("true", "1", "yes")
 
     if supabase_url and supabase_key and not use_local_force:
-        try:
-            logger.info("Attempting connection to Supabase PostgreSQL...")
-            repo = SupabaseRepository(supabase_url=supabase_url, supabase_key=supabase_key)
-            health = repo.check_health()
-            if health["status"] == "ok":
-                logger.info("Supabase connection verified successfully.")
-                _repo_instance = repo
-                return _repo_instance
-            else:
-                logger.warning(
-                    f"Supabase connection test failed: {health.get('error')}. Falling back to SQLite local database."
-                )
-        except Exception as exc:
-            logger.warning(
-                f"Failed to initialize Supabase client ({exc}). Falling back to SQLite local database."
+        if supabase_key.startswith("sb_publishable_"):
+            logger.info(
+                "Supabase client publishable key detected (client anon key). "
+                "Server repository using persistent SQLite to honor database RLS policies."
             )
+        else:
+            try:
+                logger.info("Attempting connection to Supabase PostgreSQL...")
+                repo = SupabaseRepository(supabase_url=supabase_url, supabase_key=supabase_key)
+                health = repo.check_health()
+                if health["status"] == "ok":
+                    logger.info("Supabase connection verified successfully.")
+                    _repo_instance = repo
+                    return _repo_instance
+                else:
+                    logger.warning(
+                        f"Supabase connection test failed: {health.get('error')}. Falling back to SQLite local database."
+                    )
+            except Exception as exc:
+                logger.warning(
+                    f"Failed to initialize Supabase client ({exc}). Falling back to SQLite local database."
+                )
 
-    logger.info("Using SQLite local development database at data/tickets_dev.db")
-    _repo_instance = SQLiteRepository(db_path=os.getenv("SQLITE_DB_PATH", "data/tickets_dev.db"))
+    raw_path = os.getenv("SQLITE_DB_PATH", "data/tickets_dev.db")
+    if raw_path != ":memory:" and not os.path.isabs(raw_path):
+        candidate_backend = _base_dir / raw_path
+        candidate_root = _base_dir.parent / raw_path
+        if candidate_backend.exists():
+            resolved_db = str(candidate_backend)
+        elif candidate_root.exists():
+            resolved_db = str(candidate_root)
+        else:
+            resolved_db = str(candidate_backend)
+    else:
+        resolved_db = raw_path
+
+    logger.info(f"Using SQLite local development database at {resolved_db}")
+    _repo_instance = SQLiteRepository(db_path=resolved_db)
     return _repo_instance
 
 

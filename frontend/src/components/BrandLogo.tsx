@@ -81,18 +81,18 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <div className="flex flex-col">
         <div className="flex items-center space-x-2">
           <span
-            className={`font-bold tracking-tight text-white font-sans ${textSizes[size]}`}
+            className={`font-bold tracking-tight text-slate-900 dark:text-white font-sans ${textSizes[size]}`}
           >
             {BRAND_CONFIG.name}
           </span>
           {showBadge && (
-            <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-mono">
+            <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/20 font-mono">
               Enterprise
             </span>
           )}
         </div>
         {showTagline && (
-          <span className="text-[11px] text-slate-400 font-sans tracking-normal hidden md:inline-block">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-sans tracking-normal hidden md:inline-block">
             {BRAND_CONFIG.primaryTagline}
           </span>
         )}

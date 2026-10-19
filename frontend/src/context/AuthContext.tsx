@@ -107,6 +107,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(initialSession);
           setUser(initialSession?.user ?? null);
           if (initialSession?.user) {
+            localStorage.setItem('resolve_local_user', JSON.stringify({
+              id: initialSession.user.id,
+              email: initialSession.user.email,
+              user_metadata: initialSession.user.user_metadata,
+            }));
             await fetchProfile(initialSession.user);
           }
           setLoading(false);
@@ -127,6 +132,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(newSession?.user ?? null);
 
         if (event === 'SIGNED_IN' && newSession?.user) {
+          localStorage.setItem('resolve_local_user', JSON.stringify({
+            id: newSession.user.id,
+            email: newSession.user.email,
+            user_metadata: newSession.user.user_metadata,
+          }));
           await fetchProfile(newSession.user);
           const userName =
             (newSession.user.user_metadata?.full_name as string) ||
@@ -134,9 +144,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             'Team Member';
           setWelcomeMessage(`Welcome back, ${userName}! Ready to resolve tickets.`);
         } else if (event === 'SIGNED_OUT') {
+          localStorage.removeItem('resolve_local_user');
           setProfile(null);
           setWelcomeMessage(null);
         } else if (event === 'TOKEN_REFRESHED' && newSession?.user) {
+          localStorage.setItem('resolve_local_user', JSON.stringify({
+            id: newSession.user.id,
+            email: newSession.user.email,
+            user_metadata: newSession.user.user_metadata,
+          }));
           await fetchProfile(newSession.user);
         }
       }
@@ -157,9 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user_metadata: { full_name: email.split('@')[0] || 'Local Specialist' },
       } as unknown as User;
       setUser(mockUser);
-      if (rememberMe) {
-        localStorage.setItem('resolve_local_user', JSON.stringify(mockUser));
-      }
+      localStorage.setItem('resolve_local_user', JSON.stringify(mockUser));
       await fetchProfile(mockUser);
       setWelcomeMessage(`Welcome back! You are in local development mode.`);
       return { error: null };
@@ -236,8 +250,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    localStorage.removeItem('resolve_local_user');
     if (!isSupabaseConfigured) {
-      localStorage.removeItem('resolve_local_user');
       setUser(null);
       setSession(null);
       setProfile(null);

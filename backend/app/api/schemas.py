@@ -168,3 +168,40 @@ class AnalyticsResponse(BaseModel):
     timestamp: str
     live_metrics: LiveMetrics
     offline_evaluation_benchmark: Optional[Dict[str, Any]] = None
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant", "system"]
+    content: str = Field(..., min_length=1, max_length=2000)
+
+
+class HelpChatRequest(BaseModel):
+    message: str = Field(..., min_length=1, max_length=1000)
+    current_page: Optional[str] = None
+    history: Optional[List[ChatMessage]] = Field(default_factory=list)
+
+
+class HelpChatResponse(BaseModel):
+    reply: str
+    suggested_actions: Optional[List[Dict[str, str]]] = Field(default_factory=list)
+
+
+class DuplicateTicketMatch(BaseModel):
+    ticket_id: str
+    subject: str
+    similarity_score: float
+    similarity_reason: str
+    status: str
+    priority: str
+    category: Optional[str] = None
+    created_at: Optional[str] = None
+
+
+class DuplicateCheckRequest(BaseModel):
+    subject: str = Field(..., min_length=3, max_length=1000)
+    exclude_ticket_id: Optional[str] = None
+
+
+class DuplicateCheckResponse(BaseModel):
+    matches: List[DuplicateTicketMatch]
+    total_matches: int

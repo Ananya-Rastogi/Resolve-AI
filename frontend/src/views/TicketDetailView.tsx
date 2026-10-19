@@ -13,23 +13,30 @@ import {
   ShieldAlert,
   Send,
   Zap,
+  Copy,
+  ExternalLink,
 } from 'lucide-react';
-import { fetchTicketDetail, updateTicket } from '../api';
-import { TicketDetail, TicketStatus, AssignedTeam, TicketPriority } from '../types';
+import { fetchTicketDetail, updateTicket, fetchTicketDuplicates } from '../api';
+import { TicketDetail, TicketStatus, AssignedTeam, TicketPriority, DuplicateTicketMatch } from '../types';
 import { StatusBadge, PriorityBadge, TopicBadge, TierBadge, SourceBadge, SentimentBadge } from '../components/Badges';
 import { WorkflowTracker } from '../components/WorkflowTracker';
 import { BRAND_CONFIG } from '../config/brand';
+import { calculateTicketSLA } from '../utils/sla';
 
 interface TicketDetailViewProps {
   ticketId: string;
   onBack: () => void;
+  onNavigate?: (view: string, ticketId?: string) => void;
 }
 
-export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, onBack }) => {
+export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, onBack, onNavigate }) => {
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
+
+  const [duplicates, setDuplicates] = useState<DuplicateTicketMatch[]>([]);
+  const [loadingDuplicates, setLoadingDuplicates] = useState(false);
 
   const [editStatus, setEditStatus] = useState<TicketStatus>('open');
   const [editTeam, setEditTeam] = useState<string>('General Support');
@@ -51,8 +58,22 @@ export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, on
     }
   };
 
+  const loadDuplicates = async () => {
+    try {
+      setLoadingDuplicates(true);
+      const res = await fetchTicketDuplicates(ticketId);
+      setDuplicates(res.matches || []);
+    } catch (err) {
+      console.warn('Failed to load duplicates for ticket:', err);
+      setDuplicates([]);
+    } finally {
+      setLoadingDuplicates(false);
+    }
+  };
+
   useEffect(() => {
     loadDetail();
+    loadDuplicates();
   }, [ticketId]);
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -101,6 +122,10 @@ export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, on
   }
 
   const analysis = ticket.analysis;
+  const sla = calculateTicketSLA(ticket.priority, ticket.created_at, ticket.status);
+  const createdDateStr = ticket.created_at && !isNaN(new Date(ticket.created_at).getTime())
+    ? new Date(ticket.created_at).toLocaleString()
+    : '—';
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-12">
@@ -115,7 +140,7 @@ export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, on
         </button>
 
         <div className="flex items-center space-x-2 font-mono text-xs text-slate-500">
-          <span>Created: {new Date(ticket.created_at).toLocaleString()}</span>
+          <span>Created: {createdDateStr}</span>
         </div>
       </div>
 
@@ -123,13 +148,17 @@ export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, on
       <div className="p-6 sm:p-7 rounded-2xl saas-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-wrap items-center gap-2.5">
               <span className="text-xl sm:text-2xl font-bold font-mono text-indigo-600 dark:text-indigo-400">
                 {ticket.ticket_id}
               </span>
               <TierBadge tier={ticket.tier} />
               <StatusBadge status={ticket.status} />
               <PriorityBadge priority={ticket.priority} />
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${sla.colorClass}`}>
+                <Clock className="w-3.5 h-3.5 mr-1 shrink-0" />
+                SLA: {sla.status}
+              </span>
             </div>
             <div className="text-xs text-slate-600 dark:text-slate-400 flex flex-wrap gap-x-4 gap-y-1 pt-1">
               <span>Customer: <strong className="text-slate-900 dark:text-slate-200">{ticket.customer_name || 'Anonymous Customer'}</strong></span>
@@ -140,6 +169,18 @@ export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, on
 
           <div className="flex items-center space-x-2">
             <SourceBadge source={ticket.classification_source} />
+          </div>
+        </div>
+
+        {/* SLA Status & Target Deadline Box */}
+        <div className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs ${sla.colorClass}`}>
+          <div className="flex items-center space-x-2">
+            <Clock className="w-4 h-4 shrink-0" />
+            <span className="font-bold">Resolution SLA Target:</span>
+            <span>{sla.timeRemaining}</span>
+          </div>
+          <div className="font-mono text-[11px] font-medium">
+            {sla.deadlineText}
           </div>
         </div>
 
@@ -320,6 +361,81 @@ export const TicketDetailView: React.FC<TicketDetailViewProps> = ({ ticketId, on
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Potential Duplicate / Related Tickets Card */}
+          <div className="p-6 rounded-2xl saas-card space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+              <h2 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center space-x-2">
+                <Copy className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <span>Similar & Related Tickets</span>
+              </h2>
+              <span className="text-xs font-mono text-slate-500">
+                {loadingDuplicates
+                  ? 'Checking database...'
+                  : duplicates.length > 0
+                  ? `${duplicates.length} match${duplicates.length > 1 ? 'es' : ''} found`
+                  : 'No duplicates'}
+              </span>
+            </div>
+
+            {loadingDuplicates ? (
+              <div className="py-5 text-center text-xs text-slate-500 space-y-2">
+                <div className="w-4 h-4 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto" />
+                <p className="font-mono text-[11px]">Scanning database for similar tickets...</p>
+              </div>
+            ) : duplicates.length === 0 ? (
+              <p className="text-xs text-slate-500 dark:text-slate-400 italic py-1">
+                No duplicate or related tickets found in the database.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  Potential duplicate tickets sharing similar descriptions or customer concerns:
+                </p>
+                <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                  {duplicates.map((match) => (
+                    <div
+                      key={match.ticket_id}
+                      className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-xs space-y-2"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center space-x-2">
+                          <button
+                            type="button"
+                            onClick={() => (onNavigate ? onNavigate('detail', match.ticket_id) : undefined)}
+                            className="font-mono font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1 focus-ring"
+                            title="View ticket details"
+                          >
+                            <span>{match.ticket_id}</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </button>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                            {Math.round(match.similarity_score * 100)}% Match
+                          </span>
+                          <StatusBadge status={match.status} />
+                          <PriorityBadge priority={match.priority} />
+                          {match.category && <TopicBadge topic={match.category} />}
+                        </div>
+                        {match.created_at && (
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            {new Date(match.created_at).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="text-slate-800 dark:text-slate-200 font-medium">
+                        {match.subject}
+                      </div>
+
+                      <div className="text-[11px] text-slate-600 dark:text-slate-400 italic">
+                        {match.similarity_reason}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

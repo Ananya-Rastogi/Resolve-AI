@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Send,
   AlertCircle,
+  AlertTriangle,
   CheckCircle,
   User,
   Mail,
@@ -10,9 +11,11 @@ import {
   ArrowRight,
   BookOpen,
   Sparkles,
+  ExternalLink,
+  Copy,
 } from 'lucide-react';
-import { createTicket } from '../api';
-import { TicketDetail } from '../types';
+import { createTicket, checkDuplicateTickets } from '../api';
+import { TicketDetail, DuplicateTicketMatch } from '../types';
 import { StatusBadge, PriorityBadge, TopicBadge, TierBadge, SourceBadge, SentimentBadge } from '../components/Badges';
 import { BRAND_CONFIG } from '../config/brand';
 import { BrandSymbol } from '../components/BrandLogo';
@@ -24,63 +27,84 @@ interface CreateTicketViewProps {
 
 export const CreateTicketView: React.FC<CreateTicketViewProps> = ({ onNavigate }) => {
   const [subject, setSubject] = useState('');
-  const [customerName, setCustomerName] = useState('Sarah Jenkins');
-  const [email, setEmail] = useState('sarah.jenkins@enterprise.io');
-  const [customerId, setCustomerId] = useState('CUST-8492');
-  const [tier, setTier] = useState('Gold');
+  const [customerName, setCustomerName] = useState('');
+  const [email, setEmail] = useState('');
+  const [customerId, setCustomerId] = useState('');
+  const [tier, setTier] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TicketDetail | null>(null);
+
+  // Duplicate detection state
+  const [duplicates, setDuplicates] = useState<DuplicateTicketMatch[]>([]);
+  const [checkingDuplicates, setCheckingDuplicates] = useState(false);
+  const [dismissedDuplicates, setDismissedDuplicates] = useState(false);
+
+  useEffect(() => {
+    const trimmed = subject.trim();
+    if (trimmed.length < 10) {
+      setDuplicates([]);
+      setCheckingDuplicates(false);
+      return;
+    }
+
+    setDismissedDuplicates(false);
+    setCheckingDuplicates(true);
+    const timer = setTimeout(async () => {
+      try {
+        const res = await checkDuplicateTickets(trimmed);
+        setDuplicates(res.matches || []);
+      } catch (err) {
+        console.warn('Duplicate check warning:', err);
+        setDuplicates([]);
+      } finally {
+        setCheckingDuplicates(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [subject]);
 
   // One-click demo presets
   const demoPresets = [
     {
       label: 'Duplicate Charge (Billing)',
       text: 'I was charged twice on my credit card for invoice #INV-20491. Please issue an immediate refund for the $149.00 duplicate deduction.',
-      tier: 'Platinum',
-      name: 'Michael Vance',
     },
     {
       label: 'Delayed Package (Shipping)',
       text: 'My expedited package with tracking ID TRK-881290 has been stuck in transit for 4 days past the guaranteed delivery date. Where is my parcel?',
-      tier: 'Gold',
-      name: 'Jessica Reynolds',
     },
     {
       label: 'API Lockout (Technical)',
       text: 'Getting HTTP 403 Forbidden errors when calling the production REST API endpoints after resetting our corporate service credentials.',
-      tier: 'Silver',
-      name: 'DevOps Lead',
     },
     {
       label: 'General Inquiry (Other)',
       text: 'Do you have open career opportunities for senior distributed systems engineers on your cloud infrastructure team?',
-      tier: 'Bronze',
-      name: 'Alex Rivera',
     },
     {
       label: 'Cryptocurrency Inquiry (Other)',
       text: 'Can I pay for my annual enterprise subscription using Ethereum or Bitcoin cryptocurrency tokens directly from a cold wallet?',
-      tier: 'Platinum',
-      name: 'Crypto Investor',
     },
   ];
 
   const handleApplyPreset = (preset: (typeof demoPresets)[0]) => {
     setSubject(preset.text);
-    setTier(preset.tier);
-    setCustomerName(preset.name);
-    setEmail(`${preset.name.toLowerCase().replace(/\s+/g, '.')}@example.com`);
-    setCustomerId(`CUST-${Math.floor(1000 + Math.random() * 9000)}`);
     setResult(null);
     setError(null);
+    setDismissedDuplicates(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!subject.trim()) {
       setError('Please provide an issue description before submitting.');
+      return;
+    }
+    if (!tier) {
+      setError('Please select a customer tier before submitting.');
       return;
     }
 
@@ -164,6 +188,81 @@ export const CreateTicketView: React.FC<CreateTicketViewProps> = ({ onNavigate }
           />
         </div>
 
+        {/* Debounced Duplicate Detection Indicator & Warning Banner */}
+        {checkingDuplicates && (
+          <div className="flex items-center space-x-2 text-xs text-slate-500 font-mono py-0.5">
+            <div className="w-3 h-3 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+            <span>Scanning existing tickets for potential duplicates...</span>
+          </div>
+        )}
+
+        {!dismissedDuplicates && duplicates.length > 0 && (
+          <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/80 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                <div>
+                  <h4 className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                    Potential Duplicate Tickets Detected ({duplicates.length})
+                  </h4>
+                  <p className="text-[11px] text-amber-800 dark:text-amber-300/90 mt-0.5">
+                    Similar issues already exist in the system. You may review them below or continue submitting this ticket.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDismissedDuplicates(true)}
+                className="text-[11px] text-amber-700 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-200 font-medium px-2 py-0.5 rounded hover:bg-amber-100 dark:hover:bg-amber-900/40 transition focus-ring"
+              >
+                Dismiss
+              </button>
+            </div>
+
+            <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+              {duplicates.map((match) => (
+                <div
+                  key={match.ticket_id}
+                  className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-amber-200/70 dark:border-amber-900/50 text-xs space-y-1.5 shadow-sm"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => onNavigate('detail', match.ticket_id)}
+                        className="font-mono font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1"
+                        title="View ticket details"
+                      >
+                        <span>{match.ticket_id}</span>
+                        <ExternalLink className="w-3 h-3 inline" />
+                      </button>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                        {Math.round(match.similarity_score * 100)}% Match
+                      </span>
+                      <StatusBadge status={match.status} />
+                      <PriorityBadge priority={match.priority} />
+                      {match.category && <TopicBadge topic={match.category} />}
+                    </div>
+                    {match.created_at && (
+                      <span className="text-[10px] text-slate-500 font-mono">
+                        {new Date(match.created_at).toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-slate-800 dark:text-slate-200 font-medium text-xs truncate">
+                    {match.subject}
+                  </div>
+
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400 italic">
+                    {match.similarity_reason}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Customer & Account Details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           <div className="space-y-1">
@@ -214,7 +313,9 @@ export const CreateTicketView: React.FC<CreateTicketViewProps> = ({ onNavigate }
               value={tier}
               onChange={(e) => setTier(e.target.value)}
               className="saas-input text-xs"
+              required
             >
+              <option value="" disabled>Select customer tier</option>
               <option value="Platinum">Platinum (High Priority Care)</option>
               <option value="Gold">Gold Priority</option>
               <option value="Silver">Silver Standard</option>
@@ -371,10 +472,11 @@ export const CreateTicketView: React.FC<CreateTicketViewProps> = ({ onNavigate }
               Clear
             </button>
             <button
+              id="view-full-report-btn"
               onClick={() => onNavigate('detail', result.ticket_id)}
               className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition focus-ring"
             >
-              <span>Open Full Ticket Details</span>
+              <span>View Full Report</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

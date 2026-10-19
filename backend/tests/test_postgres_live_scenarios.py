@@ -50,8 +50,69 @@ def run_psql_file(db_name: str, file_path_wsl: str, user: str = "postgres") -> s
     ]
     return subprocess.run(cmd, capture_output=True, text=True)
 
+def ensure_postgres_running() -> bool:
+    """Ensure that the local disposable PostgreSQL instance in WSL docker-desktop is running."""
+    # 1. Quick check if postgres is already accepting connections
+    try:
+        res = run_psql("postgres", "SELECT 1;")
+        if res.returncode == 0:
+            return True
+    except Exception:
+        pass
+
+    # 2. Check if WSL docker-desktop is available and has pg_ctl
+    try:
+        check = subprocess.run(
+            ["wsl", "-d", "docker-desktop", "-e", "which", "pg_ctl"],
+            capture_output=True, text=True, timeout=10
+        )
+        if check.returncode != 0:
+            return False
+    except Exception:
+        return False
+
+    # 3. Create run directories with proper permissions (/run is tmpfs with ample space)
+    try:
+        subprocess.run(
+            ["wsl", "-d", "docker-desktop", "-e", "sh", "-c",
+             "mkdir -p /run/postgresql /run/pgdata && chown -R postgres:postgres /run/postgresql /run/pgdata"],
+            capture_output=True, text=True, timeout=10
+        )
+
+        # 4. Initialize database cluster in /run/pgdata if not present
+        check_init = subprocess.run(
+            ["wsl", "-d", "docker-desktop", "-e", "test", "-f", "/run/pgdata/PG_VERSION"],
+            capture_output=True, text=True, timeout=5
+        )
+        if check_init.returncode != 0:
+            init_res = subprocess.run(
+                ["wsl", "-d", "docker-desktop", "-u", "postgres", "-e", "initdb", "-D", "/run/pgdata"],
+                capture_output=True, text=True, timeout=30
+            )
+            if init_res.returncode != 0:
+                return False
+
+        # 5. Start pg_ctl
+        subprocess.run(
+            ["wsl", "-d", "docker-desktop", "-u", "postgres", "-e", "pg_ctl", "-D", "/run/pgdata", "-l", "/run/pgdata/pg.log", "start"],
+            capture_output=True, text=True, timeout=15
+        )
+
+        # 6. Poll for server readiness
+        for _ in range(15):
+            time.sleep(0.5)
+            res = run_psql("postgres", "SELECT 1;")
+            if res.returncode == 0:
+                return True
+    except Exception:
+        return False
+
+    return False
+
 def create_disposable_db(db_name: str) -> None:
     """Drop and recreate a clean disposable database."""
+    if not ensure_postgres_running():
+        raise unittest.SkipTest("Disposable PostgreSQL instance in WSL docker-desktop is not reachable.")
     drop_create_sql = f"""
     DROP DATABASE IF EXISTS {db_name};
     CREATE DATABASE {db_name};
@@ -106,6 +167,11 @@ def setup_supabase_harness(db_name: str) -> None:
 
 class TestPostgresMigrationScenarios(unittest.TestCase):
     """Execution test suite against local PostgreSQL 18."""
+
+    @classmethod
+    def setUpClass(cls):
+        # Proactively ensure PostgreSQL service is running when entering this test case
+        ensure_postgres_running()
 
     def setUp(self):
         # Confirm that the migration file exists at the host location

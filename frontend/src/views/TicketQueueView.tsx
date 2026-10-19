@@ -6,11 +6,13 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  Clock,
 } from 'lucide-react';
 import { fetchTickets, updateTicket } from '../api';
 import { Ticket, TicketStatus } from '../types';
 import { StatusBadge, PriorityBadge, TopicBadge, TierBadge, SourceBadge } from '../components/Badges';
 import { BRAND_CONFIG } from '../config/brand';
+import { calculateTicketSLA } from '../utils/sla';
 
 interface TicketQueueViewProps {
   onNavigate: (view: string, ticketId?: string) => void;
@@ -242,47 +244,66 @@ export const TicketQueueView: React.FC<TicketQueueViewProps> = ({ onNavigate }) 
                   <th className="px-5 py-3">Customer & Tier</th>
                   <th className="px-5 py-3">Subject</th>
                   <th className="px-5 py-3">Category & Priority</th>
+                  <th className="px-5 py-3">SLA Status</th>
                   <th className="px-5 py-3">Team & AI Method</th>
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3 text-right">Details</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60">
-                {tickets.map((t) => (
-                  <tr key={t.ticket_id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition">
-                    <td className="px-5 py-3.5 whitespace-nowrap font-mono text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                      <button
-                        onClick={() => onNavigate('detail', t.ticket_id)}
-                        className="hover:underline text-left block focus-ring"
-                      >
-                        {t.ticket_id}
-                      </button>
-                      <span className="text-[10px] text-slate-500 font-sans block mt-0.5">
-                        {new Date(t.created_at).toLocaleDateString()}
-                      </span>
-                    </td>
+                {tickets.map((t) => {
+                  const sla = calculateTicketSLA(t.priority, t.created_at, t.status);
+                  const createdDate = t.created_at && !isNaN(new Date(t.created_at).getTime())
+                    ? new Date(t.created_at).toLocaleDateString()
+                    : '—';
 
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="font-semibold text-slate-900 dark:text-slate-200">{t.customer_name || 'Anonymous Customer'}</div>
-                      <div className="mt-1">
-                        <TierBadge tier={t.tier} />
-                      </div>
-                    </td>
+                  return (
+                    <tr key={t.ticket_id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition">
+                      <td className="px-5 py-3.5 whitespace-nowrap font-mono text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                        <button
+                          onClick={() => onNavigate('detail', t.ticket_id)}
+                          className="hover:underline text-left block focus-ring"
+                        >
+                          {t.ticket_id}
+                        </button>
+                        <span className="text-[10px] text-slate-500 font-sans block mt-0.5">
+                          {createdDate}
+                        </span>
+                      </td>
 
-                    <td className="px-5 py-3.5 max-w-sm truncate text-slate-700 dark:text-slate-300">
-                      <span title={t.subject}>{t.subject}</span>
-                    </td>
-
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="flex flex-col space-y-1">
-                        <div>
-                          <TopicBadge topic={t.category} />
+                      <td className="px-5 py-3.5 whitespace-nowrap">
+                        <div className="font-semibold text-slate-900 dark:text-slate-200">{t.customer_name || 'Anonymous Customer'}</div>
+                        <div className="mt-1">
+                          <TierBadge tier={t.tier} />
                         </div>
-                        <div>
-                          <PriorityBadge priority={t.priority} />
+                      </td>
+
+                      <td className="px-5 py-3.5 max-w-sm truncate text-slate-700 dark:text-slate-300">
+                        <span title={t.subject}>{t.subject}</span>
+                      </td>
+
+                      <td className="px-5 py-3.5 whitespace-nowrap">
+                        <div className="flex flex-col space-y-1">
+                          <div>
+                            <TopicBadge topic={t.category} />
+                          </div>
+                          <div>
+                            <PriorityBadge priority={t.priority} />
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
+
+                      <td className="px-5 py-3.5 whitespace-nowrap">
+                        <div className="flex flex-col space-y-1">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold border ${sla.colorClass} w-fit`}>
+                            <Clock className="w-3 h-3 mr-1 shrink-0" />
+                            {sla.status}
+                          </span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono" title={sla.deadlineText}>
+                            {sla.timeRemaining}
+                          </span>
+                        </div>
+                      </td>
 
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <select
@@ -325,7 +346,8 @@ export const TicketQueueView: React.FC<TicketQueueViewProps> = ({ onNavigate }) 
                       </button>
                     </td>
                   </tr>
-                ))}
+                );
+              })}
               </tbody>
             </table>
           </div>

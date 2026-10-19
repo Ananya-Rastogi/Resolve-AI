@@ -15,12 +15,31 @@ import { ResetPasswordView } from './views/ResetPasswordView';
 import { fetchHealth } from './api';
 import { HealthResponse } from './types';
 import { BRAND_CONFIG } from './config/brand';
+import { HelpAssistant } from './components/HelpAssistant';
+import { OnboardingTour } from './components/OnboardingTour';
 
 const AppContent: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, profile, updateProfile, loading } = useAuth();
   const [currentView, setCurrentView] = useState<string>('dashboard');
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const userKey = user.id || user.email || 'default';
+    const hasLocalCompleted = localStorage.getItem('resolve_onboarding_' + userKey) === 'true';
+    const hasProfileCompleted = Boolean(profile?.preferences?.onboarding_completed);
+    if (!hasLocalCompleted && !hasProfileCompleted) {
+      setOnboardingOpen(true);
+    }
+  }, [user, profile]);
+
+  useEffect(() => {
+    const handleReopenTour = () => setOnboardingOpen(true);
+    window.addEventListener('resolve-open-tour', handleReopenTour);
+    return () => window.removeEventListener('resolve-open-tour', handleReopenTour);
+  }, []);
 
   const loadHealth = async () => {
     try {
@@ -105,6 +124,7 @@ const AppContent: React.FC = () => {
           <TicketDetailView
             ticketId={selectedTicketId}
             onBack={() => handleNavigate('queue')}
+            onNavigate={handleNavigate}
           />
         )}
         {activeView === 'evaluation' && <QualityEvalView />}
@@ -131,6 +151,19 @@ const AppContent: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Floating In-App Help Assistant */}
+      <HelpAssistant currentPage={activeView} onNavigate={handleNavigate} />
+
+      {/* Interactive First-Time Onboarding Tour */}
+      <OnboardingTour
+        isOpen={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+        onStartTicket={() => handleNavigate('create')}
+        user={user}
+        profile={profile}
+        updateProfile={updateProfile}
+      />
     </div>
   );
 };

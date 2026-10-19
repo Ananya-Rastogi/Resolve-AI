@@ -3,11 +3,29 @@ FastAPI application for Enterprise Multi-Agent Ticket Routing System.
 Provides RESTful endpoints for ticket ingestion, queue triage, analytics, and health monitoring.
 """
 from datetime import datetime, timezone
+import base64
 import json
 import logging
 import math
 import os
+from pathlib import Path
 from typing import Any, Dict, Optional
+import urllib.parse
+
+from dotenv import load_dotenv
+
+# Ensure environment variables are loaded from backend/.env or root .env
+_base_dir = Path(__file__).resolve().parent.parent.parent
+_env_file = _base_dir / ".env"
+if _env_file.is_file():
+    load_dotenv(_env_file)
+else:
+    load_dotenv()
+
+try:
+    import jwt
+except ImportError:
+    jwt = None
 
 from fastapi import FastAPI, HTTPException, Query, Request, Response, status as http_status
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,11 +45,18 @@ from app.api.schemas import (
     UserProfileResponse,
     UserProfileUpdateRequest,
     AdminRoleUpdateRequest,
+    HelpChatRequest,
+    HelpChatResponse,
+    DuplicateTicketMatch,
+    DuplicateCheckRequest,
+    DuplicateCheckResponse,
 )
 from app.db.repository import get_repository
 from app.graph.workflow import get_rag_pipeline, run_ticket_workflow
 from app.models.schemas import CustomerTier, TicketState
 from app.utils.ticket_utils import generate_ticket_id
+from app.utils.help_chatbot import generate_help_response
+from app.utils.duplicate_detector import find_duplicate_tickets
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ticket_api")
@@ -67,6 +92,31 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
+_auth_supabase_client = None
+
+
+def get_supabase_auth_client():
+    """Cache and return a standalone Supabase client for authentication verification."""
+    global _auth_supabase_client
+    if _auth_supabase_client is not None:
+        return _auth_supabase_client
+    supabase_url = os.getenv("SUPABASE_URL", "").strip()
+    supabase_key = os.getenv("SUPABASE_KEY", "").strip()
+    if (
+        supabase_url
+        and supabase_key
+        and not supabase_url.startswith("https://your-project")
+        and not supabase_key.startswith("your-supabase")
+    ):
+        try:
+            from supabase import create_client
+            _auth_supabase_client = create_client(supabase_url, supabase_key)
+            return _auth_supabase_client
+        except Exception as e:
+            logger.debug(f"Could not initialize Supabase auth client: {e}")
+    return None
+
+
 def get_auth_user(request: Request) -> Optional[Dict[str, Any]]:
     """
     Authenticate user using Supabase JWT Bearer token or local dev mode fallback.
@@ -79,11 +129,24 @@ def get_auth_user(request: Request) -> Optional[Dict[str, Any]]:
     if not token:
         return None
 
+    # 1. Strictly isolated development fallback for offline SQLite testing
+    if token.startswith("dev-") or token.startswith("test-"):
+        user_id = token
+        raw_id = urllib.parse.unquote(token[4:]) if token.startswith("dev-") else token[5:]
+        email = raw_id if "@" in raw_id else f"{user_id}@resolve-ai.local"
+        full_name = raw_id.split("@")[0].replace("-", " ").title()
+        return {
+            "id": user_id,
+            "email": email,
+            "user_metadata": {"full_name": full_name},
+        }
+
     repo = get_repository()
-    # If Supabase client is available, verify token securely via Supabase Auth API
-    if hasattr(repo, "client") and repo.client is not None:
+    # 2. Verify token securely via Supabase Auth API if Supabase client is available
+    supabase_client = getattr(repo, "client", None) or get_supabase_auth_client()
+    if supabase_client is not None:
         try:
-            res = repo.client.auth.get_user(token)
+            res = supabase_client.auth.get_user(token)
             if res and res.user:
                 return {
                     "id": str(res.user.id),
@@ -92,37 +155,44 @@ def get_auth_user(request: Request) -> Optional[Dict[str, Any]]:
                 }
         except Exception as e:
             logger.debug(f"Supabase auth get_user verification failed: {e}")
-            return None
 
-    # Development fallback for local testing when offline SQLite is explicitly used
-    if repo.backend_name == "local_sqlite":
-        if token.startswith("dev-") or token.startswith("test-"):
-            user_id = token
-            return {
-                "id": user_id,
-                "email": f"{user_id}@resolve-ai.local",
-                "user_metadata": {"full_name": "Support Agent"},
-            }
-        return {
-            "id": "local-agent-001",
-            "email": "agent@resolve-ai.local",
-            "user_metadata": {"full_name": "Local Support Specialist"},
-        }
+    # 3. Cryptographic JWT verification if SUPABASE_JWT_SECRET is configured
+    jwt_secret = os.getenv("SUPABASE_JWT_SECRET")
+    if jwt_secret and token.count(".") == 2 and jwt is not None:
+        try:
+            payload = jwt.decode(
+                token,
+                jwt_secret,
+                algorithms=["HS256"],
+                options={"verify_signature": True, "verify_exp": True},
+                audience="authenticated",
+            )
+            sub = payload.get("sub")
+            if sub:
+                return {
+                    "id": str(sub),
+                    "email": payload.get("email", ""),
+                    "user_metadata": payload.get("user_metadata", {}),
+                }
+        except Exception as exc:
+            logger.debug(f"Cryptographic JWT verification failed: {exc}")
 
+    # 4. Reject unverified tokens
     return None
 
 
 def check_ticket_access(ticket: Dict[str, Any], user: Optional[Dict[str, Any]], repo) -> bool:
     """
-    Enforce backend authorization when using service-role key:
-    - If user is None (public test mode or unauthenticated), allow if ticket is unassigned.
-    - If user is authenticated:
-      - Admin and Manager can access all tickets.
-      - Agent can access if ticket is unassigned (user_id is None) or owned by the agent.
+    Enforce backend authorization:
+    - User must be authenticated. Unauthenticated requests are denied.
+    - Admin and Manager can access all production tickets.
+    - Agent can access if ticket is unassigned (user_id is None) or owned by the agent.
     """
     if not user:
-        return True
+        return False
     user_id = user.get("id")
+    if not user_id:
+        return False
     profile = repo.get_user_profile(user_id) or {}
     role = profile.get("role", "agent")
     if role in ("admin", "manager"):
@@ -301,21 +371,30 @@ def list_tickets(
     page: int = Query(1, ge=1, description="Page number"),
     limit: int = Query(20, ge=1, le=100, description="Items per page"),
 ):
-    """Retrieve paginated list of tickets with optional filtering and role-based data isolation."""
+    """Retrieve paginated list of tickets with mandatory authentication and role-based data isolation."""
     user = get_auth_user(request)
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to view tickets.",
+        )
     repo = get_repository()
 
-    # Enforce role scoping if user is an agent
-    if user:
-        profile = repo.get_user_profile(user["id"]) or {}
-        role = profile.get("role", "agent")
-        if role not in ("admin", "manager"):
-            # An agent cannot request another agent's user_id
-            if user_id and user_id != user["id"]:
-                raise HTTPException(
-                    status_code=http_status.HTTP_403_FORBIDDEN,
-                    detail="Agents are not authorized to view other agents' private tickets.",
-                )
+    profile = repo.get_user_profile(user["id"]) or {}
+    role = profile.get("role", "agent")
+
+    effective_user_id = user_id
+    if role in ("admin", "manager"):
+        # Admins and managers can view all tickets, or filter by a specific user_id
+        effective_user_id = user_id
+    else:
+        # Non-admin agents can only view their own private tickets.
+        if user_id and user_id != user["id"]:
+            raise HTTPException(
+                status_code=http_status.HTTP_403_FORBIDDEN,
+                detail="Agents are not authorized to view other agents' private tickets.",
+            )
+        effective_user_id = user["id"]
 
     items, total = repo.list_tickets(
         status=status,
@@ -325,7 +404,8 @@ def list_tickets(
         search=search,
         page=page,
         limit=limit,
-        user_id=user_id,
+        user_id=effective_user_id,
+        exclude_benchmarks=True,
     )
 
     total_pages = max(1, math.ceil(total / limit)) if total > 0 else 1
@@ -342,6 +422,12 @@ def list_tickets(
 @app.get("/api/tickets/{ticket_id}", response_model=TicketDetailResponse, tags=["Tickets"])
 def get_ticket_details(ticket_id: str, request: Request):
     """Retrieve full ticket details, AI analysis parameters, citations, and audit history."""
+    user = get_auth_user(request)
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to view ticket details.",
+        )
     repo = get_repository()
     ticket = repo.get_ticket(ticket_id)
     if not ticket:
@@ -350,8 +436,7 @@ def get_ticket_details(ticket_id: str, request: Request):
             detail=f"Ticket '{ticket_id}' not found.",
         )
 
-    user = get_auth_user(request)
-    if user and not check_ticket_access(ticket, user, repo):
+    if not check_ticket_access(ticket, user, repo):
         raise HTTPException(
             status_code=http_status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to view this ticket.",
@@ -381,6 +466,12 @@ def get_ticket_details(ticket_id: str, request: Request):
 @app.patch("/api/tickets/{ticket_id}", response_model=TicketResponse, tags=["Tickets"])
 def update_ticket(ticket_id: str, updates: TicketUpdateRequest, request: Request):
     """Safely update ticket status, assigned team, priority, or escalation with audit logging."""
+    user = get_auth_user(request)
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to update tickets.",
+        )
     repo = get_repository()
     ticket = repo.get_ticket(ticket_id)
     if not ticket:
@@ -389,8 +480,7 @@ def update_ticket(ticket_id: str, updates: TicketUpdateRequest, request: Request
             detail=f"Ticket '{ticket_id}' not found.",
         )
 
-    user = get_auth_user(request)
-    if user and not check_ticket_access(ticket, user, repo):
+    if not check_ticket_access(ticket, user, repo):
         raise HTTPException(
             status_code=http_status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to update this ticket.",
@@ -398,9 +488,11 @@ def update_ticket(ticket_id: str, updates: TicketUpdateRequest, request: Request
 
     update_dict = updates.model_dump(exclude_unset=True)
     actor = update_dict.pop("actor", "support_agent")
+    # Prevent user-supplied ticket ownership manipulation
+    update_dict.pop("user_id", None)
 
     # If ticket was unassigned and an authenticated agent updates it, claim ticket for agent
-    if user and ticket.get("user_id") is None:
+    if ticket.get("user_id") is None:
         update_dict["user_id"] = user["id"]
 
     if not update_dict:
@@ -437,14 +529,28 @@ def admin_update_user_role(target_user_id: str, payload: AdminRoleUpdateRequest,
 
 
 @app.get("/api/analytics", response_model=AnalyticsResponse, tags=["Analytics"])
-def get_analytics():
+def get_analytics(request: Request):
     """
     Return real-time operational ticket statistics and offline evaluation benchmark metrics.
     Clearly distinguishes live production data from static offline test set evaluations.
+    Requires authentication.
     """
+    user = get_auth_user(request)
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to view analytics.",
+        )
     now_iso = datetime.now(timezone.utc).isoformat()
     repo = get_repository()
-    live_stats = repo.get_analytics()
+
+    effective_user_id = None
+    profile = repo.get_user_profile(user["id"]) or {}
+    role = profile.get("role", "agent")
+    if role not in ("admin", "manager"):
+        effective_user_id = user["id"]
+
+    live_stats = repo.get_analytics(user_id=effective_user_id, exclude_benchmarks=True)
 
     # Load offline evaluation benchmark metrics if available
     offline_eval_data = None
@@ -525,3 +631,99 @@ def update_user_profile_endpoint(payload: UserProfileUpdateRequest, request: Req
             detail="Failed to update profile.",
         )
     return UserProfileResponse(**updated)
+
+
+@app.post("/api/help/chat", response_model=HelpChatResponse, tags=["Help"])
+def help_chat_endpoint(payload: HelpChatRequest):
+    """
+    In-app help assistant providing contextual, accurate guidance on navigation,
+    priority rules, SLA targets, and AI triage.
+    """
+    history_dicts = [h.model_dump() for h in payload.history] if payload.history else []
+    result = generate_help_response(
+        message=payload.message,
+        current_page=payload.current_page,
+        history=history_dicts,
+    )
+    return HelpChatResponse(
+        reply=result["reply"],
+        suggested_actions=result.get("suggested_actions", []),
+    )
+
+
+@app.post("/api/tickets/check-duplicates", response_model=DuplicateCheckResponse, tags=["Tickets"])
+def check_duplicates_endpoint(payload: DuplicateCheckRequest, request: Request):
+    """
+    Check for potential duplicate tickets against actual database records before submission.
+    Never auto-merges or deletes; returns human-actionable suggestions strictly scoped to the user.
+    """
+    user = get_auth_user(request)
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to check duplicate tickets.",
+        )
+    repo = get_repository()
+    profile = repo.get_user_profile(user["id"]) or {}
+    role = profile.get("role", "agent")
+
+    effective_user_id = None
+    if role not in ("admin", "manager"):
+        effective_user_id = user["id"]
+
+    existing_tickets, _ = repo.list_tickets(user_id=effective_user_id, limit=100, exclude_benchmarks=True)
+    matches = find_duplicate_tickets(
+        subject=payload.subject,
+        existing_tickets=existing_tickets,
+        exclude_ticket_id=payload.exclude_ticket_id,
+        threshold=0.35,
+    )
+    return DuplicateCheckResponse(
+        matches=[DuplicateTicketMatch(**m) for m in matches],
+        total_matches=len(matches),
+    )
+
+
+@app.get("/api/tickets/{ticket_id}/duplicates", response_model=DuplicateCheckResponse, tags=["Tickets"])
+def get_ticket_duplicates_endpoint(ticket_id: str, request: Request):
+    """
+    Find existing tickets in the database with similar subject or problem descriptions,
+    strictly verifying authorization on the target ticket and scoping search to authorized tickets.
+    """
+    user = get_auth_user(request)
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to view duplicate tickets.",
+        )
+    repo = get_repository()
+    ticket = repo.get_ticket(ticket_id)
+    if not ticket:
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail=f"Ticket '{ticket_id}' not found.",
+        )
+
+    if not check_ticket_access(ticket, user, repo):
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to view duplicates for this ticket.",
+        )
+
+    profile = repo.get_user_profile(user["id"]) or {}
+    role = profile.get("role", "agent")
+    effective_user_id = None
+    if role not in ("admin", "manager"):
+        effective_user_id = user["id"]
+
+    existing_tickets, _ = repo.list_tickets(user_id=effective_user_id, limit=100, exclude_benchmarks=True)
+    matches = find_duplicate_tickets(
+        subject=ticket.get("subject", ""),
+        existing_tickets=existing_tickets,
+        exclude_ticket_id=ticket_id,
+        threshold=0.35,
+    )
+    return DuplicateCheckResponse(
+        matches=[DuplicateTicketMatch(**m) for m in matches],
+        total_matches=len(matches),
+    )

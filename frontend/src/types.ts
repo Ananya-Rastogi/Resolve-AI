@@ -130,3 +130,37 @@ export interface HealthResponse {
   database_status: string;
   version: string;
 }
+
+export interface DuplicateTicketMatch {
+  ticket_id: string;
+  subject: string;
+  similarity_score: number;
+  similarity_reason: string;
+  status: TicketStatus;
+  priority: TicketPriority;
+  category?: TicketTopic;
+  created_at?: string;
+}
+
+export interface DuplicateCheckResponse {
+  matches: DuplicateTicketMatch[];
+  total_matches: number;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+export interface HelpChatResponse {
+  reply: string;
+  suggested_actions?: Array<{ label: string; view?: string; action?: string; prompt?: string }>;
+}
+
+export interface SLAStatusInfo {
+  status: 'On Track' | 'Due Soon' | 'Overdue' | 'Needs Review' | 'Resolved';
+  timeRemaining: string;
+  deadlineText: string;
+  isOverdue: boolean;
+  colorClass: string;
+}

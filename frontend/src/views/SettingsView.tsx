@@ -12,6 +12,7 @@ import {
   Save,
   CheckCircle,
   AlertCircle,
+  Sparkles,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -297,6 +298,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onNavigate }) => {
           >
             <User className="w-3.5 h-3.5" />
             <span>Open Account Page</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('resolve-open-tour'))}
+            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/30 transition focus-ring"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Replay Onboarding Tour</span>
           </button>
 
           <button

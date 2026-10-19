@@ -7,6 +7,8 @@ import {
   TicketPriority,
   TicketStatus,
   UserProfile,
+  DuplicateCheckResponse,
+  HelpChatResponse,
 } from './types';
 import { supabase } from './lib/supabase';
 
@@ -19,11 +21,32 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.access_token) {
+      if (session.expires_at && Math.floor(Date.now() / 1000) >= session.expires_at) {
+        const { data: refreshData } = await supabase.auth.refreshSession();
+        if (refreshData?.session?.access_token) {
+          headers['Authorization'] = `Bearer ${refreshData.session.access_token}`;
+          return headers;
+        }
+      }
       headers['Authorization'] = `Bearer ${session.access_token}`;
+      return headers;
     }
   } catch (e) {
     // Supabase auth not initialized or network offline
   }
+
+  // Local development fallback: send token identifying local authenticated user
+  try {
+    const localSavedUser = localStorage.getItem('resolve_local_user');
+    if (localSavedUser) {
+      const parsed = JSON.parse(localSavedUser);
+      const userKey = parsed.id || parsed.email || 'local-agent';
+      headers['Authorization'] = `Bearer dev-${encodeURIComponent(userKey)}`;
+    }
+  } catch (e) {
+    // Ignore JSON parse errors
+  }
+
   return headers;
 }
 
@@ -78,7 +101,8 @@ export async function fetchTicketDetail(ticketId: string): Promise<TicketDetail>
   const headers = await getAuthHeaders();
   const res = await fetch(`${API_BASE}/tickets/${encodeURIComponent(ticketId)}`, { headers });
   if (!res.ok) {
-    throw new Error(`Failed to load ticket ${ticketId}: ${res.statusText}`);
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || `Failed to load ticket ${ticketId}: ${res.statusText}`);
   }
   return res.json();
 }
@@ -148,6 +172,58 @@ export async function updateUserProfileApi(updates: Partial<UserProfile>): Promi
   });
   if (!res.ok) {
     throw new Error(`Failed to update profile: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function checkDuplicateTickets(
+  subject: string,
+  excludeTicketId?: string
+): Promise<DuplicateCheckResponse> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/tickets/check-duplicates`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      subject,
+      exclude_ticket_id: excludeTicketId,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`Duplicate check failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchTicketDuplicates(ticketId: string): Promise<DuplicateCheckResponse> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/tickets/${encodeURIComponent(ticketId)}/duplicates`, {
+    headers,
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to load duplicates for ticket ${ticketId}: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function sendHelpChatMessage(
+  message: string,
+  currentPage?: string,
+  history?: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>
+): Promise<HelpChatResponse> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE}/help/chat`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      message,
+      current_page: currentPage,
+      history: history || [],
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || `Help chatbot error (${res.status})`);
   }
   return res.json();
 }

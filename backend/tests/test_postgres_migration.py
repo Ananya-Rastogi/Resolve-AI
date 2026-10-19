@@ -10,6 +10,7 @@ Validates:
     exactly ONE caller succeeds and all concurrent/subsequent calls fail.
 """
 import concurrent.futures
+from pathlib import Path
 import re
 import threading
 import time
@@ -22,10 +23,14 @@ class TestPostgresMigrationSyntax(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open("supabase/migration_001_auth_profiles.sql", "r", encoding="utf-8") as f:
+        base_dir = Path(__file__).resolve().parent.parent
+        migration_file = base_dir / "supabase" / "migration_001_auth_profiles.sql"
+        schema_file = base_dir / "supabase" / "schema.sql"
+
+        with open(migration_file, "r", encoding="utf-8") as f:
             cls.migration_sql = f.read()
 
-        with open("supabase/schema.sql", "r", encoding="utf-8") as f:
+        with open(schema_file, "r", encoding="utf-8") as f:
             cls.schema_sql = f.read()
 
     def test_01_no_pg_catalog_coalesce(self):

@@ -17,6 +17,8 @@ class TestFastAPIBackend(unittest.TestCase):
         cls.test_repo = SQLiteRepository(db_path=":memory:")
         set_repository(cls.test_repo)
         cls.client = TestClient(app)
+        cls.admin_headers = {"Authorization": "Bearer dev-admin-test"}
+        cls.test_repo.update_user_role_admin("dev-admin-test", "admin")
 
     def test_01_health_endpoint(self):
         """Verify GET /api/health returns healthy status and metadata."""
@@ -79,7 +81,11 @@ class TestFastAPIBackend(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
 
     def test_05_list_tickets_and_filtering(self):
-        """Verify GET /api/tickets supports pagination and query filters."""
+        """Verify GET /api/tickets requires authentication, supports pagination and query filters."""
+        # Unauthenticated request rejected with 401
+        unauth_res = self.client.get("/api/tickets?page=1&limit=10")
+        self.assertEqual(unauth_res.status_code, 401)
+
         # Create a second ticket with shipping
         self.client.post(
             "/api/tickets",
@@ -90,25 +96,29 @@ class TestFastAPIBackend(unittest.TestCase):
             },
         )
 
-        response = self.client.get("/api/tickets?page=1&limit=10")
+        response = self.client.get("/api/tickets?page=1&limit=10", headers=self.admin_headers)
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertGreaterEqual(data["total"], 2)
         self.assertGreaterEqual(len(data["items"]), 2)
 
         # Filter by category=billing
-        billing_res = self.client.get("/api/tickets?category=billing")
+        billing_res = self.client.get("/api/tickets?category=billing", headers=self.admin_headers)
         self.assertEqual(billing_res.status_code, 200)
         billing_items = billing_res.json()["items"]
         self.assertTrue(all(item["category"] == "billing" for item in billing_items))
 
     def test_06_get_ticket_details(self):
-        """Verify GET /api/tickets/{ticket_id} returns full analysis and audit history."""
+        """Verify GET /api/tickets/{ticket_id} requires auth and returns full analysis and audit history."""
         # Fetch first ticket
-        list_res = self.client.get("/api/tickets?limit=1")
+        list_res = self.client.get("/api/tickets?limit=1", headers=self.admin_headers)
         ticket_id = list_res.json()["items"][0]["ticket_id"]
 
-        detail_res = self.client.get(f"/api/tickets/{ticket_id}")
+        # Unauthenticated request rejected
+        unauth_res = self.client.get(f"/api/tickets/{ticket_id}")
+        self.assertEqual(unauth_res.status_code, 401)
+
+        detail_res = self.client.get(f"/api/tickets/{ticket_id}", headers=self.admin_headers)
         self.assertEqual(detail_res.status_code, 200)
         detail = detail_res.json()
         self.assertEqual(detail["ticket_id"], ticket_id)
@@ -116,32 +126,44 @@ class TestFastAPIBackend(unittest.TestCase):
         self.assertIsInstance(detail.get("events"), list)
 
     def test_07_get_ticket_not_found(self):
-        """Verify GET /api/tickets/{non_existent} returns 404."""
-        response = self.client.get("/api/tickets/TKT-DOES-NOT-EXIST")
+        """Verify GET /api/tickets/{non_existent} returns 404 for authorized user."""
+        response = self.client.get("/api/tickets/TKT-DOES-NOT-EXIST", headers=self.admin_headers)
         self.assertEqual(response.status_code, 404)
 
     def test_08_update_ticket(self):
-        """Verify PATCH /api/tickets/{ticket_id} safely updates status and assigned team."""
-        list_res = self.client.get("/api/tickets?limit=1")
+        """Verify PATCH /api/tickets/{ticket_id} requires auth and safely updates status and assigned team."""
+        list_res = self.client.get("/api/tickets?limit=1", headers=self.admin_headers)
         ticket_id = list_res.json()["items"][0]["ticket_id"]
+
+        # Unauthenticated update rejected
+        unauth_res = self.client.patch(
+            f"/api/tickets/{ticket_id}",
+            json={"status": "resolved", "assigned_team": "Billing Support", "actor": "manager_alice"},
+        )
+        self.assertEqual(unauth_res.status_code, 401)
 
         patch_res = self.client.patch(
             f"/api/tickets/{ticket_id}",
             json={"status": "resolved", "assigned_team": "Billing Support", "actor": "manager_alice"},
+            headers=self.admin_headers,
         )
         self.assertEqual(patch_res.status_code, 200)
         updated = patch_res.json()
         self.assertEqual(updated["status"], "resolved")
 
         # Verify audit event was logged
-        detail_res = self.client.get(f"/api/tickets/{ticket_id}")
+        detail_res = self.client.get(f"/api/tickets/{ticket_id}", headers=self.admin_headers)
         events = detail_res.json().get("events", [])
         update_events = [e for e in events if e.get("event_type") == "ticket_updated"]
         self.assertGreaterEqual(len(update_events), 1)
 
     def test_09_analytics_endpoint(self):
-        """Verify GET /api/analytics returns real aggregated statistics and offline evaluation benchmarks."""
-        response = self.client.get("/api/analytics")
+        """Verify GET /api/analytics requires auth and returns real aggregated statistics."""
+        # Unauthenticated request rejected
+        unauth = self.client.get("/api/analytics")
+        self.assertEqual(unauth.status_code, 401)
+
+        response = self.client.get("/api/analytics", headers=self.admin_headers)
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIn("live_metrics", data)
@@ -189,8 +211,8 @@ class TestFastAPIBackend(unittest.TestCase):
         ticket = res.json()
         self.assertEqual(ticket["user_id"], "dev-agent-42")
 
-        # Verify filtering by user_id
-        list_res = self.client.get("/api/tickets?user_id=dev-agent-42")
+        # Verify filtering by user_id with authorized caller
+        list_res = self.client.get("/api/tickets?user_id=dev-agent-42", headers={"Authorization": "Bearer dev-agent-42"})
         self.assertEqual(list_res.status_code, 200)
         items = list_res.json()["items"]
         self.assertTrue(any(t["ticket_id"] == ticket["ticket_id"] for t in items))
@@ -399,6 +421,187 @@ class TestFastAPIBackend(unittest.TestCase):
         # Verify second user was NOT elevated
         p2 = test_repo.get_user_profile("user-second-boot")
         self.assertEqual(p2["role"], "agent")
+
+    def test_16_security_unauthenticated_requests_rejected(self):
+        """
+        Verify all sensitive ticket and duplicate endpoints strictly reject unauthenticated requests with 401.
+        """
+        # 1. Ticket list
+        res_list = self.client.get("/api/tickets")
+        self.assertEqual(res_list.status_code, 401)
+
+        # 2. Ticket details
+        res_detail = self.client.get("/api/tickets/TKT-SAMPLE-001")
+        self.assertEqual(res_detail.status_code, 401)
+
+        # 3. Ticket updates
+        res_patch = self.client.patch("/api/tickets/TKT-SAMPLE-001", json={"status": "resolved"})
+        self.assertEqual(res_patch.status_code, 401)
+
+        # 4. Analytics
+        res_analytics = self.client.get("/api/analytics")
+        self.assertEqual(res_analytics.status_code, 401)
+
+        # 5. Duplicate check POST
+        res_dup_post = self.client.post("/api/tickets/check-duplicates", json={"subject": "Payment refund inquiry"})
+        self.assertEqual(res_dup_post.status_code, 401)
+
+        # 6. Duplicate check GET
+        res_dup_get = self.client.get("/api/tickets/TKT-SAMPLE-001/duplicates")
+        self.assertEqual(res_dup_get.status_code, 401)
+
+    def test_17_security_forged_unsigned_jwts_rejected(self):
+        """
+        Verify that forged, unsigned, or unverified JWTs are rejected and never trusted.
+        """
+        forged_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdHRhY2tlci1hZG1pbiIsImVtYWlsIjoiaGFja2VyQGF0dGFjay5jb20iLCJyb2xlIjoiYWRtaW4ifQ.invalidsignature123"
+        forged_headers = {"Authorization": f"Bearer {forged_jwt}"}
+
+        res_list = self.client.get("/api/tickets", headers=forged_headers)
+        self.assertEqual(res_list.status_code, 401)
+
+        res_dup = self.client.post("/api/tickets/check-duplicates", json={"subject": "Billing issue"}, headers=forged_headers)
+        self.assertEqual(res_dup.status_code, 401)
+
+        random_headers = {"Authorization": "Bearer arbitrary-fake-token-string"}
+        res_random = self.client.get("/api/tickets", headers=random_headers)
+        self.assertEqual(res_random.status_code, 401)
+
+    def test_18_security_user_id_param_spoofing_blocked(self):
+        """
+        Verify that supplying ?user_id=target-user cannot bypass authorization for unauthenticated users or agents.
+        """
+        # Unauthenticated user supplies ?user_id=dev-user-alpha -> 401
+        res_unauth = self.client.get("/api/tickets?user_id=dev-user-alpha")
+        self.assertEqual(res_unauth.status_code, 401)
+
+        # Non-admin agent dev-user-beta supplies ?user_id=dev-user-alpha -> 403 Forbidden
+        res_agent = self.client.get(
+            "/api/tickets?user_id=dev-user-alpha",
+            headers={"Authorization": "Bearer dev-user-beta"},
+        )
+        self.assertEqual(res_agent.status_code, 403)
+
+    def test_19_security_duplicate_check_authorization_and_isolation(self):
+        """
+        Verify that duplicate detection enforces user isolation and never leaks cross-tenant ticket subjects or IDs.
+        """
+        # 1. User Alpha creates ticket with sensitive subject
+        res_a = self.client.post(
+            "/api/tickets",
+            json={
+                "subject": "Confidential Alpha corporate credit card compromise report",
+                "customer_name": "Alpha Corp",
+                "tier": "Platinum",
+            },
+            headers={"Authorization": "Bearer dev-user-alpha"},
+        )
+        self.assertEqual(res_a.status_code, 201)
+        ticket_a_id = res_a.json()["ticket_id"]
+
+        # 2. User Beta checks duplicates for the exact same subject -> should find 0 matches
+        res_beta_dup = self.client.post(
+            "/api/tickets/check-duplicates",
+            json={"subject": "Confidential Alpha corporate credit card compromise report"},
+            headers={"Authorization": "Bearer dev-user-beta"},
+        )
+        self.assertEqual(res_beta_dup.status_code, 200)
+        beta_matches = res_beta_dup.json()["matches"]
+        matched_ids = [m["ticket_id"] for m in beta_matches]
+        self.assertNotIn(ticket_a_id, matched_ids)
+        self.assertEqual(len(beta_matches), 0)
+
+        # 3. User Alpha checks duplicates -> finds Ticket A
+        res_alpha_dup = self.client.post(
+            "/api/tickets/check-duplicates",
+            json={"subject": "Confidential Alpha corporate credit card compromise report"},
+            headers={"Authorization": "Bearer dev-user-alpha"},
+        )
+        self.assertEqual(res_alpha_dup.status_code, 200)
+        alpha_matches = res_alpha_dup.json()["matches"]
+        alpha_matched_ids = [m["ticket_id"] for m in alpha_matches]
+        self.assertIn(ticket_a_id, alpha_matched_ids)
+
+        # 4. User Beta attempts to query ticket duplicates endpoint for Ticket A -> 403 Forbidden
+        res_beta_direct = self.client.get(
+            f"/api/tickets/{ticket_a_id}/duplicates",
+            headers={"Authorization": "Bearer dev-user-beta"},
+        )
+        self.assertEqual(res_beta_direct.status_code, 403)
+
+        # 5. User Alpha queries ticket duplicates endpoint for Ticket A -> 200 OK
+        res_alpha_direct = self.client.get(
+            f"/api/tickets/{ticket_a_id}/duplicates",
+            headers={"Authorization": "Bearer dev-user-alpha"},
+        )
+        self.assertEqual(res_alpha_direct.status_code, 200)
+
+    def test_18_supabase_token_verification_and_unauthorized_regression(self):
+        """
+        Regression test for Issue 1:
+        1. An unverified/invalid Bearer token returns 401 Unauthorized when requesting ticket details.
+        2. A verified Supabase auth token authenticates the user, allowing access to their own ticket.
+        3. Ticket creation, listing, and detail retrieval use consistent authenticated identity.
+        4. Cross-user ticket access remains forbidden (403).
+        """
+        from unittest.mock import MagicMock, patch
+
+        # 1. Unverified token returns 401 Unauthorized
+        tkt_res = self.client.post(
+            "/api/tickets",
+            json={"subject": "Regression test ticket for auth verification", "customer_name": "Test User", "tier": "Gold"},
+            headers={"Authorization": "Bearer dev-agent-regression"},
+        )
+        self.assertEqual(tkt_res.status_code, 201)
+        ticket_id = tkt_res.json()["ticket_id"]
+
+        invalid_res = self.client.get(
+            f"/api/tickets/{ticket_id}",
+            headers={"Authorization": "Bearer invalid.fake.token"},
+        )
+        self.assertEqual(invalid_res.status_code, 401)
+        self.assertIn("Authentication required", invalid_res.json()["detail"])
+
+        # 2. Mock Supabase Auth verification to simulate valid Supabase token
+        mock_user = MagicMock()
+        mock_user.id = "supabase-user-uuid-1234"
+        mock_user.email = "specialist@enterprise.io"
+        mock_user.user_metadata = {"full_name": "Enterprise Specialist"}
+
+        mock_auth_res = MagicMock()
+        mock_auth_res.user = mock_user
+
+        mock_supabase_client = MagicMock()
+        mock_supabase_client.auth.get_user.return_value = mock_auth_res
+
+        with patch("app.api.main.get_supabase_auth_client", return_value=mock_supabase_client):
+            # 3. Create ticket with Supabase JWT
+            jwt_token = "valid.supabase.jwt"
+            create_res = self.client.post(
+                "/api/tickets",
+                json={"subject": "Supabase authenticated user ticket", "customer_name": "Auth Customer", "tier": "Platinum"},
+                headers={"Authorization": f"Bearer {jwt_token}"},
+            )
+            self.assertEqual(create_res.status_code, 201)
+            created_ticket = create_res.json()
+            # Verified user_id bound consistently
+            self.assertEqual(created_ticket["user_id"], "supabase-user-uuid-1234")
+            created_id = created_ticket["ticket_id"]
+
+            # 4. Creator retrieves full ticket detail successfully (200 OK)
+            detail_res = self.client.get(
+                f"/api/tickets/{created_id}",
+                headers={"Authorization": f"Bearer {jwt_token}"},
+            )
+            self.assertEqual(detail_res.status_code, 200)
+            self.assertEqual(detail_res.json()["ticket_id"], created_id)
+
+            # 5. Different unprivileged agent attempting to view this ticket receives 403 Forbidden
+            other_user_res = self.client.get(
+                f"/api/tickets/{created_id}",
+                headers={"Authorization": "Bearer dev-other-agent"},
+            )
+            self.assertEqual(other_user_res.status_code, 403)
 
 
 if __name__ == "__main__":

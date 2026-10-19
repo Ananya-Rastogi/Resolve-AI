@@ -33,7 +33,7 @@ class TestSafetyAndRegression(unittest.TestCase):
 
     def test_02_citation_validity_against_canonical_faqs(self):
         """Verify all citations produced by the workflow map strictly to canonical FAQ IDs (FAQ_001 - FAQ_030)."""
-        docs = load_canonical_faqs("data/rag_faqs.csv")
+        docs = load_canonical_faqs()
         valid_faq_ids = {d.metadata.get("faq_id") for d in docs}
         state = TicketState(
             subject="How do I change my credit card payment method?",
