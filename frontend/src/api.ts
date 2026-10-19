@@ -12,7 +12,8 @@ import {
 } from './types';
 import { supabase } from './lib/supabase';
 
-const API_BASE = '/api';
+const API_BASE =
+  `${(import.meta.env.VITE_API_URL || '').replace(/\/$/, '')}/api`;
 
 async function getAuthHeaders(): Promise<HeadersInit> {
   const headers: Record<string, string> = {
