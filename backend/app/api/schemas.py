@@ -2,7 +2,9 @@
 Pydantic API request and response schemas for FastAPI backend.
 """
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional
+import json
+from typing import Any, Dict, List, Literal, Optional, Union
+from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -79,12 +81,47 @@ class TicketAnalysisSchema(BaseModel):
 
 
 class TicketEventSchema(BaseModel):
-    id: Optional[int] = None
+    model_config = ConfigDict(extra="ignore")
+
+    id: Optional[Union[str, int, UUID]] = None
     ticket_id: str
     event_type: str
     actor: str = "system"
     details: Dict[str, Any] = Field(default_factory=dict)
-    created_at: str
+    created_at: Union[str, datetime]
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def coerce_id(cls, v: Any) -> Optional[Union[str, int]]:
+        if v is None:
+            return None
+        if isinstance(v, (str, int)):
+            return v
+        return str(v)
+
+    @field_validator("details", mode="before")
+    @classmethod
+    def parse_details(cls, v: Any) -> Dict[str, Any]:
+        if v is None:
+            return {}
+        if isinstance(v, dict):
+            return v
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, dict):
+                    return parsed
+            except Exception:
+                pass
+            return {"raw": v}
+        return {}
+
+    @field_validator("created_at", mode="before")
+    @classmethod
+    def serialize_created_at(cls, v: Any) -> str:
+        if isinstance(v, datetime):
+            return v.isoformat()
+        return str(v)
 
 
 class TicketResponse(BaseModel):
@@ -106,8 +143,15 @@ class TicketResponse(BaseModel):
     escalation_level: str = "Not Escalated"
     classification_source: Optional[str] = None
     generated_reply: Optional[str] = None
-    created_at: str
-    updated_at: str
+    created_at: Union[str, datetime]
+    updated_at: Union[str, datetime]
+
+    @field_validator("created_at", "updated_at", mode="before")
+    @classmethod
+    def serialize_datetime(cls, v: Any) -> str:
+        if isinstance(v, datetime):
+            return v.isoformat()
+        return str(v)
 
 
 class UserProfileResponse(BaseModel):
@@ -120,8 +164,17 @@ class UserProfileResponse(BaseModel):
     role: str = "agent"
     theme: str = "system"
     preferences: Dict[str, Any] = Field(default_factory=dict)
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: Optional[Union[str, datetime]] = None
+    updated_at: Optional[Union[str, datetime]] = None
+
+    @field_validator("created_at", "updated_at", mode="before")
+    @classmethod
+    def serialize_datetime(cls, v: Any) -> Optional[str]:
+        if v is None:
+            return None
+        if isinstance(v, datetime):
+            return v.isoformat()
+        return str(v)
 
 
 class UserProfileUpdateRequest(BaseModel):

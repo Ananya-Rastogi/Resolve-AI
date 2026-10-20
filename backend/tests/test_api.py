@@ -603,6 +603,58 @@ class TestFastAPIBackend(unittest.TestCase):
             )
             self.assertEqual(other_user_res.status_code, 403)
 
+    def test_21_process_ticket_with_uuid_event_regression(self):
+        """
+        Regression test for production HTTP 500 ValidationError:
+        When backend constructs TicketEventSchema(**e) where e['id'] is a UUID string
+        (such as returned by Supabase '87824b75-367b-49fd-bb8c-b36189e8df6b'),
+        POST /api/tickets must succeed with 201 Created and return the UUID event ID intact.
+        """
+        original_get_events = self.test_repo.get_ticket_events
+        uuid_str = "87824b75-367b-49fd-bb8c-b36189e8df6b"
+
+        def mock_get_events(ticket_id):
+            real_events = original_get_events(ticket_id)
+            if real_events:
+                for ev in real_events:
+                    ev["id"] = uuid_str
+                return real_events
+            return [{
+                "id": uuid_str,
+                "ticket_id": ticket_id,
+                "event_type": "ticket_created",
+                "actor": "system",
+                "details": {"action": "ticket_created"},
+                "created_at": "2026-10-20T16:23:39.449612+00:00",
+            }]
+
+        self.test_repo.get_ticket_events = mock_get_events
+        try:
+            payload = {
+                "subject": "Urgent UUID event test for Supabase production bug regression",
+                "customer_name": "UUID Tester",
+                "customer_id": "CUST-UUID-1",
+                "email": "uuid@example.com",
+                "tier": "Gold",
+            }
+            res = self.client.post("/api/tickets", json=payload)
+            self.assertEqual(res.status_code, 201, f"Expected 201 but got {res.status_code}: {res.text}")
+            data = res.json()
+            self.assertIn("events", data)
+            self.assertGreaterEqual(len(data["events"]), 1)
+            event_ids = [ev["id"] for ev in data["events"]]
+            self.assertIn(uuid_str, event_ids)
+
+            # Also verify GET /api/tickets/{ticket_id} detail returns 200 with UUID event
+            ticket_id = data["ticket_id"]
+            get_res = self.client.get(f"/api/tickets/{ticket_id}", headers=self.admin_headers)
+            self.assertEqual(get_res.status_code, 200)
+            get_data = get_res.json()
+            get_event_ids = [ev["id"] for ev in get_data["events"]]
+            self.assertIn(uuid_str, get_event_ids)
+        finally:
+            self.test_repo.get_ticket_events = original_get_events
+
 
 if __name__ == "__main__":
     unittest.main()

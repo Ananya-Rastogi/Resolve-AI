@@ -74,7 +74,7 @@ export interface TicketAnalysis {
 }
 
 export interface TicketEvent {
-  id?: number;
+  id?: number | string;
   ticket_id: string;
   event_type: string;
   actor: string;
