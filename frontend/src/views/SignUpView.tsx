@@ -136,8 +136,11 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
               >
                 Full Name
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+              <div className="relative flex items-center">
+                <div
+                  className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                  aria-hidden="true"
+                >
                   <User className="w-4 h-4" />
                 </div>
                 <input
@@ -147,7 +150,8 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Jane Doe"
-                  className="saas-input pl-10"
+                  className="saas-input saas-input-with-icon-left"
+                  style={{ paddingLeft: '48px' }}
                 />
               </div>
             </div>
@@ -160,8 +164,11 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
               >
                 Work Email Address
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+              <div className="relative flex items-center">
+                <div
+                  className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                  aria-hidden="true"
+                >
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -172,7 +179,8 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="saas-input pl-10"
+                  className="saas-input saas-input-with-icon-left"
+                  style={{ paddingLeft: '48px' }}
                 />
               </div>
             </div>
@@ -185,8 +193,11 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
               >
                 Password (min 6 characters)
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+              <div className="relative flex items-center">
+                <div
+                  className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                  aria-hidden="true"
+                >
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -196,13 +207,14 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Choose a strong password"
-                  className="saas-input pl-10 pr-10"
+                  className="saas-input saas-input-with-icons"
+                  style={{ paddingLeft: '48px', paddingRight: '48px' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none focus:text-indigo-600 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -217,8 +229,11 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
               >
                 Confirm Password
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+              <div className="relative flex items-center">
+                <div
+                  className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                  aria-hidden="true"
+                >
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -228,7 +243,8 @@ export const SignUpView: React.FC<SignUpViewProps> = ({ onNavigate }) => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Re-type your password"
-                  className="saas-input pl-10"
+                  className="saas-input saas-input-with-icon-left"
+                  style={{ paddingLeft: '48px' }}
                 />
               </div>
             </div>

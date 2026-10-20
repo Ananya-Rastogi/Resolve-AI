@@ -120,8 +120,11 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
                   New Password
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="relative flex items-center">
+                  <div
+                    className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                    aria-hidden="true"
+                  >
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -130,7 +133,8 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter at least 6 characters"
-                    className="saas-input pl-10"
+                    className="saas-input saas-input-with-icon-left"
+                    style={{ paddingLeft: '48px' }}
                   />
                 </div>
               </div>
@@ -139,8 +143,11 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
                   Confirm New Password
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="relative flex items-center">
+                  <div
+                    className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                    aria-hidden="true"
+                  >
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -149,7 +156,8 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Re-type your new password"
-                    className="saas-input pl-10"
+                    className="saas-input saas-input-with-icon-left"
+                    style={{ paddingLeft: '48px' }}
                   />
                 </div>
               </div>
@@ -185,8 +193,11 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
                 >
                   Your Email Address
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="relative flex items-center">
+                  <div
+                    className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none text-slate-400 dark:text-slate-500"
+                    aria-hidden="true"
+                  >
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
@@ -196,7 +207,8 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@company.com"
-                    className="saas-input pl-10"
+                    className="saas-input saas-input-with-icon-left"
+                    style={{ paddingLeft: '48px' }}
                   />
                 </div>
               </div>

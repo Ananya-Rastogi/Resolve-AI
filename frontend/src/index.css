@@ -58,23 +58,56 @@
 }
 
 /* Enterprise Surface & Component Utilities */
-.saas-card {
-  @apply bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl transition-colors;
+@layer components {
+  .saas-card {
+    @apply bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl transition-colors;
+  }
+
+  .saas-card-hover {
+    @apply transition-all duration-150;
+  }
+  .saas-card-hover:hover {
+    @apply border-indigo-300 dark:border-slate-700 bg-slate-50/50 dark:bg-[#161F30] shadow-sm;
+  }
+
+  .saas-panel {
+    @apply bg-slate-50 dark:bg-[#0E1524] border border-slate-200 dark:border-slate-800;
+  }
+
+  .saas-input {
+    @apply w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors;
+  }
+
+  /* Dedicated input classes with absolute icon padding reservation */
+  .saas-input-with-icon-left {
+    padding-left: 48px !important;
+  }
+
+  .saas-input-with-icon-right {
+    padding-right: 48px !important;
+  }
+
+  .saas-input-with-icons {
+    padding-left: 48px !important;
+    padding-right: 48px !important;
+  }
 }
 
-.saas-card-hover {
-  @apply transition-all duration-150;
-}
-.saas-card-hover:hover {
-  @apply border-indigo-300 dark:border-slate-700 bg-slate-50/50 dark:bg-[#161F30] shadow-sm;
-}
-
-.saas-panel {
-  @apply bg-slate-50 dark:bg-[#0E1524] border border-slate-200 dark:border-slate-800;
+/* Explicit high-specificity padding rules so utility or base styles cannot override */
+.saas-input-with-icon-left,
+input.saas-input-with-icon-left {
+  padding-left: 48px !important;
 }
 
-.saas-input {
-  @apply w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors;
+.saas-input-with-icon-right,
+input.saas-input-with-icon-right {
+  padding-right: 48px !important;
+}
+
+.saas-input-with-icons,
+input.saas-input-with-icons {
+  padding-left: 48px !important;
+  padding-right: 48px !important;
 }
 
 /* Accessible focus visible utility */
@@ -85,3 +118,4 @@
   outline: 2px solid #6366F1;
   outline-offset: 2px;
 }
+
