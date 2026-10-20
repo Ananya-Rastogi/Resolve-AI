@@ -119,18 +119,34 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Right Hand Actions: Health, Theme, User Menu */}
           <div className="hidden sm:flex items-center space-x-3">
             {/* Database indicator */}
-            <div className="flex items-center space-x-2 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
+            <button
+              type="button"
+              onClick={onRefreshHealth}
+              className="flex items-center space-x-2 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs transition cursor-pointer focus-ring"
+              title={`Database status: ${health?.status || 'checking'}${health?.storage_backend ? ` (${health.storage_backend})` : ''} - Click to refresh`}
+              aria-label="Database health status indicator"
+            >
               <Database className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span className="text-slate-700 dark:text-slate-300 font-mono text-[11px]">
-                {health?.storage_backend === 'supabase' ? 'Supabase Cloud' : 'SQLite Local'}
+                {health?.storage_backend === 'supabase'
+                  ? 'Supabase Cloud'
+                  : health?.storage_backend === 'local_sqlite'
+                  ? 'SQLite Local'
+                  : health?.storage_backend === 'offline_mode'
+                  ? 'Offline'
+                  : health?.storage_backend || 'Connecting...'}
               </span>
               <span
                 className={`w-2 h-2 rounded-full ${
-                  health?.status === 'healthy' ? 'bg-emerald-500' : 'bg-amber-500'
+                  health?.status === 'healthy'
+                    ? 'bg-emerald-500'
+                    : health?.status === 'degraded'
+                    ? 'bg-amber-500'
+                    : 'bg-rose-500'
                 }`}
                 title={`Database status: ${health?.status || 'checking'}`}
               />
-            </div>
+            </button>
 
             {/* Quick Theme Switcher Button */}
             <button

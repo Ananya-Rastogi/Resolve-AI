@@ -12,8 +12,13 @@ import {
 } from './types';
 import { supabase } from './lib/supabase';
 
-const API_BASE =
-  `${(import.meta.env.VITE_API_URL || '').replace(/\/$/, '')}/api`;
+const DEFAULT_BACKEND_URL = 'https://resolve-ai-backend-p6s7.onrender.com';
+
+const API_BASE = `${(
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? DEFAULT_BACKEND_URL : '')
+).replace(/\/$/, '')}/api`;
+
 
 async function getAuthHeaders(): Promise<HeadersInit> {
   const headers: Record<string, string> = {

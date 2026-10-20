@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://resolve-ai-backend-p6s7.onrender.com/api/:path*"
+    }
+  ]
+}
